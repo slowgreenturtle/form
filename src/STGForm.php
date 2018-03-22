@@ -37,7 +37,12 @@ abstract class STGForm
 
     }
 
-    abstract protected function setup();
+    abstract protected function build();
+
+    protected function setup()
+    {
+
+    }
 
     public function __toString()
     {
