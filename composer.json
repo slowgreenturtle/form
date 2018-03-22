@@ -1,0 +1,34 @@
+{
+  "name": "sgt/form",
+  "homepage": "https://github.com/slowgreenturtle",
+  "description": "Form class for the Laravel framework",
+  "keywords": [
+    "sgt",
+    "slowgreenturtle",
+    "form",
+    "laravel"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tony Black",
+      "homepage": "https://github.com/slowgreenturtle"
+    }
+  ],
+  "support": {
+    "forum": "https://github.com/slowgreenturtle/form/wiki",
+    "issues": "https://github.com/slowgreenturtle/form/issues"
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SGT\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  }
+}
