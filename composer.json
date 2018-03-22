@@ -21,7 +21,8 @@
     "issues": "https://github.com/slowgreenturtle/form/issues"
   },
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.0",
+    "laravelcollective/html": "^5.4.0"
   },
   "autoload": {
     "psr-4": {
