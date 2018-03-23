@@ -1,9 +1,8 @@
 <?php
 
-namespace LaravelCaptcha\Providers;
+namespace SGT;
 
 use Illuminate\Support\ServiceProvider;
-use Validator;
 
 class SGTServiceProvider extends ServiceProvider
 {
