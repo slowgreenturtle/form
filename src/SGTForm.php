@@ -249,7 +249,7 @@ abstract class SGTForm
         if ($required == true)
         {
             $label_text = '* ' . $label_text;
-            $tooltip    .= ' required';
+            $tooltip    = 'Required. ' . $tooltip;
         }
 
         if ($tooltip)
@@ -302,7 +302,7 @@ abstract class SGTForm
     {
 
         $element['class'] = array_get($element, 'class', []) + ['date'];
-        $element['type']  = 'text';
+        $element['type']  = 'input';
 
         return $this->input($element);
 
@@ -856,14 +856,6 @@ class AppForm extends \SGT\Form
     {
 
         $this->params[$name][$attribute] = $value;
-    }
-
-    public function text($element)
-    {
-
-        $element['type'] = 'text';
-
-        return $this->input($element);
     }
 
     public function password($element)
