@@ -29,9 +29,6 @@
       "SGT\\": "src/"
     }
   },
-  "scripts": {
-    "post-install-cmd": "SGT\\Installer::postInstall"
-  },
   "extra": {
     "laravel": {
       "providers": [
