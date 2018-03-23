@@ -38,7 +38,7 @@ class SGTServiceProvider extends ServiceProvider
         if (method_exists($this, 'publishes'))
         {
             $this->publishes([
-                __DIR__ . '/../defaults/sgtform.php' => config_path('sgtform.php')
+                __DIR__ . '/../defaults/config/sgtform.php' => config_path('sgtform.php')
             ]);
         }
     }
