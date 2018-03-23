@@ -2,7 +2,7 @@
 
 namespace SGT;
 
-abstract class STGForm
+abstract class SGTForm
 {
 
     public $form_url     = '';
