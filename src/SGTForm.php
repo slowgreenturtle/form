@@ -2,6 +2,8 @@
 
 namespace SGT;
 
+use Form;
+
 abstract class SGTForm
 {
 
@@ -21,6 +23,7 @@ abstract class SGTForm
 
     /** @var string $view_file The Laravel view file */
     protected $view_file = '';
+    protected $format = 'default';
 
     public function __construct($model = null)
     {
@@ -184,6 +187,81 @@ abstract class SGTForm
 
     }
 
+    protected function viewDataDefault($element)
+    {
+
+        $data                = [];
+        $name                = array_get($element, 'name');
+        $data['div_name']    = $name . '_div';
+        $data['div_classes'] = $this->makeDivClasses($name);
+        $data['label']       = $this->label($element);
+
+        return $data;
+    }
+
+    protected function makeDivClasses($name)
+    {
+
+        $div_classes = ['form-group'];
+
+        if ($this->hasError($name))
+        {
+            $div_classes[] = 'has-error';
+        }
+
+        return implode(' ', $div_classes);
+
+    }
+
+    public function hasError($field)
+    {
+
+        if ($this->errors)
+        {
+            return $this->errors->default->has($field);
+        }
+
+        return false;
+
+    }
+
+    public function label($element)
+    {
+
+        $element_name = array_get($element, 'name');
+
+        $label_text = array_get($element, 'label', $element_name);
+        $required   = array_get($element, 'required', false);
+
+        $label_text = str_replace('_id', '', $label_text);
+
+        $attributes = ['class' => 'control-label'];
+
+        if (empty($label_text))
+        {
+            return '';
+        }
+
+        $tooltip = array_get($element, 'tooltip', array_get($this->tooltips, $element_name));
+
+        if ($required == true)
+        {
+            $label_text = '* ' . $label_text;
+            $tooltip    .= ' required';
+        }
+
+        if ($tooltip)
+        {
+            $attributes['title']       = $tooltip;
+            $attributes['data-toggle'] = 'tooltip';
+        }
+
+        $label = Form::label($label_text, null, $attributes);
+
+        return $label;
+
+    }
+
     public function getValue($name)
     {
 
@@ -206,146 +284,16 @@ abstract class SGTForm
         return array_get($this->params, $name, $default);
     }
 
-    public function input2($element)
+    protected function viewForm($type, $data, $element)
     {
 
-        $name = array_get($element, 'name');
+        $format         = $this->format;
+        $element_format = array_get($element, 'view');
+        $format         = $element_format == null ? $format : $element_format;
 
-        $type         = array_get($element, 'type', 'text');
-        $append_text  = array_get($element, 'append');
-        $prepend_text = array_get($element, 'prepend');
-        $help         = array_get($element, 'help');
+        $view_form = 'form.' . $format . '.' . $type;
 
-        $div_name = $name . '_div';
-
-        $div_classes = ['form-group'];
-
-        $input_group = false;
-
-        if ($append_text != null)
-        {
-            $input_group = true;
-        }
-
-        if ($prepend_text != null)
-        {
-            $input_group = true;
-        }
-
-        $input_classes = ['form-control'];
-
-        if ($this->hasError($name))
-        {
-            $div_classes[]   = 'has-danger';
-            $input_classes[] = 'form-control-danger';
-        }
-
-        $html = '<div class="' . implode(' ', $div_classes) . '" id="' . $div_name . '">';
-
-        $class = array_get($element, 'class');
-
-        if ($class)
-        {
-            $input_classes = array_merge($input_classes, $class);
-        };
-
-        $html .= $this->label($element);
-
-        if ($input_group == true)
-        {
-            $html .= '<div class="input-group">';
-        }
-
-        if ($prepend_text != null)
-        {
-            $html .= "<span class=\"input-group-addon\" >$prepend_text</span>";
-        }
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $input_classes),
-        ];
-
-        $attributes += array_get($element, 'options', []);
-
-        $html .= Form::input($type, $name, $this->getValue($name), $attributes);
-
-        if ($append_text != null)
-        {
-            $html .= "<span class=\"input-group-addon\" >$append_text</span>";
-        }
-
-        if ($input_group == true)
-        {
-            $html .= '</div>';
-        }
-
-        if ($help != null)
-        {
-
-            $html .= '<small>' . $help . '</small>';
-
-        }
-
-        $html .= '</div>';
-
-        return $html;
-
-    }
-
-    public function hasError($field)
-    {
-
-        if ($this->errors)
-        {
-            return $this->errors->default->has($field);
-        }
-
-        return false;
-
-    }
-
-    public function label($element)
-    {
-
-        $element_name = array_get($element, 'name');
-
-        $label_text = array_get($element, 'label', $element_name);
-
-        $label_text = str_replace('_id', '', $label_text);
-
-        $attributes = ['class' => 'control-label'];
-
-        if (empty($label_text))
-        {
-            return '';
-        }
-
-        $required = array_get($element, 'required', false);
-
-        if ($required == true)
-        {
-            $label_text = '* ' . $label_text;
-
-            $title = array_get($attributes, 'title', '');
-            $title = 'Required ' . $title;
-
-            $attributes['title']       = $title;
-            $attributes['data-toggle'] = 'tooltip';
-
-        }
-
-        $label = Form::label($label_text, null, $attributes);
-
-        $tooltip = array_get($element, 'tooltip', array_get($this->tooltips, $element_name));
-
-        if ($tooltip)
-        {
-            $label .= ' <i class="fa fa-question-circle-o" title="' . $tooltip . '"></i>';
-        }
-
-        return $label;
+        return view($view_form, $data)->__toString();
 
     }
 
@@ -421,53 +369,6 @@ abstract class SGTForm
         $element['id'] = $name;
 
         return Form::hidden($name, $value, $element);
-    }
-
-    public function textarea($element)
-    {
-
-        $name = array_get($element, 'name');
-
-        $div_name = $name . '_div';
-
-        $div_classes = ['form-group'];
-
-        if ($this->hasError($name))
-        {
-            $div_classes[] = 'has-danger';
-        }
-
-        $html = '<div class="' . implode(' ', $div_classes) . '" id="' . $div_name . '">';
-
-        $class = array_get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        };
-
-        $html .= $this->label($element);
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        $attributes += array_get($element, 'options', []);
-
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $html .= Form::textarea($name, null, $attributes);
-
-        $html .= '</div>';
-
-        return $html;
-
     }
 
     public function checkbox($element)
@@ -581,53 +482,6 @@ abstract class SGTForm
 
     }
 
-    public function select2($element)
-    {
-
-        $name     = array_get($element, 'name');
-        $list     = array_get($element, 'list', []);
-        $multiple = array_get($element, 'multiple');
-
-        $selected = $this->getValue($name);
-
-        $div_name = $name . '_div';
-
-        $html = '<div class="form-group" id="' . $div_name . '">';
-
-        $class = array_get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        };
-
-        $html .= $this->label($element);
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        if ($multiple == true)
-        {
-            $attributes['multiple'] = 'multiple';
-        }
-
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $html .= Form::select($name, $list, $selected, $attributes);
-
-        $html .= '</div>';
-
-        return $html;
-
-    }
-
     public function select($element)
     {
 
@@ -680,6 +534,39 @@ abstract class SGTForm
         array_set($element, 'type', 'color');
 
         return $this->input($element);
+    }
+
+    public function textarea($element)
+    {
+
+        $data = $this->viewDataDefault($element);
+
+        $name  = array_get($element, 'name');
+        $class = array_get($element, 'class');
+
+        $classes = ['form-control'];
+
+        if ($class)
+        {
+            $classes = array_merge($classes, $class);
+        };
+
+        $attributes = [
+            'id'    => $name,
+            'name'  => $name,
+            'class' => implode(' ', $classes)];
+
+        $attributes += array_get($element, 'options', []);
+
+        if ($this->model)
+        {
+            Form::setModel($this->model);
+        }
+
+        $data['form_element'] = Form::textarea($name, null, $attributes);
+
+        return $this->viewForm('textarea', $data, $element);
+
     }
 
 }
