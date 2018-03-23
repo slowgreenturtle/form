@@ -5,7 +5,7 @@ return [
         [
             'view' =>
                 [
-                    'path' => 'stgform::element/default'
+                    'path' => 'sgtform::element/default'
                 ]
         ]
 ];

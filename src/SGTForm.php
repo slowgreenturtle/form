@@ -23,7 +23,7 @@ abstract class SGTForm
 
     /** @var string $view_file The Laravel view file */
     protected $view_file         = '';
-    protected $element_view_path = 'sgtform:element';
+    protected $element_view_path = '';
 
     public function __construct($model = null)
     {
@@ -37,7 +37,7 @@ abstract class SGTForm
 
         Form::setModel($model);
 
-        $this->element_view_path = config('stgform.element.view.path');
+        $this->element_view_path = config('sgtform.element.view.path');
 
         $this->build();
 
@@ -341,7 +341,7 @@ abstract class SGTForm
     public function text($element)
     {
 
-        $element['type'] = 'text';
+        $element['type'] = 'input';
 
         return $this->input($element);
     }
