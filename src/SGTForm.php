@@ -532,7 +532,7 @@ abstract class SGTForm
     public function color($element)
     {
 
-        array_set($element, 'type', 'color');
+        array_set($element, 'type', 'input');
 
         return $this->input($element);
     }
