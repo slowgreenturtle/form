@@ -30,7 +30,6 @@ abstract class STGForm
             $this->view = view($this->view_file);
         }
 
-        $this->html  = new HtmlBuilder();
         $this->model = $model;
 
         Form::setModel($model);
