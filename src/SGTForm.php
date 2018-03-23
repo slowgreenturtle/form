@@ -22,8 +22,8 @@ abstract class SGTForm
     protected $view = null;
 
     /** @var string $view_file The Laravel view file */
-    protected $view_file = '';
-    protected $format = 'default';
+    protected $view_file         = '';
+    protected $element_view_path = 'sgtform:element';
 
     public function __construct($model = null)
     {
@@ -36,6 +36,8 @@ abstract class SGTForm
         $this->model = $model;
 
         Form::setModel($model);
+
+        $this->element_view_path = config('stgform.element.view.path');
 
         $this->build();
 
@@ -183,7 +185,7 @@ abstract class SGTForm
 
         $data['form_element'] = Form::input($type, $name, $this->getValue($name), $attributes);
 
-        return $this->viewForm('input', $data, $element);
+        return $this->elementView($data, $element);
 
     }
 
@@ -284,14 +286,13 @@ abstract class SGTForm
         return array_get($this->params, $name, $default);
     }
 
-    protected function viewForm($type, $data, $element)
+    protected function elementView($data, $element)
     {
 
-        $format         = $this->format;
-        $element_format = array_get($element, 'view');
-        $format         = $element_format == null ? $format : $element_format;
+        $view_form = array_get($element, 'view', $this->element_view_path);
+        $type      = array_get($element, 'type');
 
-        $view_form = 'form.' . $format . '.' . $type;
+        $view_form .= '/' . $type;
 
         return view($view_form, $data)->__toString();
 
@@ -516,7 +517,7 @@ abstract class SGTForm
 
         $data['form_element'] = Form::select($name, $list, $selected, $attributes);
 
-        return $this->viewForm('select', $data, $element);
+        return $this->elementView($data, $element);
 
     }
 
@@ -565,7 +566,7 @@ abstract class SGTForm
 
         $data['form_element'] = Form::textarea($name, null, $attributes);
 
-        return $this->viewForm('textarea', $data, $element);
+        return $this->elementView($data, $element);
 
     }
 
@@ -578,27 +579,6 @@ use Form;
 
 class AppForm extends \SGT\Form
 {
-
-    public $form_url     = '';
-    public $errors       = null;
-    public $method       = 'POST';
-    public $model        = null;
-    public $form_options = [];
-
-    protected $fields   = [];
-    protected $params   = [];
-    protected $tooltips = [];
-
-    public function __construct($model = null)
-    {
-
-        $this->model = $model;
-
-        Form::setModel($model);
-
-        $this->build();
-    }
-
     public function field_names()
     {
 

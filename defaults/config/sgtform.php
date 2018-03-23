@@ -1,3 +1,11 @@
 <?php
 
-return [];
+return [
+    'element' =>
+        [
+            'view' =>
+                [
+                    'path' => 'stgform::element/default'
+                ]
+        ]
+];
