@@ -43,7 +43,7 @@ class SGTServiceProvider extends ServiceProvider
         }
     }
 
-    public function publicViewFiles()
+    public function publishViewFiles()
     {
 
         $view_path = __DIR__ . '/../defaults/views';
