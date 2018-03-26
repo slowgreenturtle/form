@@ -1,5 +1,5 @@
 <div class="{{ $div_classes }}" id="{{ $div_name}}">
-        {!! $label !!}
+    {!! $label !!}
     @if($prepend_text != null || $append_text != null)
         <div class="input-group">
             @endif
@@ -16,5 +16,10 @@
 
             @if($prepend_text != null || $append_text != null)
         </div>
+    @endif
+
+    @if(!empty($help))
+
+        <small>{{ $help }}</small>
     @endif
 </div>

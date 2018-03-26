@@ -165,10 +165,16 @@ abstract class SGTForm
         $type                 = array_get($element, 'type', 'text');
         $data['append_text']  = array_get($element, 'append');
         $data['prepend_text'] = array_get($element, 'prepend');
+        $data['help']         = array_get($element, 'help');
 
         $class = array_get($element, 'class');
 
         $classes = ['form-control'];
+
+        if ($this->hasError($name))
+        {
+            $classes[] = 'form-control-danger';
+        }
 
         if ($class)
         {
@@ -186,32 +192,6 @@ abstract class SGTForm
         $data['form_element'] = Form::input($type, $name, $this->getValue($name), $attributes);
 
         return $this->elementView($data, $element);
-
-    }
-
-    protected function viewDataDefault($element)
-    {
-
-        $data                = [];
-        $name                = array_get($element, 'name');
-        $data['div_name']    = $name . '_div';
-        $data['div_classes'] = $this->makeDivClasses($name);
-        $data['label']       = $this->label($element);
-
-        return $data;
-    }
-
-    protected function makeDivClasses($name)
-    {
-
-        $div_classes = ['form-group'];
-
-        if ($this->hasError($name))
-        {
-            $div_classes[] = 'has-error';
-        }
-
-        return implode(' ', $div_classes);
 
     }
 
@@ -284,6 +264,32 @@ abstract class SGTForm
     {
 
         return array_get($this->params, $name, $default);
+    }
+
+    protected function viewDataDefault($element)
+    {
+
+        $data                = [];
+        $name                = array_get($element, 'name');
+        $data['div_name']    = $name . '_div';
+        $data['div_classes'] = $this->makeDivClasses($name);
+        $data['label']       = $this->label($element);
+
+        return $data;
+    }
+
+    protected function makeDivClasses($name)
+    {
+
+        $div_classes = ['form-group'];
+
+        if ($this->hasError($name))
+        {
+            $div_classes[] = 'has-error';
+        }
+
+        return implode(' ', $div_classes);
+
     }
 
     protected function elementView($data, $element)
