@@ -173,7 +173,8 @@ abstract class SGTForm
 
         if ($this->hasError($name))
         {
-            $classes[] = 'form-control-danger';
+            $classes[] = Config('sgtform.element.input.css.error');
+
         }
 
         if ($class)
