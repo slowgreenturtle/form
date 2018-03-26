@@ -195,6 +195,32 @@ abstract class SGTForm
 
     }
 
+    protected function viewDataDefault($element)
+    {
+
+        $data                = [];
+        $name                = array_get($element, 'name');
+        $data['div_name']    = $name . '_div';
+        $data['div_classes'] = $this->makeDivClasses($name);
+        $data['label']       = $this->label($element);
+
+        return $data;
+    }
+
+    protected function makeDivClasses($name)
+    {
+
+        $div_classes = ['form-group'];
+
+        if ($this->hasError($name))
+        {
+            $div_classes[] = 'has-error';
+        }
+
+        return implode(' ', $div_classes);
+
+    }
+
     public function hasError($field)
     {
 
@@ -238,7 +264,7 @@ abstract class SGTForm
             $attributes['data-toggle'] = 'tooltip';
         }
 
-        $label = Form::label($label_text, null, $attributes);
+        $label = Form::label($element_name, $label_text, $attributes);
 
         return $label;
 
@@ -264,32 +290,6 @@ abstract class SGTForm
     {
 
         return array_get($this->params, $name, $default);
-    }
-
-    protected function viewDataDefault($element)
-    {
-
-        $data                = [];
-        $name                = array_get($element, 'name');
-        $data['div_name']    = $name . '_div';
-        $data['div_classes'] = $this->makeDivClasses($name);
-        $data['label']       = $this->label($element);
-
-        return $data;
-    }
-
-    protected function makeDivClasses($name)
-    {
-
-        $div_classes = ['form-group'];
-
-        if ($this->hasError($name))
-        {
-            $div_classes[] = 'has-error';
-        }
-
-        return implode(' ', $div_classes);
-
     }
 
     protected function elementView($data, $element)
