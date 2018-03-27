@@ -7,21 +7,7 @@ use Form;
 class Input extends Element
 {
 
-    public $attributes = [];
-
-    public function __construct($attributes)
-    {
-
-        $this->setDefaults();
-
-        $this->attributes = $attributes;
-    }
-
-    public function setDefaults()
-    {
-
-
-    }
+    protected $_type = 'input';
 
     public function draw()
     {
@@ -30,10 +16,10 @@ class Input extends Element
 
         $name = array_get($element, 'name');
 
-        $type                 = array_get($element, 'type', 'text');
-        $data['append_text']  = array_get($element, 'append');
-        $data['prepend_text'] = array_get($element, 'prepend');
-        $data['help']         = array_get($element, 'help');
+        //$type                 = array_get($element, 'type', 'text');
+        //$data['append_text']  = array_get($element, 'append');
+        //$data['prepend_text'] = array_get($element, 'prepend');
+        //$data['help']         = array_get($element, 'help');
 
         $class = array_get($element, 'class');
 
@@ -57,18 +43,26 @@ class Input extends Element
 
         $attributes += array_get($element, 'options', []);
 
-        $data['form_element'] = Form::input($type, $name, $this->getValue($name), $attributes);
+        $data['form_element'] = Form::input($this->_type, $name, $this->getValue($name), $attributes);
+
+        $view_file = $this->getViewFile();
+
+        return view($view_file, ['element' => $this])->__toString();
+
+    }
+
+    public function getViewFile()
+    {
 
         $element_view_path = config('sgtform.element.view.path');
 
+        $view_file = $this->view_file;
 
-        $view_form = array_get($element, 'view', $element_view_path);
-        $type      = array_get($element, 'type');
+        $view_file = $view_file == '' ? $element_view_path : $view_file;
 
-        $view_form .= '/' . $type;
+        $view_file .= '/' . $this->type;
 
-        return view($view_form, $data)->d__toString();
-
+        return $view_file;
     }
 
 }

@@ -7,9 +7,10 @@ use Form;
 abstract class SGTForm
 {
 
-    public $form_url     = '';
-    public $errors       = null;
-    public $method       = 'POST';
+    public $form_url = '';
+    public $errors   = null;
+    public $method   = 'POST';
+
     public $model        = null;
     public $form_options = [];
 
@@ -244,6 +245,10 @@ abstract class SGTForm
 
         $label_text = str_replace('_id', '', $label_text);
 
+        $label_text = str_replace('_', ' ', $label_text);
+
+        $label_text = ucwords($label_text);
+
         $attributes = ['class' => 'control-label'];
 
         if (empty($label_text))
@@ -429,6 +434,7 @@ abstract class SGTForm
     /**
      * A select tag form is a multiple select form which displays the results as tags in the field location.
      * The results are sent to the server as an array.
+     *
      * @param $element
      */
     public function select_tag($element)
