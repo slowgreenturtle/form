@@ -314,7 +314,7 @@ abstract class SGTForm
     {
 
         $element['class'] = array_get($element, 'class', []) + ['date'];
-        $element['type']  = 'input';
+        $element['type']  = 'date';
 
         return $this->input($element);
 
