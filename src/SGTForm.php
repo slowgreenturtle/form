@@ -313,7 +313,8 @@ abstract class SGTForm
     public function date($element)
     {
 
-        $element['type'] = 'date';
+        $element['class'] = array_get($element, 'class', []) + ['date'];
+        $element['type']  = 'text';
 
         return $this->input($element);
 
@@ -322,7 +323,8 @@ abstract class SGTForm
     public function date_time($element)
     {
 
-        $element['type'] = 'datetime';
+        $element['class'] = array_get($element, 'class', []) + ['datetime'];
+        $element['type']  = 'text';
 
         return $this->input($element);
 
@@ -331,7 +333,8 @@ abstract class SGTForm
     public function time($element)
     {
 
-        $element['type'] = 'date';
+        $element['class'] = array_get($element, 'class', []) + ['time'];
+        $element['type']  = 'text';
 
         return $this->input($element);
 
