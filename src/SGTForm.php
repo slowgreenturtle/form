@@ -313,22 +313,27 @@ abstract class SGTForm
     public function date($element)
     {
 
-        $element['class'] = array_get($element, 'class', []) + ['date'];
-        $element['type']  = 'date';
+        $element['type'] = 'date';
 
         return $this->input($element);
 
     }
 
-    public function color_picker($element)
+    public function date_time($element)
     {
 
-        $html = $this->input($element);
+        $element['type'] = 'datetime';
 
-        $data['element_name'] = array_get($element, 'name');
-        $html                 .= view('partial.color_picker', $data);
+        return $this->input($element);
 
-        return $html;
+    }
+
+    public function time($element)
+    {
+
+        $element['type'] = 'date';
+
+        return $this->input($element);
 
     }
 
