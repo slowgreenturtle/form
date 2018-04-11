@@ -301,6 +301,9 @@ abstract class SGTForm
     protected function elementView($data, $element)
     {
 
+        $data['element_id']   = array_get($element, 'name');
+        $data['element_name'] = array_get($element, 'name');
+
         $view_form = array_get($element, 'view', $this->element_view_path);
         $type      = array_get($element, 'type');
 
