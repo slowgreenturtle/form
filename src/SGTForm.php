@@ -264,13 +264,12 @@ abstract class SGTForm
             $tooltip    = 'Required. ' . $tooltip;
         }
 
+        $label = Form::label($element_name, $label_text, $attributes);
+
         if ($tooltip)
         {
-            $attributes['title']       = $tooltip;
-            $attributes['data-toggle'] = 'tooltip';
+            $label .= " <i title=\"$tooltip\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
         }
-
-        $label = Form::label($element_name, $label_text, $attributes);
 
         return $label;
 
