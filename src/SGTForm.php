@@ -261,7 +261,11 @@ abstract class SGTForm
         if ($required == true)
         {
             $label_text = '* ' . $label_text;
-            $tooltip    = 'Required. ' . $tooltip;
+
+            if(strlen($tooltip) > 0)
+            {
+                $tooltip    = 'Required. ' . $tooltip;
+            }
         }
 
         $label = Form::label($element_name, $label_text, $attributes);
