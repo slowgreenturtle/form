@@ -534,6 +534,9 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
+        $add_attributes = array_get($element, 'attributes', []);
+        $attributes     += $add_attributes;
+
         if ($this->model)
         {
             Form::setModel($this->model);
