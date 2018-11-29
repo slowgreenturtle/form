@@ -7,9 +7,10 @@ use Form;
 abstract class SGTForm
 {
 
-    public $form_url = '';
-    public $errors   = null;
-    public $method   = 'POST';
+    public $form_url  = '';
+    public $form_name = null;
+    public $errors    = null;
+    public $method    = 'POST';
 
     public $model        = null;
     public $form_options = [];
@@ -88,7 +89,20 @@ abstract class SGTForm
         $this->errors = $errors;
 
         $form_options = [
-            'method' => $this->method];
+            'method' => $this->method
+        ];
+
+        if (empty($this->form_name))
+        {
+            $form_name = snake_case(class_basename($this));
+        }
+        else
+        {
+            $form_name = $this->form_name;
+        }
+
+        $form_options['name'] = $form_name;
+        $form_options['id']   = $form_name;
 
         if ($this->form_url != '')
         {
@@ -262,9 +276,9 @@ abstract class SGTForm
         {
             $label_text = '* ' . $label_text;
 
-            if(strlen($tooltip) > 0)
+            if (strlen($tooltip) > 0)
             {
-                $tooltip    = 'Required. ' . $tooltip;
+                $tooltip = 'Required. ' . $tooltip;
             }
         }
 
@@ -537,8 +551,9 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
-        $add_attributes = array_get($element, 'attributes', []);
-        $attributes     += $add_attributes;
+        $add_atributes = array_get($element, 'attributes', []);
+
+        $attributes += $add_atributes;
 
         if ($this->model)
         {
