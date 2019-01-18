@@ -426,6 +426,13 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
+        $options = array_get($element, 'options');
+
+        if(is_array($options))
+        {
+            $attributes+= $options;
+        }
+
         if ($this->model)
         {
             Form::setModel($this->model);
