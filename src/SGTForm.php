@@ -43,11 +43,19 @@ abstract class SGTForm
 
         $this->build();
 
+        $this->add('return_url', 'hidden');
+
         $this->setup();
 
     }
 
     abstract protected function build();
+
+    public function add($name, $type, $attributes = [])
+    {
+
+        $this->fields[$name] = array_merge($attributes, ['type' => $type, 'name' => $name]);
+    }
 
     protected function setup()
     {
@@ -119,12 +127,6 @@ abstract class SGTForm
     {
 
         return Form::close();
-    }
-
-    public function add($name, $type, $attributes = [])
-    {
-
-        $this->fields[$name] = array_merge($attributes, ['type' => $type, 'name' => $name]);
     }
 
     public function field_exists($name)
@@ -442,9 +444,9 @@ abstract class SGTForm
 
         $options = array_get($element, 'options');
 
-        if(is_array($options))
+        if (is_array($options))
         {
-            $attributes+= $options;
+            $attributes += $options;
         }
 
         if ($this->model)
