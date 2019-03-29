@@ -564,6 +564,14 @@ abstract class SGTForm
 
         $attributes += $add_atributes;
 
+        $multiselect = array_get($attributes, 'multiple');
+
+        if ($multiselect)
+        {
+            $attributes['name'] = $name . '[]';
+            $attributes['size'] = array_get($attributes, 'size', 10);
+        }
+
         if ($this->model)
         {
             Form::setModel($this->model);
