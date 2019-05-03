@@ -15,10 +15,10 @@ return [
                             'error'   => 'form-control-danger'
                         ]
                 ],
-            'table' => [
-                'datatable' => [
-                    'default' => 'sgtform::table.datatable.default'
-                ]
-            ]
+        ],
+    'table'   => [
+        'datatable' => [
+            'default' => 'sgtform::table.datatable.default'
         ]
+    ]
 ];
