@@ -16,11 +16,6 @@ class Input extends Element
 
         $name = array_get($element, 'name');
 
-        //$type                 = array_get($element, 'type', 'text');
-        //$data['append_text']  = array_get($element, 'append');
-        //$data['prepend_text'] = array_get($element, 'prepend');
-        //$data['help']         = array_get($element, 'help');
-
         $class = array_get($element, 'class');
 
         $classes = ['form-control'];

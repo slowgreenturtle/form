@@ -40,7 +40,7 @@ abstract class Base
     /**  The Laravel view for this table */
     protected $view = null;
     /** @var string $view_file The Laravel view file */
-    protected $view_file = 'table.default';
+    protected $view_file = '';
 
     /** @var Request|null The http request */
     protected $request = null;
@@ -71,11 +71,25 @@ abstract class Base
 
         $this->request = $request;
         $this->html    = new HtmlBuilder();
-        $this->view    = view($this->view_file);
+        $this->view    = view($this->getViewFile());
 
         $this->custom_search_fields = [];
 
         $this->setup();
+
+    }
+
+    public function getViewFile()
+    {
+
+        $view_file = $this->view_file;
+
+        if (empty($view_file))
+        {
+            $view_file = config('sgtform.table.datatable.default');
+        }
+
+        return $view_file;
 
     }
 
