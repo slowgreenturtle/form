@@ -16,7 +16,7 @@ return [
                         ]
                 ],
             'table' => [
-                'data_table' => [
+                'datatable' => [
                     'default' => 'sgtform:table.datatable.default'
                 ]
             ]
