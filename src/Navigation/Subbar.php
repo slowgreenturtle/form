@@ -2,7 +2,7 @@
 
 namespace SGT\Navigation;
 
-use SGT\Navigation\Sidebar\Item;
+use \SGT\Navigation\Subbar\Item;
 
 class Subbar
 {

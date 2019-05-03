@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Html\Subbar;
+namespace SGT\Navigation\Subbar;
 
-use App\Http\Html\Attribute;
 use Illuminate\Support\Facades\Auth;
+use SGT\Navigation\Attribute;
 
 class Item
 {
