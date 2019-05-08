@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'element' =>
+    'element'    =>
         [
             'view'  =>
                 [
@@ -16,12 +16,15 @@ return [
                         ]
                 ],
         ],
-    'table'   => [
+    'table'      => [
         'datatable' => [
             'default' => 'sgtform::table.datatable.default'
         ]
     ],
-    'colors'  => [
+    'navigation' => [
+        'subbar' => 'sgtform::navigation.subbar'
+    ],
+    'colors'     => [
         'green'      => 'btn-success',
         'blue'       => 'btn-primary',
         'red'        => 'btn-danger',
@@ -30,7 +33,7 @@ return [
         'light-blue' => 'btn-info',
         'white'      => '',
     ],
-    'sizes'   => [
+    'sizes'      => [
         'xsmall' => 'btn-xs',
         'small'  => 'btn-sm',
         'medium' => '',

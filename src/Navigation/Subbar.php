@@ -34,14 +34,13 @@ class Subbar
     public function display()
     {
 
-        $html = '';
+        $view_file = config('sgtform.navigation.subbar');
 
-        foreach ($this->items as $item)
-        {
-            $html .= $item->display();
-        }
+        $view = view($view_file);
 
-        return $html;
+        $view->items = $this->items;
+
+        return $view->__toString();
 
     }
 }
