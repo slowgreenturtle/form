@@ -23,6 +23,8 @@ abstract class SGTForm
 
     protected $view = null;
 
+    protected $boostrap_version = 3;
+
     /** @var string $view_file The Laravel view file */
     protected $view_file         = '';
     protected $element_view_path = '';
