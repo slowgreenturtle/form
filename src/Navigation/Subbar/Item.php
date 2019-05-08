@@ -40,6 +40,15 @@ class Item
         return $this;
     }
 
+    public function route($route, $params = [])
+    {
+
+        $this->route['route']  = $route;
+        $this->route['params'] = $params;
+
+        return $this;
+    }
+
     public function permission($permission)
     {
 

@@ -2,28 +2,10 @@
 
 namespace SGT\Navigation;
 
-
 class Button extends Item
 {
 
     public $type = 'button';
-
-    protected $button_sizes = [
-        'xsmall' => 'btn-xs',
-        'small'  => 'btn-sm',
-        'medium' => '',
-        'large'  => 'btn-lg'
-    ];
-
-    protected $button_colors = [
-        'green'      => 'btn-success',
-        'blue'       => 'btn-primary',
-        'red'        => 'btn-danger',
-        'gray'       => 'btn-secondary',
-        'yellow'     => 'btn-warning',
-        'light-blue' => 'btn-info',
-        'white'      => '',
-    ];
 
     public static function create($label = '')
     {
@@ -82,16 +64,4 @@ class Button extends Item
         return $class;
     }
 
-    public function getColorClass()
-    {
-
-        return array_get($this->button_colors, $this->color, 'btn-primary');
-    }
-
-    public function getSizeClass()
-    {
-
-        return array_get($this->button_sizes, $this->size);
-
-    }
 }

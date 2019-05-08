@@ -20,5 +20,20 @@ return [
         'datatable' => [
             'default' => 'sgtform::table.datatable.default'
         ]
+    ],
+    'colors'  => [
+        'green'      => 'btn-success',
+        'blue'       => 'btn-primary',
+        'red'        => 'btn-danger',
+        'gray'       => 'btn-secondary',
+        'yellow'     => 'btn-warning',
+        'light-blue' => 'btn-info',
+        'white'      => '',
+    ],
+    'sizes'   => [
+        'xsmall' => 'btn-xs',
+        'small'  => 'btn-sm',
+        'medium' => '',
+        'large'  => 'btn-lg'
     ]
 ];

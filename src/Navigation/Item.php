@@ -19,11 +19,16 @@ abstract class Item
     protected $route      = [];
     protected $confirm    = false;
     protected $classes    = [];
+    protected $colors     = [];
+    protected $sizes      = [];
 
     public function __construct($label = 'Default')
     {
 
         $this->label($label);
+        $this->colors = config('sgtform.colors');
+        $this->sizes  = config('sgtform.sizes');
+
     }
 
     public function label($label)
@@ -37,6 +42,19 @@ abstract class Item
     public abstract function display();
 
     abstract public static function create($label = '');
+
+    public function getSizeClass()
+    {
+
+        return array_get($this->sizes, $this->size);
+
+    }
+
+    public function getColorClass()
+    {
+
+        return array_get($this->colors, $this->color, 'btn-primary');
+    }
 
     public function name($value)
     {
@@ -165,18 +183,6 @@ abstract class Item
     {
 
         return $this->classes;
-    }
-
-    public function getSizeClass()
-    {
-
-        return '';
-    }
-
-    public function getColorClass()
-    {
-
-        return '';
     }
 
     public function icon($text)
