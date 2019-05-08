@@ -55,13 +55,11 @@ abstract class Base
                 ],
             'table'   =>
                 [
-                    'table'            => 'table',
-                    'table-striped'    => 'table-stripped',
-                    'table-bordered'   => 'table-bordered',
-                    'table-hover'      => 'table-hover',
-                    'dataTable'        => 'dataTable',
-                    'no-footer'        => 'no-footer',
-                    'table-responsive' => 'table-responsive'
+                    'table'          => 'table',
+                    'table-striped'  => 'table-stripped',
+                    'table-bordered' => 'table-bordered',
+                    'table-hover'    => 'table-hover',
+                    'no-footer'      => 'no-footer'
                 ],
             'row'     => []
         ];
