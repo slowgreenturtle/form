@@ -5,13 +5,17 @@
             @endif
 
             @if($prepend_text != null)
-                <span class="input-group-addon">{{$prepend_text}}</span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">{{ $prepend_text }}</span>
+                </div>
             @endif
 
             {{ $form_element }}
 
             @if($append_text != null)
-                <span class="input-group-addon">{{  $append_text }}</span>
+                <div class="input-group-append">
+                    <span class="input-group-text">{{ $append_text }}</span>
+                </div>
             @endif
 
             @if($prepend_text != null || $append_text != null)
