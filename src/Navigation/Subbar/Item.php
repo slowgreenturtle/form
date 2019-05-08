@@ -10,15 +10,16 @@ class Item
 
     use Attribute;
 
-    protected $icon       = '';
     protected $label      = '';
-    protected $link       = '';
+    protected $url        = '';
     protected $color      = 'blue';
     protected $tool       = '';
     protected $size       = 'small';
     protected $attributes = [];
     protected $type       = 'item';
     protected $permission = '';
+    protected $colors     = [];
+    protected $sizes      = [];
 
     protected $badge = [
         'text'    => '',
@@ -29,6 +30,9 @@ class Item
     {
 
         $this->label($label);
+        $this->label($label);
+        $this->colors = config('sgtform.colors');
+        $this->sizes  = config('sgtform.sizes');
 
     }
 
@@ -56,10 +60,10 @@ class Item
 
     }
 
-    public function link($link)
+    public function url($url)
     {
 
-        $this->link = $link;
+        $this->link = $url;
 
         return $this;
     }
@@ -95,14 +99,6 @@ class Item
         return $this;
     }
 
-    public function icon($text)
-    {
-
-        $this->icon = $text;
-
-        return $this;
-    }
-
     public function tool($text)
     {
 
@@ -122,18 +118,20 @@ class Item
     public function display()
     {
 
-        $user = Auth::user();
+        $user = auth()->user();
 
-        if (!$user->hasAccess($this->permission))
+        $permission = $this->permission;
+
+        if (!empty($permission))
         {
-            return '';
+            if (!$user->hasAccess($this->permission))
+            {
+                return '';
+            }
         }
 
         switch ($this->type)
         {
-
-            case 'title':
-                return $this->displayTitle();
             case 'divider':
                 return $this->displayDivider();
             case 'item':
@@ -141,14 +139,6 @@ class Item
         }
 
         return '';
-    }
-
-    protected function displayTitle()
-    {
-
-        $html = '<li class="nav-title" >' . $this->label . '</li >';
-
-        return $html;
     }
 
     protected function displayDivider()
@@ -162,12 +152,7 @@ class Item
     protected function displayItem()
     {
 
-        $html = '<li class="nav-item" ><a class="nav-link" href = "' . $this->link . '" >';
-
-        if ($this->icon != '')
-        {
-            $html .= '<i class="icon-calculator"></i>';
-        }
+        $html = '<a class="nav-link" href="' . $this->gethRef() . '" >';
 
         $html .= $this->label;
 
@@ -187,4 +172,20 @@ class Item
         return $html;
     }
 
+    /**
+     * Will build an href for this item with the route being a priority if it exists. if not, the link path
+     * will be used.
+     *
+     * @return string
+     */
+    public function gethRef()
+    {
+
+        if (count($this->route))
+        {
+            return route(array_get($this->route, 'route'), array_get($this->route, 'params'));
+        }
+
+        return $this->url;
+    }
 }
