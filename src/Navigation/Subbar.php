@@ -2,30 +2,19 @@
 
 namespace SGT\Navigation;
 
-use \SGT\Navigation\Subbar\Item;
+use SGT\Navigation\Subbar\Item;
 
 class Subbar
 {
 
     public $title = '';
-    public $menus = [];
-
-    public function title($label)
-    {
-
-        $item = Item::create($label);
-        $item->type('title');
-        $this->menus[] = $item;
-
-        return $item;
-
-    }
+    public $items = [];
 
     public function item($label)
     {
 
         $item          = Item::create($label);
-        $this->menus[] = $item;
+        $this->items[] = $item;
 
         return $item;
 
@@ -36,9 +25,23 @@ class Subbar
 
         $item = Item::create();
         $item->type('divider');
-        $this->menus[] = $item;
+        $this->items[] = $item;
 
         return $item;
+
+    }
+
+    public function display()
+    {
+
+        $html = '';
+
+        foreach ($this->items as $item)
+        {
+            $html .= $item->display();
+        }
+
+        return $html;
 
     }
 }
