@@ -18,11 +18,11 @@ return [
         ],
     'table'      => [
         'datatable' => [
-            'default' => 'sgtform::table.datatable.default'
+            'default' => 'sgtform::bootstrap.3.table.datatable.default'
         ]
     ],
     'navigation' => [
-        'subbar' => 'sgtform::navigation.subbar'
+        'subbar' => 'sgtform::bootstrap.3.navigation.subbar'
     ],
     'colors'     => [
         'green'      => 'btn-success',
