@@ -24,7 +24,7 @@ return [
     'navigation' => [
         'subbar' => 'sgtform::bootstrap.3.navigation.subbar',
         'button' => [
-            'dropdown' => 'sgtform:bootstrap.3.navigation.button.dropdown'
+            'dropdown' => 'sgtform::bootstrap.3.navigation.button.dropdown'
         ]
     ],
     'colors'     => [

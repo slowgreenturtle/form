@@ -122,12 +122,9 @@ class Item
 
         $permission = $this->permission;
 
-        if (!empty($permission))
+        if (!empty($permission) && !$user->hasPermission($permission))
         {
-            if (!$user->hasAccess($this->permission))
-            {
-                return '';
-            }
+            return '';
         }
 
         switch ($this->type)
