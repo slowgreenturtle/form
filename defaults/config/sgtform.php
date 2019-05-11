@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'bootstrap'  =>
+        [
+            'version' => 3
+        ],
     'element'    =>
         [
             'link'   => [
@@ -38,12 +42,11 @@ return [
                     'large'  => 'btn-lg'
                 ]
             ],
-
-            'view'  =>
+            'view'   =>
                 [
                     'path' => 'sgtform::bootstrap.3.element.default'
                 ],
-            'input' =>
+            'input'  =>
                 [
                     'css' =>
                         [
