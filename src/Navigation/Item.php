@@ -53,7 +53,7 @@ abstract class Item
     public function getColorClass()
     {
 
-        return array_get($this->colors, $this->color, 'btn-primary');
+        return array_get($this->colors, $this->color, '');
     }
 
     public function name($value)
