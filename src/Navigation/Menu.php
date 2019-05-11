@@ -12,6 +12,9 @@ class Menu extends Item
     protected $color = '';
     protected $size  = '';
 
+    protected $config_colors = 'sgtform.element.link.colors';
+    protected $config_sizes  = 'sgtform.element.link.sizes';
+
     public static function create($link = '')
     {
 

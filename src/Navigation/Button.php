@@ -7,6 +7,9 @@ class Button extends Item
 
     public $type = 'button';
 
+    protected $config_colors = 'sgtform.element.button.colors';
+    protected $config_sizes  = 'sgtform.element.button.sizes';
+
     public static function create($label = '')
     {
 

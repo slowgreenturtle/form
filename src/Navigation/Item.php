@@ -26,8 +26,8 @@ abstract class Item
     {
 
         $this->label($label);
-        $this->colors = config('sgtform.colors');
-        $this->sizes  = config('sgtform.sizes');
+        $this->colors = config($this->config_colors);
+        $this->sizes  = config($this->config_sizes);
 
     }
 

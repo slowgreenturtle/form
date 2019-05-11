@@ -3,6 +3,42 @@
 return [
     'element'    =>
         [
+            'link'   => [
+                'colors' =>
+                    [
+                        'green'      => 'btn-success',
+                        'blue'       => 'btn-primary',
+                        'red'        => 'btn-danger',
+                        'gray'       => 'btn-secondary',
+                        'yellow'     => 'btn-warning',
+                        'light-blue' => 'btn-info',
+                        'white'      => '',
+                    ],
+                'sizes'  => [
+                    'xsmall' => 'btn-xs',
+                    'small'  => 'btn-sm',
+                    'medium' => '',
+                    'large'  => 'btn-lg'
+                ]
+            ],
+            'button' => [
+                'colors' => [
+                    'green'      => 'btn-success',
+                    'blue'       => 'btn-primary',
+                    'red'        => 'btn-danger',
+                    'gray'       => 'btn-secondary',
+                    'yellow'     => 'btn-warning',
+                    'light-blue' => 'btn-info',
+                    'white'      => '',
+                ],
+                'sizes'  => [
+                    'xsmall' => 'btn-xs',
+                    'small'  => 'btn-sm',
+                    'medium' => '',
+                    'large'  => 'btn-lg'
+                ]
+            ],
+
             'view'  =>
                 [
                     'path' => 'sgtform::bootstrap.3.element.default'
@@ -27,19 +63,4 @@ return [
             'dropdown' => 'sgtform::bootstrap.3.navigation.button.dropdown'
         ]
     ],
-    'colors'     => [
-        'green'      => 'btn-success',
-        'blue'       => 'btn-primary',
-        'red'        => 'btn-danger',
-        'gray'       => 'btn-secondary',
-        'yellow'     => 'btn-warning',
-        'light-blue' => 'btn-info',
-        'white'      => '',
-    ],
-    'sizes'      => [
-        'xsmall' => 'btn-xs',
-        'small'  => 'btn-sm',
-        'medium' => '',
-        'large'  => 'btn-lg'
-    ]
 ];
