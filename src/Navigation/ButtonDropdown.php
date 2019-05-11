@@ -13,7 +13,7 @@ class ButtonDropdown extends Button
     {
 
         $item = new Menu($label);
-
+        $item->addClass('dropdown-item');
         $this->items[] = $item;
 
         return $item;
