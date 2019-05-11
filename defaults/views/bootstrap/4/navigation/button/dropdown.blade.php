@@ -10,7 +10,7 @@
             <span class="sr-only">Toggle Dropdown</span>
         </button>
 
-        <div class="dropdown-menu">
+        <div class="{{ $dropdown->dropdownMenuClasses() }}">
             @foreach($items as $counter=>$item)
 
                 @if($item->type == 'divider')
