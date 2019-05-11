@@ -1,25 +1,23 @@
 <div class="btn-group">
 
-    <a type="button" class="btn {{ implode(' ', $dropdown->classes()) }}"
+    <a class="{{ implode(' ', $dropdown->classes()) }}"
        href="{{ $dropdown->gethRef() }}">{{ $dropdown->getLabel() }}</a>
 
     @if(count($items))
         <button type="button"
-                class="btn {{ $dropdown->getColorClass() }} {{ $dropdown->getSizeClass() }} dropdown-toggle"
-                data-toggle="dropdown">
-            <span class="caret"></span>
+                class="btn dropdown-toggle dropdown-toggle-split {{ $dropdown->getColorClass() }} {{ $dropdown->getSizeClass() }}"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
         </button>
-        <ul class="dropdown-menu" role="menu">
-
+        <div class="dropdown-menu">
             @foreach($items as $counter=>$item)
 
                 @if($item->type == 'divider')
-                    <li class="divider"></li>
+                    <div class="dropdown-divider"></div>
                 @else
-                    <li>{!! $item->display() !!}</li>
+                    {!! $item->display() !!}
                 @endif
             @endforeach
-        </ul>
+        </div>
     @endif
 </div>
