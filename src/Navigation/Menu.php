@@ -46,12 +46,21 @@ class Menu extends Item
     public function classes()
     {
 
-        $class         = [];
-        $color         = $this->getColorClass();
-        $class[$color] = $color;
+        $class = [];
 
-        $size         = $this->getSizeClass();
-        $class[$size] = $size;
+        $color = $this->getColorClass();
+
+        if ($color)
+        {
+            $class[$color] = $color;
+        }
+
+        $size = $this->getSizeClass();
+
+        if ($size)
+        {
+            $class[$size] = $size;
+        }
 
         $parent_classes = parent::classes();
 
