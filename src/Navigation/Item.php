@@ -174,7 +174,7 @@ abstract class Item
     public function addClass($class)
     {
 
-        $this->classes[] = $class;
+        $this->classes[$class] = $class;
 
         return $this;
     }

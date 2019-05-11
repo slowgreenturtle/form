@@ -8,7 +8,9 @@ namespace SGT\Navigation;
 class Menu extends Item
 {
 
-    public $type = 'menu';
+    public    $type  = 'menu';
+    protected $color = '';
+    protected $size  = '';
 
     public static function create($link = '')
     {
