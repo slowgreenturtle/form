@@ -9,7 +9,12 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
         </button>
-        <div class="dropdown-menu">
+
+            <div class="{{ $dropdown->dropdownMenuClasses() }}">
+@endif
+
+
+                    <div class="dropdown-menu">
             @foreach($items as $counter=>$item)
 
                 @if($item->type == 'divider')

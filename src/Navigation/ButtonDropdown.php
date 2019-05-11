@@ -5,9 +5,18 @@ namespace SGT\Navigation;
 class ButtonDropdown extends Button
 {
 
-    public $type = 'button_dropdown';
+    public    $type      = 'button_dropdown';
+    protected $alignment = 'left';
+    protected $items     = [];     //  Can be left or right
 
-    protected $items = [];
+    public function alignment($alignment = 'left')
+    {
+
+        $this->alignment = $alignment == 'left' ? 'left' : 'right';
+
+        return $this;
+
+    }
 
     public function addItem($label)
     {
@@ -29,12 +38,24 @@ class ButtonDropdown extends Button
         return $item;
     }
 
+    public function dropdownMenuClasses()
+    {
+
+        $classes["dropdown-menu"] = "dropdown-menu";
+
+        if ($this->alignment == 'right')
+        {
+            $classes["dropdown-menu-right"] = "dropdown-menu-right";
+        }
+
+        return implode(' ', $classes);
+
+    }
+
     public function display()
     {
 
         $view = view(config('sgtform.navigation.button.dropdown'));
-
-        $view->dropdown = $this;
 
         $divider    = null;
         $item_count = 0;
@@ -84,7 +105,9 @@ class ButtonDropdown extends Button
 
         if ($item_count > 0)
         {
-            $view->items = $items;
+
+            $view->items    = $items;
+            $view->dropdown = $this;
 
             return $view->__toString();
         }
