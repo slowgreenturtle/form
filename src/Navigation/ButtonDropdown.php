@@ -6,7 +6,7 @@ class ButtonDropdown extends Button
 {
 
     public    $type      = 'button_dropdown';
-    protected $alignment = 'left';
+    protected $alignment = 'right';
     protected $items     = [];     //  Can be left or right
 
     public function alignment($alignment = 'left')
