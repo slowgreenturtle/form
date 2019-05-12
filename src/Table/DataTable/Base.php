@@ -42,6 +42,9 @@ abstract class Base
     /** @var string $view_file The Laravel view file */
     protected $view_file = '';
 
+    /** @var array Custom search fields the child model may want to get from the Request */
+    protected $custom_search_fields = [];
+
     /** @var Request|null The http request */
     protected $request = null;
     protected $classes =
@@ -70,8 +73,6 @@ abstract class Base
         $this->request = $request;
         $this->html    = new HtmlBuilder();
         $this->view    = view($this->getViewFile());
-
-        $this->custom_search_fields = [];
 
         $this->setup();
 
