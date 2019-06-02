@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT\Element;
+namespace SGT\HTTP\Element;
 
 use Form;
 

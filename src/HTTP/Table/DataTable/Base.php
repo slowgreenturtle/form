@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT\Table\DataTable;
+namespace SGT\HTTP\Table\DataTable;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

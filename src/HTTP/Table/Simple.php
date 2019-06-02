@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Html\Table;
+namespace SGT\HTTP\Table;
 
 
 class Simple

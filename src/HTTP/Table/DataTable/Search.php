@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT\Table\DataTable;
+namespace SGT\HTTP\Table\DataTable;
 
 class Search
 {
