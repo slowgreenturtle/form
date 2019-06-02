@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT;
+namespace SGT\HTTP;
 
 class HtmlBuilder
 {

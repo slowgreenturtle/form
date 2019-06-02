@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT;
+namespace SGT\Model;
 
 use Illuminate\Support\Facades\Storage;
 

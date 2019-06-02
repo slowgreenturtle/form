@@ -24,6 +24,9 @@ class SGTServiceProvider extends ServiceProvider
 
         $this->publishConfigFile();
         $this->publishViewFiles();
+
+        $this->loadMigrationsFrom(__DIR__ . '/Database/migrations');
+
     }
 
     /**

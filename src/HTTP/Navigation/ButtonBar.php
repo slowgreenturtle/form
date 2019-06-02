@@ -4,7 +4,7 @@
  * A horizontal bar of buttons. Can include dropdown buttons.
  */
 
-namespace SGT\Navigation;
+namespace SGT\HTTP\Navigation;
 
 class ButtonBar
 {

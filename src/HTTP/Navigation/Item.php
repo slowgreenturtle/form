@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT\Navigation;
+namespace SGT\HTTP\Navigation;
 
 abstract class Item
 {

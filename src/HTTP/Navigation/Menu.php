@@ -3,7 +3,7 @@
  * A single Menu Item. Which displays a href tag.
  */
 
-namespace SGT\Navigation;
+namespace SGT\HTTP\Navigation;
 
 class Menu extends Item
 {

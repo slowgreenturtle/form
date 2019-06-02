@@ -1,8 +1,8 @@
 <?php
 
-namespace SGT\Navigation;
+namespace SGT\HTTP\Navigation;
 
-use SGT\Navigation\Subbar\Item;
+use SGT\HTTP\Navigation\Subbar\Item;
 
 class Subbar
 {
