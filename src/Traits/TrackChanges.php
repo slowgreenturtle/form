@@ -27,6 +27,8 @@ trait TrackChanges
 
         $history = new Change();
 
+        $history->
+
         $history->field = $this->translateName($field);
         $history->value = $this->translateValue($field, $value);
         $history->save();

@@ -19,8 +19,8 @@ class TrackChanges extends Migration
         {
 
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('reportable_id');
-            $table->string('reportable_type');
+            $table->unsignedBigInteger('reportable_id')->nullable();
+            $table->string('reportable_type')->nullable();
             $table->string('field');
             $table->text('value')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
