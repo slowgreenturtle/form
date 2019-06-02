@@ -4,7 +4,7 @@ namespace SGT\Table\DataTable;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use SGT\HtmlBuilder;
+use SGT\HTTP\HtmlBuilder;
 use stdClass;
 
 abstract class Base
