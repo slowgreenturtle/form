@@ -38,9 +38,9 @@ abstract class SGTForm
     public function __construct($model = null)
     {
 
-        $this->setAttribute('name', snake_case(class_basename($this)));
-        $this->setAttribute('method', 'POST');
-        $this->setAttribute('id', $this->getAttribute('name'));
+        $this->setFormAttribute('name', snake_case(class_basename($this)));
+        $this->setFormAttribute('method', 'POST');
+        $this->setFormAttribute('id', $this->getAttribute('name'));
 
         if ($this->view_file)
         {
@@ -61,13 +61,13 @@ abstract class SGTForm
 
     }
 
-    public function setAttribute($name, $value)
+    public function setFormAttribute($name, $value)
     {
 
         $this->form_attributes[$name] = $value;
     }
 
-    public function getAttribute($name, $default_value = null)
+    public function getFormAttribute($name, $default_value = null)
     {
 
         return Arr::get($this->form_attributes, $name, $default_value);
@@ -382,7 +382,7 @@ abstract class SGTForm
         $this->params[$name] = $value;
     }
 
-    public function setElementAttribute($name, $attribute, $value = null)
+    public function setAttribute($name, $attribute, $value = null)
     {
 
         $this->params[$name][$attribute] = $value;
