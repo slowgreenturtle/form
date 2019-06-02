@@ -2,6 +2,7 @@
 
 namespace SGT\Traits;
 
+use SGT\Model\Change;
 use SGT\Observer\ChangeObserver;
 
 trait TrackChanges
