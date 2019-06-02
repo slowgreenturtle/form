@@ -7,14 +7,19 @@ use Form;
 abstract class SGTForm
 {
 
-    public $form_url  = '';
-    public $form_name = null;
-    public $errors    = null;
-    public $method    = 'POST';
+    public $errors = null;
 
-    public $model        = null;
-    public $form_options = [];
+    /**
+     * @var array The attributes attached to the form. Method, etc.
+     *
+     */
+    public $form_attributes = [];
 
+    public $model = null;
+
+    /**
+     * @var array The fields which are created for the form
+     */
     protected $fields   = [];
     protected $params   = [];
     protected $tooltips = [];
@@ -31,6 +36,10 @@ abstract class SGTForm
 
     public function __construct($model = null)
     {
+
+        $this->setAttribute('name', snake_case(class_basename($this)));
+        $this->setAttribute('method', 'POST');
+        $this->setAttribute('id', $this->getAttribute('name'));
 
         if ($this->view_file)
         {
@@ -49,6 +58,18 @@ abstract class SGTForm
 
         $this->setup();
 
+    }
+
+    public function setAttribute($name, $value)
+    {
+
+        $this->form_attributes[$name] = $value;
+    }
+
+    public function getAttribute($name, $default_value = null)
+    {
+
+        return Arr::get($this->form_attributes, $name, $default_value);
     }
 
     abstract protected function build();
@@ -102,25 +123,9 @@ abstract class SGTForm
             'method' => $this->method
         ];
 
-        if (empty($this->form_name))
-        {
-            $form_name = snake_case(class_basename($this));
-        }
-        else
-        {
-            $form_name = $this->form_name;
-        }
-
-        $form_options['name'] = $form_name;
-        $form_options['id']   = $form_name;
-
-        if ($this->form_url != '')
-        {
-            $form_options['url'] = $this->form_url;
-        }
-
-        $options += $this->form_options;
         $options += $form_options;
+
+        $options += $this->form_attributes;
 
         return Form::open($options);
     }
@@ -376,7 +381,7 @@ abstract class SGTForm
         $this->params[$name] = $value;
     }
 
-    public function setAttribute($name, $attribute, $value = null)
+    public function setElementAttribute($name, $attribute, $value = null)
     {
 
         $this->params[$name][$attribute] = $value;
