@@ -3,6 +3,7 @@
 namespace SGT\HTTP;
 
 use Form;
+use Illuminate\Support\Arr;
 
 abstract class SGTForm
 {
