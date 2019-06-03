@@ -40,7 +40,7 @@ abstract class SGTForm
 
         $this->setFormAttribute('name', snake_case(class_basename($this)));
         $this->setFormAttribute('method', 'POST');
-        $this->setFormAttribute('id', $this->getAttribute('name'));
+        $this->setFormAttribute('id', $this->getFormAttribute('name'));
 
         if ($this->view_file)
         {
