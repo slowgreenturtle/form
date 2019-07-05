@@ -5,12 +5,12 @@
     <tr class="{{ $table->htmlClass('row') }}" role="row">
         @foreach($table->headers() as $header)
             <th>
-                                <span data-toggle="tooltip" data-placement="bottom"
-                                      title="{{$header['tooltip']}}">
+                <span data-toggle="tooltip" data-placement="bottom"
+                      title="{{$header['tooltip']}}">
 
-                                {{ $header['name'] }}
+                {{ $header['name'] }}
 
-                                </span>
+                </span>
             </th>
 
         @endforeach
