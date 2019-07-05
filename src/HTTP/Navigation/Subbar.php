@@ -2,11 +2,13 @@
 
 namespace SGT\HTTP\Navigation;
 
+use SGT\HTTP\Config;
 use SGT\HTTP\Navigation\Subbar\Item;
 
 class Subbar
 {
 
+    use Config;
     public $title = '';
     public $items = [];
 
@@ -34,7 +36,7 @@ class Subbar
     public function display()
     {
 
-        $view_file = config('sgtform.navigation.subbar');
+        $view_file = $this->config('navigation.subbar');
 
         $view = view($view_file);
 

@@ -31,8 +31,8 @@ class Item
 
         $this->label($label);
         $this->label($label);
-        $this->colors = config('sgtform.colors');
-        $this->sizes  = config('sgtform.sizes');
+        //$this->colors = config('sgtform.colors');
+        //$this->sizes  = config('sgtform.sizes');
 
     }
 

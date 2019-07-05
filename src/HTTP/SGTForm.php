@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 abstract class SGTForm
 {
 
+    use Config;
+
     public $errors = null;
 
     /**
@@ -51,8 +53,7 @@ abstract class SGTForm
 
         Form::setModel($model);
 
-        $this->element_view_path = config('sgtform.element.view.path');
-
+        $this->element_view_path = $this->config('element.view.path');
         $this->build();
 
         $this->add('return_url', 'hidden');
@@ -198,7 +199,7 @@ abstract class SGTForm
 
         if ($this->hasError($name))
         {
-            $classes[] = Config('sgtform.element.input.css.error');
+            $classes[] = $this->config('element.input.css.error');
 
         }
 

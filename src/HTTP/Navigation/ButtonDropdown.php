@@ -55,7 +55,7 @@ class ButtonDropdown extends Button
     public function display()
     {
 
-        $view = view(config('sgtform.navigation.button.dropdown'));
+        $view = view($this->config('navigation.button.dropdown'));
 
         $divider    = null;
         $item_count = 0;

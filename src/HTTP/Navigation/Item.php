@@ -2,10 +2,14 @@
 
 namespace SGT\HTTP\Navigation;
 
+use Illuminate\Support\Arr;
+use SGT\HTTP\Config;
+
 abstract class Item
 {
 
     use Attribute;
+    use Config;
 
     public $type = '';
 
@@ -26,8 +30,8 @@ abstract class Item
     {
 
         $this->label($label);
-        $this->colors = config($this->config_colors);
-        $this->sizes  = config($this->config_sizes);
+        $this->colors = $this->config($this->config_colors);
+        $this->sizes  = $this->config($this->config_sizes);
 
     }
 
@@ -46,14 +50,14 @@ abstract class Item
     public function getSizeClass()
     {
 
-        return array_get($this->sizes, $this->size);
+        return Arr::get($this->sizes, $this->size);
 
     }
 
     public function getColorClass()
     {
 
-        return array_get($this->colors, $this->color, '');
+        return Arr::get($this->colors, $this->color, '');
     }
 
     public function name($value)
@@ -102,8 +106,8 @@ abstract class Item
 
         if (is_array($context_slug))
         {
-            $context_id   = array_get($context_slug, 'context_id');
-            $context_slug = array_get($context_slug, 'context_slug');
+            $context_id   = Arr::get($context_slug, 'context_id');
+            $context_slug = Arr::get($context_slug, 'context_slug');
         }
 
         $this->permission['slug']         = $permission_slug;
@@ -225,7 +229,7 @@ abstract class Item
 
         if (count($this->route))
         {
-            return route(array_get($this->route, 'route'), array_get($this->route, 'params'));
+            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
         }
 
         return $this->link;

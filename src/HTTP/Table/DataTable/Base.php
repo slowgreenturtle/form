@@ -4,11 +4,14 @@ namespace SGT\HTTP\Table\DataTable;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use SGT\HTTP\Config;
 use SGT\HTTP\HtmlBuilder;
 use stdClass;
 
 abstract class Base
 {
+
+    use Config;
 
     public $length_menu = [50, 100, 500];
     /**  The number of rows to display by default */
@@ -85,7 +88,7 @@ abstract class Base
 
         if (empty($view_file))
         {
-            $view_file = config('sgtform.table.datatable.default');
+            $view_file = $this->config('table.datatable.default');
         }
 
         return $view_file;
