@@ -21,7 +21,7 @@
     "issues": "https://github.com/slowgreenturtle/form/issues"
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.1.3",
     "laravelcollective/html": "^5.2.0"
     "laravel/laravel": "^5.7.0"
   },
