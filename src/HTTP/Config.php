@@ -10,7 +10,7 @@ trait Config
 
         $bootstrap_version = config('sgtform.config.bootstrap.version');
 
-        $field = 'sgtform.' . $bootstrap_version . '.' . $path;
+        $field = 'sgtform.bootstrap.' . $bootstrap_version . '.' . $path;
 
         return config($field);
 
