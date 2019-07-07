@@ -1,20 +1,13 @@
 <table class="{{ $table->htmlClass('table') }}"
        id="{{$table->name()}}" role="grid" aria-describedby="{{ $table->name()}}_info">
     <thead>
-
     <tr class="{{ $table->htmlClass('row') }}" role="row">
         @foreach($table->headers() as $header)
             <th>
                 <span data-toggle="tooltip" data-placement="bottom"
-                      title="{{$header['tooltip']}}">
-
-                {{ $header['name'] }}
-
-                </span>
+                      title="{{$header['tooltip']}}">{{ $header['name'] }}</span>
             </th>
-
         @endforeach
-
     </tr>
     </thead>
     <tbody>
@@ -23,9 +16,7 @@
 </table>
 
 @section('scripts')
-
     @parent
-
     <script>
         $(document).ready(function ()
         {
@@ -40,5 +31,4 @@
 
         });
     </script>
-
 @endsection
