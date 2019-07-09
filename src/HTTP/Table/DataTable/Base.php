@@ -386,7 +386,7 @@ abstract class Base
         {
 
             $result            = new stdClass();
-            $result->orderable = array_get($column, 'sortable', true);
+            $result->orderable = Arr::get($column, 'sortable', true);
             $results[]         = $result;
         }
 

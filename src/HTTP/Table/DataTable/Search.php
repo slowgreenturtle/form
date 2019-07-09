@@ -2,6 +2,8 @@
 
 namespace SGT\HTTP\Table\DataTable;
 
+use Illuminate\Support\Arr;
+
 class Search
 {
 
