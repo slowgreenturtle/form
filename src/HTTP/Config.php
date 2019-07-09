@@ -5,7 +5,7 @@ namespace SGT\HTTP;
 trait Config
 {
 
-    public function configBootstrap($path)
+    public function configFrontEnd($path)
     {
 
         $bootstrap_version = config('sgtform.config.bootstrap.version');
