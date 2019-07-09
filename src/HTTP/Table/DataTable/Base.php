@@ -428,9 +428,23 @@ abstract class Base
 
         $data = $this->content($records);
 
+        $record_count = 0;
+
+        if ($query)
+        {
+            $record_count = $query->count();
+        }
+
+        $record_filter_count = 0;
+
+        if ($query_search)
+        {
+            $record_filter_count = $query_search->count();
+        }
+
         $data['draw']            = $this->request->input('draw');
-        $data['recordsTotal']    = $query->count();
-        $data['recordsFiltered'] = $query_search->count();
+        $data['recordsTotal']    = $record_count;
+        $data['recordsFiltered'] = $record_filter_count;
 
         return $data;
     }
