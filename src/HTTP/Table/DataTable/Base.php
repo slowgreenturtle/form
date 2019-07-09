@@ -103,7 +103,7 @@ abstract class Base
 
     }
 
-    public function addSearchField($name, $value)
+    public function addSearchInput($name, $value)
     {
 
         $this->search->addInput($name, $value);
