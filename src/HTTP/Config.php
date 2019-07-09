@@ -19,7 +19,7 @@ trait Config
     public function config($path)
     {
 
-        $field = 'sgtform.' . $path;
+        $field = 'sgtform.config.' . $path;
 
         return config($field);
 
