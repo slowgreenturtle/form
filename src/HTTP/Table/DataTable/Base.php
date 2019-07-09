@@ -309,16 +309,6 @@ abstract class Base
 
     }
 
-    public function getOrderColumn()
-    {
-
-        $order_column = $this->request->input('order.0.column');
-        $col_name     = "columns.$order_column.data";
-        $order_column = $this->request->input($col_name);
-
-        return $order_column;
-    }
-
     public function results($request)
     {
 
@@ -412,6 +402,8 @@ abstract class Base
         # append the search query
         $query_search = $this->querySearch($query);
 
+        $query_search = $this->querySetOrder($query_search);
+
         # take the search records and return the formatted result
         $records = $this->querySearchRecords($query_search);
 
@@ -457,6 +449,25 @@ abstract class Base
 
         return $query;
 
+    }
+
+    public function querySetOrder($query)
+    {
+
+        $columns = $this->columns();
+
+        $sort_column_name = $this->search->sort_column_name;
+
+        $sort_column = Arr::get($columns, $sort_column_name . '.sort', null);
+
+        if ($sort_column)
+        {
+
+            $order_dir = $this->search->sort_order;
+            $query->orderBy($sort_column, $order_dir);
+        }
+
+        return $query;
     }
 
     /**
