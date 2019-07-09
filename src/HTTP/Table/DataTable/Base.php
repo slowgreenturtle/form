@@ -234,7 +234,7 @@ abstract class Base
         return $this->query($search)->get();
     }
 
-    public function query(Search $search = null, $count = false)
+    public function query()
     {
 
 
@@ -330,12 +330,6 @@ abstract class Base
         return $order_column;
     }
 
-    public function appendSearch($query)
-    {
-
-        return $query;
-    }
-
     public function results($request)
     {
 
@@ -426,15 +420,25 @@ abstract class Base
         $search = new Search();
         $search->fill($this->request, $this->custom_search_fields);
 
-        $records = $this->records($search);
+        $query = $this->query();
+
+        $query_search = $this->appendSearch($query, $search);
+
+        $records = $this->records($query_search);
 
         $data = $this->content($records);
 
         $data['draw']            = $this->request->input('draw');
-        $data['recordsTotal']    = $this->query(null, true)->count();
-        $data['recordsFiltered'] = $this->query($search, true)->count();
+        $data['recordsTotal']    = $query->count();
+        $data['recordsFiltered'] = $query_search->count();
 
         return $data;
+    }
+
+    public function appendSearch($query)
+    {
+
+        return $query;
     }
 
     /**
