@@ -467,6 +467,11 @@ abstract class Base
     public function querySearchRecords($query_search)
     {
 
+        if ($query_search)
+        {
+            return $query_search->get();
+        }
+
         return [];
     }
 
