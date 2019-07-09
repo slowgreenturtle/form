@@ -82,6 +82,8 @@ abstract class Base
 
         $this->display_count = $this->display_count == null ? $this->config('table.display_count') : $this->display_count;
 
+        $this->length_menu = $this->config('table.length_menu');
+
         $this->setup();
 
     }
