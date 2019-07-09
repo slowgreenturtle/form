@@ -36,7 +36,7 @@ class Subbar
     public function display()
     {
 
-        $view_file = $this->config('navigation.subbar');
+        $view_file = $this->configFrontEnd('navigation.subbar');
 
         $view = view($view_file);
 

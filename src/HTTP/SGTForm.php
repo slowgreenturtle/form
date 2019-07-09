@@ -53,7 +53,7 @@ abstract class SGTForm
 
         Form::setModel($model);
 
-        $this->element_view_path = $this->config('element.view.path');
+        $this->element_view_path = $this->configFrontEnd('element.view.path');
         $this->build();
 
         $this->add('return_url', 'hidden');
@@ -199,7 +199,7 @@ abstract class SGTForm
 
         if ($this->hasError($name))
         {
-            $classes[] = $this->config('element.input.css.error');
+            $classes[] = $this->configFrontEnd('element.input.css.error');
 
         }
 

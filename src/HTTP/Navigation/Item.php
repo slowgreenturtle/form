@@ -30,8 +30,8 @@ abstract class Item
     {
 
         $this->label($label);
-        $this->colors = $this->config($this->config_colors);
-        $this->sizes  = $this->config($this->config_sizes);
+        $this->colors = $this->configFrontEnd($this->config_colors);
+        $this->sizes  = $this->configFrontEnd($this->config_sizes);
 
     }
 

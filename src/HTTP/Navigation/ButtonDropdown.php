@@ -55,7 +55,7 @@ class ButtonDropdown extends Button
     public function display()
     {
 
-        $view = view($this->config('navigation.button.dropdown'));
+        $view = view($this->configFrontEnd('navigation.button.dropdown'));
 
         $divider    = null;
         $item_count = 0;

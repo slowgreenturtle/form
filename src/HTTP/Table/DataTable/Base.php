@@ -15,7 +15,7 @@ abstract class Base
 
     public $length_menu = [50, 100, 500];
     /**  The number of rows to display by default */
-    public $display_limit = 100;
+    public $display_count = null;
 
     /** @var bool $save_state Save the last search values */
     public $save_state = true;
@@ -80,6 +80,8 @@ abstract class Base
         $this->html = new HtmlBuilder();
         $this->view = view($this->getViewFile());
 
+        $this->display_count = $this->display_count == null ? $this->config('table.display_count') : $this->display_count;
+
         $this->setup();
 
     }
@@ -91,7 +93,7 @@ abstract class Base
 
         if (empty($view_file))
         {
-            $view_file = $this->config('table.datatable.default');
+            $view_file = $this->configFrontEnd('table.datatable.default');
         }
 
         return $view_file;
@@ -336,7 +338,7 @@ abstract class Base
 
         $settings = [];
 
-        $settings['iDisplayLength'] = $this->display_limit;
+        $settings['iDisplayLength'] = $this->display_count;
         $settings['responsive']     = true;
         $settings['order']          = $this->initial_order;
         $settings['ordering']       = $this->ordering;

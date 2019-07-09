@@ -3,11 +3,13 @@
 namespace SGT\HTTP\Element;
 
 use Form;
+use SGT\HTTP\Config;
 
 class Input extends Element
 {
 
     protected $_type = 'input';
+    use Config;
 
     public function draw()
     {
@@ -49,7 +51,7 @@ class Input extends Element
     public function getViewFile()
     {
 
-        $element_view_path = config('sgtform.element.view.path');
+        $element_view_path = $this->configFrontEnd('element.view.path');
 
         $view_file = $this->view_file;
 

@@ -5,12 +5,21 @@ namespace SGT\HTTP;
 trait Config
 {
 
-    public function config($path)
+    public function configBootstrap($path)
     {
 
         $bootstrap_version = config('sgtform.config.bootstrap.version');
 
         $field = 'sgtform.bootstrap.' . $bootstrap_version . '.' . $path;
+
+        return config($field);
+
+    }
+
+    public function config($path)
+    {
+
+        $field = 'sgtform.' . $path;
 
         return config($field);
 
