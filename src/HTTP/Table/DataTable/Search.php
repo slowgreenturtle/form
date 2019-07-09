@@ -5,15 +5,21 @@ namespace SGT\HTTP\Table\DataTable;
 class Search
 {
 
-    public $start        = 0;
-    public $limit        = 0;
-    public $column       = -1;
-    public $sort_order   = 'ASC';
-    public $search_value = '';
+    public    $draw         = false;
+    public    $start        = 0;
+    public    $limit        = 0;
+    public    $column       = -1;
+    public    $sort_order   = 'ASC';
+    public    $search_value = '';
+    public    $request      = null;
+    protected $input        = [];
 
     public function fill($request, $custom_search_fields = [])
     {
 
+
+        $this->request      = $request;
+        $this->draw         = $request->input('draw');
         $this->start        = $request->input('start');
         $this->limit        = $request->input('length');
         $this->search_value = $request->input('search.value');
@@ -22,8 +28,14 @@ class Search
 
         foreach ($custom_search_fields as $field)
         {
-            $this->$field = $request->input($field);
+            $this->input[$field] = $request->input($field);
         }
+    }
+
+    public function input($name, $default = null)
+    {
+
+        return Arr::get($this->input, $name, $default);
     }
 
 }

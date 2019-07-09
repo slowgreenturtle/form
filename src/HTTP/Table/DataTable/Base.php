@@ -45,11 +45,12 @@ abstract class Base
     /** @var string $view_file The Laravel view file */
     protected $view_file = '';
 
+    protected $search = null;
+
     /** @var array Custom search fields the child model may want to get from the Request */
     protected $custom_search_fields = [];
 
     /** @var Request|null The http request */
-    protected $request = null;
     protected $classes =
         [
             'wrapper' =>
@@ -73,9 +74,11 @@ abstract class Base
     public function __construct(Request $request)
     {
 
-        $this->request = $request;
-        $this->html    = new HtmlBuilder();
-        $this->view    = view($this->getViewFile());
+        $this->search = new Search();
+        $this->search->fill($request, $this->custom_search_fields);
+
+        $this->html = new HtmlBuilder();
+        $this->view = view($this->getViewFile());
 
         $this->setup();
 
@@ -182,10 +185,7 @@ abstract class Base
 
         $html = '';
 
-        $search = new Search();
-        $search->fill($this->request, $this->custom_search_fields);
-
-        $records = $this->records($search);
+        $records = $this->records();
 
         $row_class = $this->htmlClass('row');
 
@@ -221,24 +221,6 @@ abstract class Base
 
         return $html;
 
-    }
-
-    /**
-     * Retrieve the list of records used for this display
-     *
-     * @return array
-     */
-    public function records($search)
-    {
-
-        return $this->query($search)->get();
-    }
-
-    public function query()
-    {
-
-
-        return null;
     }
 
     /**
@@ -417,50 +399,76 @@ abstract class Base
     public function serverData()
     {
 
-        $search = new Search();
-        $search->fill($this->request, $this->custom_search_fields);
-
+        #   Get the raw query records
         $query = $this->query();
 
-        $query_search = $this->appendSearch($query, $search);
+        # append the search query
+        $query_search = $this->querySearch($query);
 
-        $records = $this->records($query_search);
+        # take the search records and return the formatted result
+        $records = $this->querySearchRecords($query_search);
 
-        $data = $this->content($records);
+        # take the formatted results and create the field elements.
+        $results = $this->formattedRecords($records);
 
-        $record_count = 0;
+        $record_count        = 0;
+        $record_filter_count = 0;
 
         if ($query)
         {
             $record_count = $query->count();
         }
 
-        $record_filter_count = 0;
-
         if ($query_search)
         {
             $record_filter_count = $query_search->count();
         }
 
-        $data['draw']            = $this->request->input('draw');
+        $data['data']            = $results;
+        $data['draw']            = $this->search->draw;
         $data['recordsTotal']    = $record_count;
         $data['recordsFiltered'] = $record_filter_count;
 
         return $data;
     }
 
-    public function appendSearch($query, Search $search)
+    public function query()
     {
 
-        return $query;
+
+        return null;
     }
 
     /**
-     * Retrieve
+     * @param $query
+     *              Return the query with the search filters appended to it.
+     * @return mixed
+     */
+    public function querySearch($query)
+    {
+
+
+        return $query;
+
+    }
+
+    /**
+     * Retrieve the list of records used for this display, filtered by search variables.
      *
      * @return array
      */
-    protected function content($records)
+    public function querySearchRecords($query_search)
+    {
+
+        return [];
+    }
+
+    /**
+     * Retrieve the records formatted by their column_* calls.
+     *
+     * @return array
+     */
+    protected function formattedRecords($records)
     {
 
         $results = [];
@@ -489,11 +497,7 @@ abstract class Base
             $results[] = $fields;
         }
 
-        $data = [
-            'data' => $results
-        ];
-
-        return $data;
+        return $results;
 
     }
 
