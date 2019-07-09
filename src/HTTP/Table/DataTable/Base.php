@@ -449,7 +449,7 @@ abstract class Base
         return $data;
     }
 
-    public function appendSearch($query)
+    public function appendSearch($query, Search $search)
     {
 
         return $query;
