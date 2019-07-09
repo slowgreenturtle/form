@@ -18,17 +18,18 @@ class Search
     {
 
 
-        $this->request      = $request;
-        $this->draw         = $request->input('draw');
-        $this->start        = $request->input('start');
-        $this->limit        = $request->input('length');
-        $this->search_value = $request->input('search.value');
-        $this->column       = $request->input('order.0.column');
-        $this->sort_order   = $request->input('order.0.dir');
+        $this->request    = $request;
+        $this->draw       = $request->input('draw');
+        $this->start      = $request->input('start');
+        $this->limit      = $request->input('length');
+        $this->column     = $request->input('order.0.column');
+        $this->sort_order = $request->input('order.0.dir');
+
+        $this->addInput('text', $request->input('search.value'));
 
         foreach ($custom_search_fields as $field)
         {
-            $this->input[$field] = $request->input($field);
+            $this->addInput($field, $request->input($field));
         }
     }
 
