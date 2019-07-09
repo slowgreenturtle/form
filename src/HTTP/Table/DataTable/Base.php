@@ -182,7 +182,10 @@ abstract class Base
 
         $html = '';
 
-        $records = $this->records();
+        $search = new Search();
+        $search->fill($this->request, $this->custom_search_fields);
+
+        $records = $this->records($search);
 
         $row_class = $this->htmlClass('row');
 
@@ -225,12 +228,10 @@ abstract class Base
      *
      * @return array
      */
-    public function records()
+    public function records($search)
     {
 
-        $query = $this->query();
-
-        return [];
+        return $this->query($search)->get();
     }
 
     public function query(Search $search = null, $count = false)
@@ -425,7 +426,7 @@ abstract class Base
         $search = new Search();
         $search->fill($this->request, $this->custom_search_fields);
 
-        $records = $this->query($search)->get();
+        $records = $this->records($search);
 
         $data = $this->content($records);
 
