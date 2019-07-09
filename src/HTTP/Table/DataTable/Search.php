@@ -32,6 +32,12 @@ class Search
         }
     }
 
+    public function addInput($name, $value)
+    {
+
+        $this->input[$name] = $value;
+    }
+
     public function input($name, $default = null)
     {
 
