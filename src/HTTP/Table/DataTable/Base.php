@@ -200,27 +200,30 @@ abstract class Base
          *
          */
 
-        $columns = [
-            "id"      =>
-                [
-                    'name' => 'ID',
-                ],
-            "name"    => [
-                'name' => 'Name'
-            ],
-            "feed"    => [
-                'name'     => 'Feeds',
-                'sortable' => false
-            ],
-            "margin"  => [
-                'name'     => 'Margin %',
-                'sortable' => false
-            ],
-            'actions' => [
-                'name'     => '',
-                'sortable' => false
-            ]
-        ];
+        /**
+         * example:
+         * $columns = [
+         * "id"      =>
+         * [
+         * 'name' => 'ID',
+         * ],
+         * "name"    => [
+         * 'name' => 'Name'
+         * ],
+         * "feed"    => [
+         * 'name'     => 'Feeds',
+         * 'sortable' => false
+         * ],
+         * "margin"  => [
+         * 'name'     => 'Margin %',
+         * 'sortable' => false
+         * ],
+         * 'actions' => [
+         * 'name'     => '',
+         * 'sortable' => false
+         * ]
+         * ];
+         * */
 
         return [];
     }
@@ -445,32 +448,33 @@ abstract class Base
     public function serverData()
     {
 
-        #   Get the raw query records
-        $query = $this->query();
-
-        # append the search query
-        $query_search = $this->querySearch($query);
-
-        $query_search = $this->querySetOrder($query_search);
-
-        # take the search records and return the formatted result
-        $records = $this->querySearchRecords($query_search);
-
-        # take the formatted results and create the field elements.
-        $results = $this->formattedRecords($records);
-
         $record_count        = 0;
         $record_filter_count = 0;
+
+        #   Get the raw query records
+        $query = $this->query();
 
         if ($query)
         {
             $record_count = $query->count();
         }
 
-        if ($query_search)
+        # append the search query
+        $query = $this->querySearch($query);
+        $query = $this->querySetOrder($query);
+
+        if ($query)
         {
-            $record_filter_count = $query_search->count();
+            $record_filter_count = $query->count();
         }
+
+        $query = $this->queryLimit($query);
+
+        # take the search records and return the formatted result
+        $records = $this->querySearchRecords($query);
+
+        # take the formatted results and create the field elements.
+        $results = $this->formattedRecords($records);
 
         $data['data']            = $results;
         $data['draw']            = $this->search->draw;
@@ -561,6 +565,18 @@ abstract class Base
 
         }
 
+        return $query;
+    }
+
+    public function column($column_name)
+    {
+
+        return Arr::get($this->columns(), $column_name);
+    }
+
+    public function queryLimit($query)
+    {
+
         $limit = $this->search->limit;
 
         if (!empty($limit))
@@ -577,12 +593,6 @@ abstract class Base
 
         return $query;
 
-    }
-
-    public function column($column_name)
-    {
-
-        return Arr::get($this->columns(), $column_name);
     }
 
     /**
