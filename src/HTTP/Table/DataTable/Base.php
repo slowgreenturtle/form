@@ -561,6 +561,20 @@ abstract class Base
 
         }
 
+        $limit = $this->search->limit;
+
+        if (!empty($limit))
+        {
+            $query->limit($limit);
+        }
+
+        $start = $this->search->start;
+
+        if (!empty($start))
+        {
+            $query->offset($start);
+        }
+
         return $query;
 
     }
