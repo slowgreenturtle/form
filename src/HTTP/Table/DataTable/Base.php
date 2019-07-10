@@ -460,7 +460,11 @@ abstract class Base
 
         $columns = $this->columns();
 
-        $sort_column_name = $this->search->sort_column_name;
+        $sort_order = $this->search->order;
+
+        $sort_columns = $this->search->columns;
+
+
 
         $sort_column = Arr::get($columns, $sort_column_name . '.sort', null);
 
