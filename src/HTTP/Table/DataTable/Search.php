@@ -47,4 +47,13 @@ class Search
 
         return Arr::get($this->input, $name, $default);
     }
+
+    public function columnName($column_number)
+    {
+
+        $column = Arr::get($this->columns, $column_number);
+
+        return Arr::get($column, 'name');
+
+    }
 }

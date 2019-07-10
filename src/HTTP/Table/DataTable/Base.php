@@ -179,6 +179,49 @@ abstract class Base
     public function columns()
     {
 
+        /**
+         *  Must be in the following format:
+         *
+         * ['slug_name'] = [
+         *  'name'=>'Name',
+         *  'sort_field'=>'name'
+         *
+         *
+         * ]
+         *
+         *
+         * slug_name    must be lowercase, underscored, used internally to track the calls, sent to the client as id fields,
+         *              etc
+         * name         The human readable name, most notably used in the header field of the table.
+         * sortable     Whether the field is sortable and has the up/down toggle showing. true by default.
+         * sort_field   is the field used if this column is sortable and can be ordered by. Used in the query sort
+         *              functionality
+         *
+         *
+         */
+
+        $columns = [
+            "id"      =>
+                [
+                    'name' => 'ID',
+                ],
+            "name"    => [
+                'name' => 'Name'
+            ],
+            "feed"    => [
+                'name'     => 'Feeds',
+                'sortable' => false
+            ],
+            "margin"  => [
+                'name'     => 'Margin %',
+                'sortable' => false
+            ],
+            'actions' => [
+                'name'     => '',
+                'sortable' => false
+            ]
+        ];
+
         return [];
     }
 
@@ -376,12 +419,14 @@ abstract class Base
 
         $columns = $this->columns();
 
-        foreach ($columns as $column)
+        foreach ($columns as $column_name => $column)
         {
 
             $result            = new stdClass();
             $result->orderable = Arr::get($column, 'sortable', true);
-            $results[]         = $result;
+            $result->name      = $column_name;
+
+            $results[] = $result;
         }
 
         return $results;
@@ -458,24 +503,72 @@ abstract class Base
     public function querySetOrder($query)
     {
 
-        $columns = $this->columns();
+        $sort_directions = [
+            'asc'  => 'asc',
+            'desc' => 'desc'
+        ];
 
-        $sort_order = $this->search->order;
+        $order = $this->search->order;
 
-        $sort_columns = $this->search->columns;
-
-
-
-        $sort_column = Arr::get($columns, $sort_column_name . '.sort', null);
-
-        if ($sort_column)
+        foreach ($order as $order_item)
         {
 
-            $order_dir = $this->search->sort_order;
-            $query->orderBy($sort_column, $order_dir);
+            $column_number = Arr::get($order_item, 'column', '');
+
+            if (is_numeric($column_number))
+            {
+
+                $order_column = Arr::get($this->search->columns, $column_number);
+
+                if ($order_column)
+                {
+
+                    $column_name = Arr::get($order_column, 'name');
+
+                    if (empty($column_name))
+                    {
+                        continue;
+                    }
+
+                    $sort_direction = Arr::get($order_item, 'dir', 'asc');
+
+                    $sort_direction = Arr::get($sort_directions, $sort_direction, 'asc');
+
+                    $orderMethodName = 'order_' . $column_name;
+
+                    if (method_exists($this, $orderMethodName))
+                    {
+                        $content = $this->$orderMethodName($query, $sort_direction);
+                    }
+                    else
+                    {
+
+                        $column = $this->column($column_name);
+
+                        if ($column)
+                        {
+                            $sort_column = Arr::get($column, 'sort_field');
+
+                            if ($sort_column)
+                            {
+                                $query->orderBy($sort_column, $sort_direction);
+                            }
+
+                        }
+                    }
+                }
+            }
+
         }
 
         return $query;
+
+    }
+
+    public function column($column_name)
+    {
+
+        return Arr::get($this->columns(), $column_name);
     }
 
     /**
@@ -507,6 +600,7 @@ abstract class Base
         foreach ($records as $record)
         {
             $fields = [];
+
             foreach ($this->columns() as $column_name => $column)
             {
                 $columnName = 'column_' . $column_name;
