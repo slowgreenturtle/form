@@ -7,12 +7,7 @@ return [
             'version' => 4,
         ],
         'table'     => [
-            'display_count' => 100,
-            'length_menu'   => [
-                50,
-                100,
-                500
-            ]
+            'settings' => []
         ]
     ],
     'bootstrap' => [

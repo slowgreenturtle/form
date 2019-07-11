@@ -13,31 +13,12 @@ abstract class Base
 
     use Config;
 
-    public $length_menu = [50, 100, 500];
-    /**  The number of rows to display by default */
-    public $display_count = null;
-
-    /** @var bool $save_state Save the last search values */
-    public $save_state = true;
-
     /** the data url for the offer */
     public $data_url = '';
 
     /** the custom method to use to send custom data back to the server */
     public $data_method = '';
 
-    /** @var bool $ordering Whether data table fields can be sorted */
-    public $ordering = true;
-
-    /** @var array $initial_order Initial order for the table column. To use multiple columns, nest array. */
-    public $initial_order = [[0, 'asc']];
-
-    /** @var bool $defer_render defer drawing fields when displaying large amounts of output */
-    public $defer_render = true;
-    /** @var bool $processing whether the server side should process data */
-    public $processing = true;
-    /** @var bool $server_side Enable Server side processing. Will use the data url to retrieve requests */
-    public $server_side = true;
     /**  The html name base for this table */
     protected $name = 'table_name';
     /**  The Laravel view for this table */
@@ -46,6 +27,19 @@ abstract class Base
     protected $view_file = '';
 
     protected $search = null;
+
+    protected $settings = [
+        'pageLength'  => 25,
+        'responsive'  => true,
+        'order'       => [[0, 'asc']],
+        'ordering'    => true,
+        'deferRender' => true,
+        'processing'  => true,
+        'serverSide'  => true,
+        'saveState'   => true,
+        'lengthMenu'  => [
+            50, 100, 500
+        ]];
 
     /** @var array Custom search fields the child model may want to get from the Request */
     protected $custom_search_fields = [];
@@ -80,9 +74,7 @@ abstract class Base
         $this->html = new HtmlBuilder();
         $this->view = view($this->getViewFile());
 
-        $this->display_count = $this->display_count == null ? $this->config('table.display_count') : $this->display_count;
-
-        $this->length_menu = $this->config('table.length_menu');
+        $this->setConfigSettings();
 
         $this->setup();
 
@@ -102,8 +94,30 @@ abstract class Base
 
     }
 
+    public function setConfigSettings()
+    {
+
+        $settings = $this->config('table.settings');
+
+        $this->settings = array_merge($this->settings, $settings);
+
+    }
+
     public function setup()
     {
+
+    }
+
+    /**
+     * Use Dot notation to add a settings value to the array going to the javascript datatable settings.
+     *
+     * @param $field
+     * @param $value
+     */
+    public function setting($field, $value)
+    {
+
+        Arr::set($this->settings, $field, $value);
 
     }
 
@@ -384,18 +398,9 @@ abstract class Base
     public function jsSettings()
     {
 
-        $settings = [];
+        $settings = $this->settings;
 
-        $settings['iDisplayLength'] = $this->display_count;
-        $settings['responsive']     = true;
-        $settings['order']          = $this->initial_order;
-        $settings['ordering']       = $this->ordering;
-        $settings['deferRender']    = $this->defer_render;
-        $settings['processing']     = $this->processing;
-        $settings['serverSide']     = $this->server_side;
-        $settings['stateSave']      = $this->save_state;
-        $settings['lengthMenu']     = $this->length_menu;
-        $settings['columns']        = $this->jsColumns();
+        $settings['columns'] = $this->jsColumns();
 
         if ($this->data_url != '')
         {
