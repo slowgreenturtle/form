@@ -341,11 +341,20 @@ abstract class SGTForm
 
     }
 
+    public function url($element)
+    {
+
+        $element['type'] = 'url';
+
+        return $this->input($element);
+
+    }
+
     public function date($element)
     {
 
         $element['class'] = array_get($element, 'class', []) + ['date'];
-        $element['type']  = 'text';
+        $element['type']  = 'date';
 
         return $this->input($element);
 
@@ -409,6 +418,14 @@ abstract class SGTForm
     {
 
         $element['type'] = 'email';
+
+        return $this->input($element);
+    }
+
+    public function number($element)
+    {
+
+        $element['type'] = 'number';
 
         return $this->input($element);
     }
@@ -603,7 +620,7 @@ abstract class SGTForm
     public function color($element)
     {
 
-        array_set($element, 'type', 'color');
+        $element['type'] = 'color';
 
         return $this->input($element);
     }
