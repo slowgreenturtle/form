@@ -41,14 +41,16 @@
     @parent
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function ()
+        {
 
             var settings = @json($table->jsSettings());
-            if (settings.ajax.data) {
+            if (settings.ajax.data)
+            {
                 settings.ajax.data = window[settings.ajax.data];
             }
 
-            $('#{{ $table->name() }}').DataTable(settings);
+            var {{strtolower($table->name)}}  = $('#{{ $table->name() }}').DataTable(settings);
 
         });
     </script>

@@ -27,7 +27,8 @@
                 settings.ajax.data = window[settings.ajax.data];
             }
 
-            $('#{{ $table->name() }}').DataTable(settings);
+            var {{strtolower($table->name)}}  = $('#{{ $table->name() }}').DataTable(settings);
+
 
         });
     </script>
