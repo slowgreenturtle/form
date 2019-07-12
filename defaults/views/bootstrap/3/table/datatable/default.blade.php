@@ -47,12 +47,15 @@
             var settings = @json($table->jsSettings());
             if (settings.ajax.data)
             {
-                settings.ajax.data = window[settings.ajax.data];
+
+                settings.ajax.data = function (d)
+                {
+                    {!! $table->getSetting('ajax.data') !!}
+                };
             }
 
-            var {{strtolower($table->name)}}  = $('#{{ $table->name() }}').DataTable(settings);
+            $('#{{ $table->name() }}').DataTable(settings);
 
         });
     </script>
-
 @endsection
