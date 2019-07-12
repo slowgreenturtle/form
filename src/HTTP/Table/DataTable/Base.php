@@ -121,6 +121,12 @@ abstract class Base
 
     }
 
+    public function getSetting($field, $value, $default_value)
+    {
+
+        return Arr::get($this->settings, $field, $default_value);
+    }
+
     public function addSearchInput($name, $value)
     {
 

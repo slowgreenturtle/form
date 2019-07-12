@@ -22,6 +22,7 @@
         {
 
             var settings = @json($table->jsSettings());
+
             if (settings.ajax.data)
             {
                 settings.ajax.data = window[settings.ajax.data];
