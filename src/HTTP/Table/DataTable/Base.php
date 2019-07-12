@@ -121,7 +121,7 @@ abstract class Base
 
     }
 
-    public function getSetting($field, $default_value)
+    public function getSetting($field, $default_value = null)
     {
 
         return Arr::get($this->settings, $field, $default_value);
