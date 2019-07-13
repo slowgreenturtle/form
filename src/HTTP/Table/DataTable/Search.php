@@ -45,7 +45,15 @@ class Search
     public function input($name, $default = null)
     {
 
-        return Arr::get($this->input, $name, $default);
+        $result = Arr::get($this->input, $name);
+
+        if ($result == null)
+        {
+            $result = $this->request->input($name, $default);
+        }
+
+        return $result;
+
     }
 
     public function columnName($column_number)
