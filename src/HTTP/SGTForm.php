@@ -503,59 +503,52 @@ abstract class SGTForm
     public function select_tag($element)
     {
 
-        $name = array_get($element, 'name');
-        $list = array_get($element, 'list', []);
-        $url  = array_get($element, 'url');
-
+        $name     = array_get($element, 'name');
+        $list     = array_get($element, 'list', []);
         $selected = $this->getValue($name);
 
-        $div_name = $name . '_div';
+        $data = [];
 
-        $html = '<div class="form-group" id="' . $div_name . '">';
+        $data['div_name']    = $name . '_div';
+        $data['div_classes'] = $this->makeDivClasses($name);
 
-        $class = array_get($element, 'class');
+        $data['label'] = $this->label($element);
 
-        $classes = [
-            'form-control',
-            'select2-multiple',
-        ];
+        $class   = array_get($element, 'class');
+        $classes = ['form-control', 'select2-multiple'];
 
         if ($class)
         {
             $classes = array_merge($classes, $class);
         };
 
-        $html .= $this->label($element);
-
         $attributes = [
-            'id'          => $name,
-            'name'        => $name . '[]',
-            'class'       => implode(' ', $classes),
-            'multiple'    => 'multiple',
-            'aria-hidden' => true
-        ];
+            'id'    => $name,
+            'name'  => $name,
+            'class' => implode(' ', $classes)];
+
+        $add_atributes = array_get($element, 'attributes', []);
+
+        $attributes += $add_atributes;
+
+        $multiselect = array_get($attributes, 'multiple');
+
+        if ($multiselect)
+        {
+            $attributes['name']        = $name . '[]';
+            $attributes['size']        = array_get($attributes, 'size', 10);
+            $attributes['multiple']    = 'multiple';
+            $attributes['aria-hidden'] = true;
+        }
 
         if ($this->model)
         {
             Form::setModel($this->model);
         }
 
-        $html .= Form::select($name, $list, $selected, $attributes);
+        $data['form_element'] = Form::select($name, $list, $selected, $attributes);
 
-        $html .= '</div>';
-
-        $data = [
-            'element_name' => $name
-        ];
-
-        if ($url != null)
-        {
-            $data['url'] = $url;
-        }
-
-        $this->scripts[] = view('form.element.select_tag', $data);
-
-        return $html;
+        return $this->elementView($data, $element);
 
     }
 

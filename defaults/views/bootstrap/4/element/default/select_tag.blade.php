@@ -2,3 +2,12 @@
     {!! $label !!}
     {{ $form_element }}
 </div>
+
+<script>
+    $(document).ready(function ()
+    {
+
+        $('.select2-multiple').select2();
+
+    });
+</script>
