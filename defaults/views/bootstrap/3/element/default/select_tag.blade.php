@@ -3,11 +3,18 @@
     {{ $form_element }}
 </div>
 
-<script>
-    $(document).ready(function ()
-    {
 
-        $('.select2-multiple').select2();
+@section('scripts')
 
-    });
-</script>
+
+    <script>
+        $(document).ready(function ()
+        {
+
+            $('.select2-multiple').select2();
+
+        });
+    </script>
+
+
+@endsection
