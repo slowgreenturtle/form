@@ -529,17 +529,11 @@ abstract class SGTForm
 
         $add_atributes = array_get($element, 'attributes', []);
 
-        $attributes += $add_atributes;
-
-        $multiselect = array_get($attributes, 'multiple');
-
-        if ($multiselect)
-        {
-            $attributes['name']        = $name . '[]';
-            $attributes['size']        = array_get($attributes, 'size', 10);
-            $attributes['multiple']    = 'multiple';
-            $attributes['aria-hidden'] = true;
-        }
+        $attributes                += $add_atributes;
+        $attributes['name']        = $name . '[]';
+        $attributes['size']        = array_get($attributes, 'size', 10);
+        $attributes['multiple']    = 'multiple';
+        $attributes['aria-hidden'] = true;
 
         if ($this->model)
         {
