@@ -451,7 +451,7 @@ abstract class Base
             return true;
         }
 
-        $columnName = 'column_' . $column_name;
+        $columnName = 'order_' . $column_name;
 
         if (method_exists($this, $columnName))
         {
