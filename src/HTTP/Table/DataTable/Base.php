@@ -213,7 +213,6 @@ abstract class Base
          * slug_name    must be lowercase, underscored, used internally to track the calls, sent to the client as id fields,
          *              etc
          * name         The human readable name, most notably used in the header field of the table.
-         * sortable     Whether the field is sortable and has the up/down toggle showing. true by default.
          * sort_field   is the field used if this column is sortable and can be ordered by. Used in the query sort
          *              functionality
          *
@@ -232,15 +231,12 @@ abstract class Base
          * ],
          * "feed"    => [
          * 'name'     => 'Feeds',
-         * 'sortable' => false
          * ],
          * "margin"  => [
          * 'name'     => 'Margin %',
-         * 'sortable' => false
          * ],
          * 'actions' => [
          * 'name'     => '',
-         * 'sortable' => false
          * ]
          * ];
          * */
@@ -437,7 +433,7 @@ abstract class Base
         {
 
             $result            = new stdClass();
-            $result->orderable = Arr::get($column, 'sortable', true);
+            $result->orderable = $this->sortable($column_name);
             $result->name      = $column_name;
 
             $results[] = $result;
@@ -445,6 +441,30 @@ abstract class Base
 
         return $results;
 
+    }
+
+    public function sortable($column_name)
+    {
+
+        if (Arr::get($this->column($column_name), 'sort_field') != null)
+        {
+            return true;
+        }
+
+        $columnName = 'column_' . $column_name;
+
+        if (method_exists($this, $columnName))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function column($column_name)
+    {
+
+        return Arr::get($this->columns(), $column_name);
     }
 
     public function response()
@@ -577,12 +597,6 @@ abstract class Base
         }
 
         return $query;
-    }
-
-    public function column($column_name)
-    {
-
-        return Arr::get($this->columns(), $column_name);
     }
 
     public function queryLimit($query)
