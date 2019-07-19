@@ -588,6 +588,11 @@ abstract class Base
     public function queryLimit($query)
     {
 
+        if ($query == null)
+        {
+            return $query;
+        }
+
         $limit = $this->search->limit;
 
         if (!empty($limit))
