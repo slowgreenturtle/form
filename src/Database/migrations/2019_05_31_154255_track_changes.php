@@ -19,17 +19,39 @@ class TrackChanges extends Migration
 
         if (Schema::hasTable($change_table_name))
         {
-            Schema::table($change_table_name, function (Blueprint $table)
+
+            Schema::table($change_table_name, function (Blueprint $table) use ($change_table_name)
             {
 
-                $table->bigIncrements('id')->change();
-                $table->unsignedBigInteger('reportable_id')->nullable()->change();
+                if (Schema::hasColumn($change_table_name, 'id'))
+                {
+                    $table->bigIncrements('id')->change();
+                }
+                else
+                {
+                    $table->bigIncrements('id');
+                }
+
+                if (Schema::hasColumn($change_table_name, 'reportable_id'))
+                {
+                    $table->unsignedBigInteger('reportable_id')->nullable()->change();
+                }
+                else
+                {
+                    $table->unsignedBigInteger('reportable_id')->nullable();
+
+                }
+
                 $table->string('reportable_type')->nullable()->change();
                 $table->string('field')->change();
                 $table->text('value')->nullable()->change();
                 $table->unsignedBigInteger('user_id')->nullable()->change();
 
-                $table->timestamp('created_at')->change();
+                if (!Schema::hasColumn($change_table_name, 'created_at'))
+                {
+                    $table->timestamp('created_at');
+
+                }
             });
 
         }
