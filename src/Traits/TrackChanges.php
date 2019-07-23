@@ -11,9 +11,9 @@ trait TrackChanges
     public static function bootTrackChanges()
     {
 
-        if (isset(self::$change_observer))
+        if (isset(self::$changeObserver))
         {
-            self::observe(self::$change_observer);
+            self::observe(self::$changeObserver);
         }
         else
         {
