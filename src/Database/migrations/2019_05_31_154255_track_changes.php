@@ -17,9 +17,9 @@ class TrackChanges extends Migration
 
         $change_table_name = config('sgtform:config.change_table', 'model_changes');
 
-        if (Schema::hasTable('model_changes'))
+        if (Schema::hasTable($change_table_name))
         {
-            Schema::create($change_table_name, function (Blueprint $table)
+            Schema::table($change_table_name, function (Blueprint $table)
             {
 
                 $table->bigIncrements('id')->change();
