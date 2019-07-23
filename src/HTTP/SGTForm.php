@@ -164,7 +164,7 @@ abstract class SGTForm
 
         if ($field == null)
         {
-            return $method;
+            return '';
         }
 
         $type = Arr::get($field, 'type');
