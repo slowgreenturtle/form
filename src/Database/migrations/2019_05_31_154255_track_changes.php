@@ -15,18 +15,41 @@ class TrackChanges extends Migration
     public function up()
     {
 
-        Schema::create('model_changes', function (Blueprint $table)
+        $change_table_name = config('sgtform:config.change_table', 'model_changes');
+
+        if (Schema::hasTable('model_changes'))
+        {
+            Schema::create($change_table_name, function (Blueprint $table)
+            {
+
+                $table->bigIncrements('id')->change();
+                $table->unsignedBigInteger('reportable_id')->nullable()->change();
+                $table->string('reportable_type')->nullable()->change();
+                $table->string('field')->change();
+                $table->text('value')->nullable()->change();
+                $table->unsignedBigInteger('user_id')->nullable()->change();
+
+                $table->timestamp('created_at')->change();
+            });
+
+        }
+        else
         {
 
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('reportable_id')->nullable();
-            $table->string('reportable_type')->nullable();
-            $table->string('field');
-            $table->text('value')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
 
-            $table->timestamp('created_at');
-        });
+            Schema::create($change_table_name, function (Blueprint $table)
+            {
+
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('reportable_id')->nullable();
+                $table->string('reportable_type')->nullable();
+                $table->string('field');
+                $table->text('value')->nullable();
+                $table->unsignedBigInteger('user_id')->nullable();
+
+                $table->timestamp('created_at');
+            });
+        }
 
     }
 

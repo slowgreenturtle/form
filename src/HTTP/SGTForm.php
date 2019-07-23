@@ -160,14 +160,14 @@ abstract class SGTForm
     public function __get($method)
     {
 
-        $field = array_get($this->fields, $method);
+        $field = Arr::get($this->fields, $method);
 
         if ($field == null)
         {
             return $method;
         }
 
-        $type = array_get($field, 'type');
+        $type = Arr::get($field, 'type');
 
         return $this->$type($field);
 
@@ -186,14 +186,14 @@ abstract class SGTForm
 
         $data = $this->viewDataDefault($element);
 
-        $name = array_get($element, 'name');
+        $name = Arr::get($element, 'name');
 
-        $type                 = array_get($element, 'type', 'text');
-        $data['append_text']  = array_get($element, 'append');
-        $data['prepend_text'] = array_get($element, 'prepend');
-        $data['help']         = array_get($element, 'help');
+        $type                 = Arr::get($element, 'type', 'text');
+        $data['append_text']  = Arr::get($element, 'append');
+        $data['prepend_text'] = Arr::get($element, 'prepend');
+        $data['help']         = Arr::get($element, 'help');
 
-        $class = array_get($element, 'class');
+        $class = Arr::get($element, 'class');
 
         $classes = ['form-control'];
 
@@ -214,7 +214,7 @@ abstract class SGTForm
             'class' => implode(' ', $classes),
         ];
 
-        $attributes += array_get($element, 'options', []);
+        $attributes += Arr::get($element, 'options', []);
 
         $data['form_element'] = Form::input($type, $name, $this->getValue($name), $attributes);
 
@@ -226,7 +226,7 @@ abstract class SGTForm
     {
 
         $data                = [];
-        $name                = array_get($element, 'name');
+        $name                = Arr::get($element, 'name');
         $data['div_name']    = $name . '_div';
         $data['div_classes'] = $this->makeDivClasses($name);
         $data['label']       = $this->label($element);
@@ -263,10 +263,10 @@ abstract class SGTForm
     public function label($element)
     {
 
-        $element_name = array_get($element, 'name');
+        $element_name = Arr::get($element, 'name');
 
-        $label_text = array_get($element, 'label', $element_name);
-        $required   = array_get($element, 'required', false);
+        $label_text = Arr::get($element, 'label', $element_name);
+        $required   = Arr::get($element, 'required', false);
 
         $label_text = str_replace('_id', '', $label_text);
 
@@ -281,7 +281,7 @@ abstract class SGTForm
             return '';
         }
 
-        $tooltip = array_get($element, 'tooltip', array_get($this->tooltips, $element_name));
+        $tooltip = Arr::get($element, 'tooltip', Arr::get($this->tooltips, $element_name));
 
         if ($required == true)
         {
@@ -323,17 +323,17 @@ abstract class SGTForm
     public function getParam($name, $default = null)
     {
 
-        return array_get($this->params, $name, $default);
+        return Arr::get($this->params, $name, $default);
     }
 
     protected function elementView($data, $element)
     {
 
-        $data['element_id']   = array_get($element, 'name');
-        $data['element_name'] = array_get($element, 'name');
+        $data['element_id']   = Arr::get($element, 'name');
+        $data['element_name'] = Arr::get($element, 'name');
 
-        $view_form = array_get($element, 'view', $this->element_view_path);
-        $type      = array_get($element, 'type');
+        $view_form = Arr::get($element, 'view', $this->element_view_path);
+        $type      = Arr::get($element, 'type');
 
         $view_form .= '/' . $type;
 
@@ -353,7 +353,7 @@ abstract class SGTForm
     public function date($element)
     {
 
-        $element['class'] = array_get($element, 'class', []) + ['date'];
+        $element['class'] = Arr::get($element, 'class', []) + ['date'];
         $element['type']  = 'date';
 
         return $this->input($element);
@@ -363,7 +363,7 @@ abstract class SGTForm
     public function date_time($element)
     {
 
-        $element['class'] = array_get($element, 'class', []) + ['datetime'];
+        $element['class'] = Arr::get($element, 'class', []) + ['datetime'];
         $element['type']  = 'text';
 
         return $this->input($element);
@@ -373,7 +373,7 @@ abstract class SGTForm
     public function time($element)
     {
 
-        $element['class'] = array_get($element, 'class', []) + ['time'];
+        $element['class'] = Arr::get($element, 'class', []) + ['time'];
         $element['type']  = 'text';
 
         return $this->input($element);
@@ -433,7 +433,7 @@ abstract class SGTForm
     public function hidden($element)
     {
 
-        $name          = array_get($element, 'name');
+        $name          = Arr::get($element, 'name');
         $value         = $this->getValue($name);
         $element['id'] = $name;
 
@@ -443,16 +443,16 @@ abstract class SGTForm
     public function checkbox($element)
     {
 
-        $name = array_get($element, 'name');
+        $name = Arr::get($element, 'name');
 
-        $check = array_get($element, 'check');
-        $value = array_get($element, 'value', 1);
+        $check = Arr::get($element, 'check');
+        $value = Arr::get($element, 'value', 1);
 
         $div_name = $name . '_div';
 
         $html = '<div class="form-group" id="' . $div_name . '">';
 
-        $class = array_get($element, 'class');
+        $class = Arr::get($element, 'class');
 
         $classes = ['form-control'];
 
@@ -468,7 +468,7 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
-        $options = array_get($element, 'options');
+        $options = Arr::get($element, 'options');
 
         if (is_array($options))
         {
@@ -503,8 +503,8 @@ abstract class SGTForm
     public function select_tag($element)
     {
 
-        $name     = array_get($element, 'name');
-        $list     = array_get($element, 'list', []);
+        $name     = Arr::get($element, 'name');
+        $list     = Arr::get($element, 'list', []);
         $selected = $this->getValue($name);
 
         $data = [];
@@ -514,7 +514,7 @@ abstract class SGTForm
 
         $data['label'] = $this->label($element);
 
-        $class   = array_get($element, 'class');
+        $class   = Arr::get($element, 'class');
         $classes = ['form-control', 'select2-multiple'];
 
         if ($class)
@@ -527,11 +527,11 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
-        $add_atributes = array_get($element, 'attributes', []);
+        $add_atributes = Arr::get($element, 'attributes', []);
 
         $attributes                += $add_atributes;
         $attributes['name']        = $name . '[]';
-        $attributes['size']        = array_get($attributes, 'size', 10);
+        $attributes['size']        = Arr::get($attributes, 'size', 10);
         $attributes['multiple']    = 'multiple';
         $attributes['aria-hidden'] = true;
 
@@ -549,8 +549,8 @@ abstract class SGTForm
     public function select($element)
     {
 
-        $name     = array_get($element, 'name');
-        $list     = array_get($element, 'list', []);
+        $name     = Arr::get($element, 'name');
+        $list     = Arr::get($element, 'list', []);
         $selected = $this->getValue($name);
 
         $data = [];
@@ -560,7 +560,7 @@ abstract class SGTForm
 
         $data['label'] = $this->label($element);
 
-        $class   = array_get($element, 'class');
+        $class   = Arr::get($element, 'class');
         $classes = ['form-control'];
 
         if ($class)
@@ -573,16 +573,16 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
-        $add_atributes = array_get($element, 'attributes', []);
+        $add_atributes = Arr::get($element, 'attributes', []);
 
         $attributes += $add_atributes;
 
-        $multiselect = array_get($attributes, 'multiple');
+        $multiselect = Arr::get($attributes, 'multiple');
 
         if ($multiselect)
         {
             $attributes['name'] = $name . '[]';
-            $attributes['size'] = array_get($attributes, 'size', 10);
+            $attributes['size'] = Arr::get($attributes, 'size', 10);
         }
 
         if ($this->model)
@@ -617,8 +617,8 @@ abstract class SGTForm
 
         $data = $this->viewDataDefault($element);
 
-        $name  = array_get($element, 'name');
-        $class = array_get($element, 'class');
+        $name  = Arr::get($element, 'name');
+        $class = Arr::get($element, 'class');
 
         $classes = ['form-control'];
 
@@ -632,7 +632,7 @@ abstract class SGTForm
             'name'  => $name,
             'class' => implode(' ', $classes)];
 
-        $attributes += array_get($element, 'options', []);
+        $attributes += Arr::get($element, 'options', []);
 
         if ($this->model)
         {

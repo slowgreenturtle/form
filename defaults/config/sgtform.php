@@ -3,10 +3,11 @@
 return [
     # What version of bootstrap should the app be using.
     'config'    => [
-        'bootstrap' => [
+        'change_table' => 'model_changes',
+        'bootstrap'    => [
             'version' => 4,
         ],
-        'table'     => [
+        'table'        => [
             'settings' => []
         ]
     ],
