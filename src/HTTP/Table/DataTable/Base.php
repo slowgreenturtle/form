@@ -167,37 +167,46 @@ abstract class Base
     public function headers()
     {
 
+        return $this->tableColumns();
+    }
+
+    /**
+     * This method processes the  columns made by the user, sets defaults, etc.
+     */
+    public function tableColumns()
+    {
+
         $fields = [
             'tooltip'
         ];
 
         $columns = $this->columns();
 
-        $table_headers = [];
+        $table_columns = [];
 
         foreach ($columns as $column_id => $column)
         {
             if (is_array($column))
             {
-                $table_headers[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
+                $table_columns[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
 
                 foreach ($fields as $field)
                 {
-                    $table_headers[$column_id][$field] = Arr::get($column, $field, '');
+                    $table_columns[$column_id][$field] = Arr::get($column, $field, '');
                 }
             }
             else
             {
-                $table_headers[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
+                $table_columns[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
 
                 foreach ($fields as $field)
                 {
-                    $table_headers[$column_id][$field] = '';
+                    $table_columns[$column][$field] = '';
                 }
             }
         }
 
-        return $table_headers;
+        return $table_columns;
 
     }
 
@@ -257,33 +266,6 @@ abstract class Base
     }
 
     /**
-     * Output elements used for the table headers
-     *
-     * @return array
-     */
-    public function htmlHeaders()
-    {
-
-        $columns = $this->columns();
-
-        $headers = [];
-
-        foreach ($columns as $column_id => $details)
-        {
-
-            $item = [
-                'tooltip' => Arr::get($details, 'tooltip'),
-            ];
-
-            $headers[] = $item;
-
-        }
-
-        return $headers;
-
-    }
-
-    /**
      * Output the HTML table body content
      */
     public function body()
@@ -308,7 +290,7 @@ abstract class Base
 
             $html .= '<tr role="row"' . $row_css_html . '>';
 
-            foreach ($this->columns() as $column_name => $column)
+            foreach ($this->tableColumns() as $column_name => $column)
             {
 
                 $html .= '<td>';
@@ -438,7 +420,7 @@ abstract class Base
 
         $results = [];
 
-        $columns = $this->columns();
+        $columns = $this->tableColumns();
 
         foreach ($columns as $column_name => $column)
         {
@@ -475,7 +457,7 @@ abstract class Base
     public function column($column_name)
     {
 
-        return Arr::get($this->columns(), $column_name);
+        return Arr::get($this->tableColumns(), $column_name);
     }
 
     public function response()
@@ -666,7 +648,7 @@ abstract class Base
         {
             $fields = [];
 
-            foreach ($this->columns() as $column_name => $column)
+            foreach ($this->tableColumns() as $column_name => $column)
             {
                 $columnName = 'column_' . $column_name;
 
