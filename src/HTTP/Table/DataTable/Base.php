@@ -177,12 +177,18 @@ abstract class Base
 
         foreach ($columns as $column_id => $column)
         {
-
-            $table_headers[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
-
-            foreach ($fields as $field)
+            if (is_array($column))
             {
-                $table_headers[$column_id][$field] = Arr::get($column, $field, '');
+                $table_headers[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
+
+                foreach ($fields as $field)
+                {
+                    $table_headers[$column_id][$field] = Arr::get($column, $field, '');
+                }
+            }
+            else
+            {
+                $table_headers[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
             }
         }
 
