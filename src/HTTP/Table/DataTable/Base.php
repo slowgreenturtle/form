@@ -182,7 +182,7 @@ abstract class Base
 
             foreach ($fields as $field)
             {
-                $table_headers[$column][$field] = array_get($column, $field, '');
+                $table_headers[$column][$field] = Arr::get($column, $field, '');
             }
         }
 
