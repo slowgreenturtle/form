@@ -189,6 +189,11 @@ abstract class Base
             else
             {
                 $table_headers[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
+
+                foreach ($fields as $field)
+                {
+                    $table_headers[$column_id][$field] = '';
+                }
             }
         }
 
