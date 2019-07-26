@@ -168,7 +168,6 @@ abstract class Base
     {
 
         $fields = [
-            'name',
             'tooltip'
         ];
 
@@ -178,11 +177,13 @@ abstract class Base
 
         foreach ($columns as $column)
         {
+
+            $table_headers[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
+
             foreach ($fields as $field)
             {
-                $header[$field] = array_get($column, $field, '');
+                $table_headers[$column][$field] = array_get($column, $field, '');
             }
-            $table_headers[] = $header;
         }
 
         return $table_headers;
@@ -242,6 +243,33 @@ abstract class Base
          * */
 
         return [];
+    }
+
+    /**
+     * Output elements used for the table headers
+     *
+     * @return array
+     */
+    public function htmlHeaders()
+    {
+
+        $columns = $this->columns();
+
+        $headers = [];
+
+        foreach ($columns as $column_id => $details)
+        {
+
+            $item = [
+                'tooltip' => Arr::get($details, 'tooltip'),
+            ];
+
+            $headers[] = $item;
+
+        }
+
+        return $headers;
+
     }
 
     /**
@@ -344,34 +372,6 @@ abstract class Base
         }
 
         return $name;
-
-    }
-
-    /**
-     * Output elements used for the table headers
-     *
-     * @return array
-     */
-    public function htmlHeaders()
-    {
-
-        $columns = $this->columns();
-
-        $headers = [];
-
-        foreach ($columns as $column_id => $details)
-        {
-
-            $item = [
-                'name'    => Arr::get($details, 'name', ucwords(str_replace('_', ' ', $column_id))),
-                'tooltip' => Arr::get($details, 'tooltip'),
-            ];
-
-            $headers[] = $item;
-
-        }
-
-        return $headers;
 
     }
 
