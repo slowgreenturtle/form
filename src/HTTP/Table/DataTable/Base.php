@@ -177,7 +177,8 @@ abstract class Base
     {
 
         $fields = [
-            'tooltip'
+            'tooltip',
+            'sort_field',
         ];
 
         $columns = $this->columns();

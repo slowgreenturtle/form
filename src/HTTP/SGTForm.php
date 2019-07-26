@@ -87,96 +87,11 @@ abstract class SGTForm
 
     }
 
-    public function __toString()
+    public function submitButton()
     {
 
-        if ($this->view)
-        {
-            $this->view->form = $this;
-
-            return $this->view->__toString();
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns a list of field
-     */
-
-    public function field_names()
-    {
-
-        return array_keys($this->fields);
-    }
-
-    public function setTooltips($tooltips)
-    {
-
-        $this->tooltips = $tooltips;
-    }
-
-    public function open($errors, array $options = [])
-    {
-
-        $this->errors = $errors;
-
-        $form_options = [
-            'method' => $this->method
-        ];
-
-        $options += $form_options;
-
-        $options += $this->form_attributes;
-
-        return Form::open($options);
-    }
-
-    public function close()
-    {
-
-        return Form::close();
-    }
-
-    public function field_exists($name)
-    {
-
-        return isset($this->fields[$name]);
-    }
-
-    public function field_set($name, $attributes)
-    {
-
-        $this->fields[$name] = $attributes;
-
-    }
-
-    public function field_update($name, $attribute, $value)
-    {
-
-        $this->fields[$name][$attribute] = $value;
-    }
-
-    public function __get($method)
-    {
-
-        $field = Arr::get($this->fields, $method);
-
-        if ($field == null)
-        {
-            return '';
-        }
-
-        $type = Arr::get($field, 'type');
-
-        return $this->$type($field);
-
-    }
-
-    public function file($element)
-    {
-
-        $element['type'] = 'file';
+        $element['name'] = $this->getFormAttribute('name') . '_submit';
+        $element['type'] = 'submit';
 
         return $this->input($element);
     }
@@ -339,6 +254,100 @@ abstract class SGTForm
 
         return view($view_form, $data)->__toString();
 
+    }
+
+    public function __toString()
+    {
+
+        if ($this->view)
+        {
+            $this->view->form = $this;
+
+            return $this->view->__toString();
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns a list of field
+     */
+
+    public function field_names()
+    {
+
+        return array_keys($this->fields);
+    }
+
+    public function setTooltips($tooltips)
+    {
+
+        $this->tooltips = $tooltips;
+    }
+
+    public function open($errors, array $options = [])
+    {
+
+        $this->errors = $errors;
+
+        $form_options = [
+            'method' => $this->method
+        ];
+
+        $options += $form_options;
+
+        $options += $this->form_attributes;
+
+        return Form::open($options);
+    }
+
+    public function close()
+    {
+
+        return Form::close();
+    }
+
+    public function field_exists($name)
+    {
+
+        return isset($this->fields[$name]);
+    }
+
+    public function field_set($name, $attributes)
+    {
+
+        $this->fields[$name] = $attributes;
+
+    }
+
+    public function field_update($name, $attribute, $value)
+    {
+
+        $this->fields[$name][$attribute] = $value;
+    }
+
+    public function __get($method)
+    {
+
+        $field = Arr::get($this->fields, $method);
+
+        if ($field == null)
+        {
+            return '';
+        }
+
+        $type = Arr::get($field, 'type');
+
+        return $this->$type($field);
+
+    }
+
+    public function file($element)
+    {
+
+        $element['type'] = 'file';
+
+        return $this->input($element);
     }
 
     public function url($element)
