@@ -8,7 +8,13 @@ return [
             'version' => 4,
         ],
         'table'        => [
-            'settings' => []
+            'settings' => [
+                "lengthChange" => true,  # allow the user to change the page length display
+                "paging"       => true,   # whether paging is allowed or all records are displayed
+                "searching"    => true,   # whether the search box is displayed.
+                "pageLength"   => 10,
+                "lengthMenu"   => [10, 25, 50]
+            ]
         ]
     ],
     'bootstrap' => [

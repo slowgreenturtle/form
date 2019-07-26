@@ -363,7 +363,7 @@ abstract class Base
         {
 
             $item = [
-                'name'    => Arr::get($details, 'name', ''),
+                'name'    => Arr::get($details, 'name', ucwords(str_replace('_', ' ', $column_id))),
                 'tooltip' => Arr::get($details, 'tooltip'),
             ];
 
