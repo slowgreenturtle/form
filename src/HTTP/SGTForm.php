@@ -4,6 +4,7 @@ namespace SGT\HTTP;
 
 use Form;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class SGTForm
 {
@@ -87,13 +88,25 @@ abstract class SGTForm
 
     }
 
-    public function submitButton()
+    public function submitButton($value = 'Submit')
     {
 
-        $element['name'] = $this->getFormAttribute('name') . '_submit';
-        $element['type'] = 'submit';
+        $name = 'submit_' . Str::slug($value);
+
+        $element['name']  = $name;
+        $element['type']  = 'submit';
+        $element['class'] = ['btn', 'btn-success'];
+        $element['label'] = '&nbsp;';
+        $this->setParam($name, $value);
+        $element['value'] = $value;
 
         return $this->input($element);
+    }
+
+    public function setParam($name, $value = null)
+    {
+
+        $this->params[$name] = $value;
     }
 
     public function input($element)
@@ -393,12 +406,6 @@ abstract class SGTForm
     {
 
         $this->params += $params;
-    }
-
-    public function setParam($name, $value = null)
-    {
-
-        $this->params[$name] = $value;
     }
 
     public function setAttribute($name, $attribute, $value = null)
