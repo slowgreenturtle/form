@@ -272,7 +272,7 @@ abstract class Base
     public function body()
     {
 
-        if ($this->data_url != '')
+        if ($this->getDataURL() != '')
         {
             //  we won't be loading data using this method
             return '';
@@ -315,6 +315,24 @@ abstract class Base
         }
 
         return $html;
+
+    }
+
+    public function getDataURL()
+    {
+
+        return $this->data_url;
+    }
+
+    /**
+     * The full URL to retrieve data from.
+     *
+     * @param $url
+     */
+    public function setDataURL($url)
+    {
+
+        $this->data_url = $url;
 
     }
 
@@ -398,9 +416,11 @@ abstract class Base
 
         $settings['columns'] = $this->jsColumns();
 
-        if ($this->data_url != '')
+        $data_url = $this->getDataURL();
+
+        if ($data_url != '')
         {
-            $settings['ajax']['url'] = $this->data_url;
+            $settings['ajax']['url'] = $data_url;
         }
 
         if ($this->data_method != '')
