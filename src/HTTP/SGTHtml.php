@@ -2,8 +2,12 @@
 
 namespace SGT\HTTP;
 
+use SGT\HTTP\Navigation\Attribute;
+
 class SGTHtml
 {
+
+    use Attribute;
 
     public function menu($menu)
     {
