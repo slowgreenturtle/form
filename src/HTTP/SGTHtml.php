@@ -29,11 +29,11 @@ class SGTHtml
             'default' => ''
         ];
 
-        $title = array_get($dropdown, 'title');
-        $links = array_get($dropdown, 'links');
-        $size  = array_get($dropdown, 'size', 'default');
+        $title = Arr::get($dropdown, 'title');
+        $links = Arr::get($dropdown, 'links');
+        $size  = Arr::get($dropdown, 'size', 'default');
 
-        $size = array_get($sizes, $size, '');
+        $size = Arr::get($sizes, $size, '');
 
         $button_classes = [
             'btn',
@@ -69,7 +69,7 @@ class SGTHtml
             if (is_array($action))
             {
 
-                $type = array_get($action, 'type');
+                $type = Arr::get($action, 'type');
 
                 switch ($type)
                 {
@@ -77,9 +77,9 @@ class SGTHtml
                         $html .= $this->confirm($action);
                         break;
                     default:
-                        $link       = array_get($action, 'link');
-                        $text       = array_get($action, 'text');
-                        $attributes = array_get($action, 'attributes', []);
+                        $link       = Arr::get($action, 'link');
+                        $text       = Arr::get($action, 'text');
+                        $attributes = Arr::get($action, 'attributes', []);
                         $html       .= '<li>' . $this->link($link, $text, $attributes) . '</li>';
                         break;
                 }
@@ -164,8 +164,8 @@ class SGTHtml
     public function confirm($action)
     {
 
-        $title = array_get($action, 'name');
-        $link  = array_get($action, 'link');
+        $title = Arr::get($action, 'name');
+        $link  = Arr::get($action, 'link');
 
         $unique_id = str_random();
 
@@ -197,7 +197,7 @@ class SGTHtml
             $title = $url;
         }
 
-        $icon = array_get($attributes, 'icon');
+        $icon = Arr::get($attributes, 'icon');
 
         $icon_text = '';
 
@@ -228,7 +228,7 @@ class SGTHtml
             if (is_array($action))
             {
 
-                $type = array_get($action, 'type');
+                $type = Arr::get($action, 'type');
 
                 switch ($type)
                 {
@@ -236,9 +236,9 @@ class SGTHtml
                         $html .= $this->confirm($action);
                         break;
                     default:
-                        $link       = array_get($action, 'link');
-                        $title      = array_get($action, 'name');
-                        $attributes = array_get($action, 'attributes', []);
+                        $link       = Arr::get($action, 'link');
+                        $title      = Arr::get($action, 'name');
+                        $attributes = Arr::get($action, 'attributes', []);
 
                         $html .= '<li>' . $this->link($link, $title, $attributes) . '</li>';
                         break;

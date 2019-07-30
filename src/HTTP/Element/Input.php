@@ -16,9 +16,9 @@ class Input extends Element
 
         $data = $this->viewDataDefault($element);
 
-        $name = array_get($element, 'name');
+        $name = Arr::get($element, 'name');
 
-        $class = array_get($element, 'class');
+        $class = Arr::get($element, 'class');
 
         $classes = ['form-control'];
 
@@ -38,7 +38,7 @@ class Input extends Element
             'class' => implode(' ', $classes),
         ];
 
-        $attributes += array_get($element, 'options', []);
+        $attributes += Arr::get($element, 'options', []);
 
         $data['form_element'] = Form::input($this->_type, $name, $this->getValue($name), $attributes);
 

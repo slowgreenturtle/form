@@ -180,7 +180,7 @@ class Item
 
         if (count($this->route))
         {
-            return route(array_get($this->route, 'route'), array_get($this->route, 'params'));
+            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
         }
 
         return $this->url;

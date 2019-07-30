@@ -66,7 +66,7 @@ abstract class Element
     public function getLabelAttribute()
     {
 
-        $label = array_get($this->attributes, 'label', $this->name);
+        $label = Arr::get($this->attributes, 'label', $this->name);
         $label = str_replace('_id', '', $label);
 
         if ($this->required == true && !empty($label))
@@ -90,7 +90,7 @@ abstract class Element
     {
 
         $data             = [];
-        $name             = array_get($element, 'name');
+        $name             = Arr::get($element, 'name');
         $data['div_name'] = $name . '_div';
 
         return $data;
@@ -112,7 +112,7 @@ abstract class Element
 
         $attributes = ['class' => 'control-label'];
 
-        $tooltip = array_get($element_name, 'tooltip', array_get($this->tooltips, $element_name));
+        $tooltip = Arr::get($element_name, 'tooltip', Arr::get($this->tooltips, $element_name));
 
         if ($required == true)
         {
