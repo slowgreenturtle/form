@@ -212,6 +212,24 @@ class SGTHtml
 
     }
 
+    public function attributes($attributes)
+    {
+
+        $html = [];
+
+        foreach ((array)$attributes as $key => $value)
+        {
+            $element = $this->attributeElement($key, $value);
+
+            if (!is_null($element))
+            {
+                $html[] = $element;
+            }
+        }
+
+        return count($html) > 0 ? ' ' . implode(' ', $html) : '';
+    }
+
     public function dropdown_button($title, $actions)
     {
 
