@@ -17,7 +17,7 @@ class HtmlServiceProvider extends ServiceProvider
     public function register()
     {
 
-        $this->app->singleton('html', function ($app)
+        $this->app->singleton('sgt_html', function ($app)
         {
 
             return new SGTHtml();
@@ -29,6 +29,6 @@ class HtmlServiceProvider extends ServiceProvider
     public function provides()
     {
 
-        return ['html', SGTHtml::class];
+        return ['sgt_html', SGTHtml::class];
     }
 }

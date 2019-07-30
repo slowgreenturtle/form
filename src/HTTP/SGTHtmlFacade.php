@@ -18,6 +18,6 @@ class SGTHtmlFacade extends Facade
     protected static function getFacadeAccessor()
     {
 
-        return 'html';
+        return 'sgt_html';
     }
 }
