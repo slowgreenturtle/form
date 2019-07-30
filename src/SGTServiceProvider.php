@@ -3,6 +3,7 @@
 namespace SGT;
 
 use Illuminate\Support\ServiceProvider;
+use SGT\HTTP\SGTHtml;
 
 class SGTServiceProvider extends ServiceProvider
 {
@@ -63,7 +64,14 @@ class SGTServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
+        $this->app->singleton('sgt_html', function ($app)
+        {
+
+            return new SGTHtml();
+        });
+
+        $this->app->alias('sgt_html', SGTHtml::class);
     }
 
     /**
@@ -74,7 +82,7 @@ class SGTServiceProvider extends ServiceProvider
     public function provides()
     {
 
-        return [];
+        return ['sgt_html', SGTHtml::class];
     }
 
 }
