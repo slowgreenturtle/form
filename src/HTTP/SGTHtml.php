@@ -2,7 +2,7 @@
 
 namespace SGT\HTTP;
 
-class HtmlBuilder
+class SGTHtml
 {
 
     public function menu($menu)
@@ -12,9 +12,7 @@ class HtmlBuilder
 
         foreach ($menu as $menu_item)
         {
-
             $html .= $this->menu_item($menu_item);
-
         }
 
         return $html;
@@ -106,7 +104,7 @@ class HtmlBuilder
     /**
      * Build an HTML attribute string from an array.
      *
-     * @param  array $attributes
+     * @param array $attributes
      * @return string
      */
     public function arrayAttributes($attributes)
@@ -133,8 +131,8 @@ class HtmlBuilder
     /**
      * Build a single attribute element.
      *
-     * @param  string $key
-     * @param  string $value
+     * @param string $key
+     * @param string $value
      * @return string
      */
     protected function arrayAttributeElement($key, $value)

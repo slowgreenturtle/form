@@ -5,7 +5,7 @@ namespace SGT\HTTP\Table\DataTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use SGT\HTTP\Config;
-use SGT\HTTP\HtmlBuilder;
+use SGT\HTTP\SGTHtml;
 use stdClass;
 
 abstract class Base
@@ -71,7 +71,7 @@ abstract class Base
         $this->search = new Search();
         $this->search->fill($request, $this->custom_search_fields);
 
-        $this->html = new HtmlBuilder();
+        $this->html = new SGTHtml();
         $this->view = view($this->getViewFile());
 
         $this->setConfigSettings();
