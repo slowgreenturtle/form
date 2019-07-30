@@ -230,52 +230,81 @@ class SGTHtml
         return count($html) > 0 ? ' ' . implode(' ', $html) : '';
     }
 
-    public function dropdown_button($title, $actions)
+    public function dropdown_button($actions, $params = [])
     {
 
-        $html = '<div class="btn-group">';
-        $html .= '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        $html .= $title . '<span class="caret"></span>';
-        $html .= '</button>';
+        $button_colors = [
+            'white'      => 'btn-default',
+            'green'      => 'btn-success',
+            'light_blue' => 'btn-info',
+            'yellow'     => 'btn-warning',
+            'blue'       => 'btn-primary',
+            'red'        => 'btn-danger'
+        ];
 
-        $html .= '<ul class="dropdown-menu">';
+        $button_color = array_get($params, 'button_color', 'blue');
+
+        $button_color_class = array_get($button_colors, $button_color, 'btn-primary');
+
+        $button_size = array_get($params, 'button_size', 'medium');
+
+        $button_size_class = '';
+
+        switch ($button_size)
+        {
+            case 'small':
+                $button_size_class = 'btn-xs';
+                break;
+            case 'large':
+                $button_size_class = 'btn-xl';
+                break;
+        }
+
+        $view_data['setting']['button_color'] = $button_color_class;
+        $view_data['setting']['button_size']  = $button_size_class;
+
+        $view_data['buttons'] = [];
 
         foreach ($actions as $action)
         {
 
             if (is_array($action))
             {
+                $type = array_get($action, 'type');
 
-                $type = Arr::get($action, 'type');
+                $button = [
+                    'link'  => array_get($action, 'link'),
+                    'title' => array_get($action, 'name'),
+                    'class' => ''
+                ];
 
-                switch ($type)
+                if ($type == 'confirm')
                 {
-                    case 'confirm':
-                        $html .= $this->confirm($action);
-                        break;
-                    default:
-                        $link       = Arr::get($action, 'link');
-                        $title      = Arr::get($action, 'name');
-                        $attributes = Arr::get($action, 'attributes', []);
-
-                        $html .= '<li>' . $this->link($link, $title, $attributes) . '</li>';
-                        break;
+                    $button['class'] = 'confirm_link';
                 }
+
+                $view_data['buttons'][] = $button;
+
             }
             else
             {
                 switch ($action)
                 {
                     case 'divider':
-                        $html .= '<li class="divider"></li>';
+                        $view_data['buttons'][] = 'divider';
                         break;
                 }
             }
         }
 
-        $html .= '</ul></div>';
+        if (count($view_data['buttons']) > 0)
+        {
+            $view = view('partial.dropdown.button', $view_data);
 
-        return $html;
+            return $view->__toString();
+        }
+
+        return '';
 
     }
 
