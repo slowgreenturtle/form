@@ -2,6 +2,7 @@
 
 namespace SGT\HTTP\Navigation\Subbar;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use SGT\HTTP\Navigation\Attribute;
 
