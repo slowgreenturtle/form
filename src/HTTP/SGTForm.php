@@ -650,12 +650,7 @@ abstract class SGTForm
 
         $attributes += Arr::get($element, 'options', []);
 
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $data['form_element'] = Form::textarea($name, null, $attributes);
+        $data['form_element'] = Form::textarea($name, $this->getValue($name), $attributes);
 
         return $this->elementView($data, $element);
 
