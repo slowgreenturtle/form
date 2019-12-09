@@ -172,6 +172,30 @@ class DataManage
         $connection    = config('database.default');
         $database_name = config("database.connections.{$connection}.database");
 
+        $local_path     = storage_path($this->config('database.copy.local.path'));
+        $local_filename = $this->config('database.copy.local.filename');
+        $local_file     = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
+
+        $cloud_filename = $this->config('database.copy.cloud.filename');
+        $cloud_path     = $this->config('database.copy.cloud.path');
+        $cloud_file     = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
+
+        #export the connection
+        $message = "Importing `$database_name` from ";
+
+        if ($destination == 'local')
+        {
+            $message .= "`$local_file`";
+        }
+        else
+        {
+            $message       .= "`$cloud_file`";
+            $disk          = $this->config('database.copy.cloud.disk');
+            $file_contents = Cloud::get($cloud_filename);
+            file_put_contents($loca_file, $file_contents);
+        }
+
+        return 'importing';
         $this->deleteTables($connection, $database_name);
 
         # extract the zip file in the temp folder
