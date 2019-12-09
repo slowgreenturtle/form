@@ -5,6 +5,7 @@ namespace SGT\HTTP;
 use Form;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use SGT\Traits\Config;
 
 abstract class SGTForm
 {

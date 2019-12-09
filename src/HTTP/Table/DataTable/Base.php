@@ -2,10 +2,10 @@
 
 namespace SGT\HTTP\Table\DataTable;
 
+use SGT\Traits\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use SGT\HTTP\SGTHtml;
-use SGT\Traits\Config;
 use stdClass;
 
 abstract class Base
