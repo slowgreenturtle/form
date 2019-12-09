@@ -15,9 +15,6 @@ class DataManage
 
     use Config;
 
-    protected $filePath;
-    protected $fileName;
-
     protected $system_connection = 'mysql';
     protected $multi_tenant      = false;
 
@@ -34,8 +31,7 @@ class DataManage
         $this->tenant_connection = $this->config('data.tenant.connection');
         $this->multi_tenant      = $this->config('data.tenant.enabled');
         $this->local_backup_path = $this->config('data.backup.path');
-
-        dd($this->local_backup_path);
+        $this->delete_limit      = $this->config('data.backup.days_stored', 1);
 
         $this->messenger = $messenger;
 

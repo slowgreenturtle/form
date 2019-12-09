@@ -7,7 +7,8 @@ return [
             'connection' => 'team',
         ],
         'backup' => [
-            'path' => 'database',
+            'path'        => 'database',
+            'days_stored' => 1,
         ]
     ],
     # What version of bootstrap should the app be using.
