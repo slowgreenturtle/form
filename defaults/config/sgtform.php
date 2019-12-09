@@ -1,14 +1,25 @@
 <?php
 
 return [
-    'data'      => [
+    'database'  => [
+        'copy'   => [
+            'cloud'    => [
+                'path'     => '',
+                'filename' => ''
+            ],
+            'local' => [
+                'filename' => 'database',
+                'path'     => 'database'
+            ],
+        ],
         'tenant' => [
             'enabled'    => false,
             'connection' => 'team',
         ],
         'backup' => [
-            'path'        => 'database',
+            'path'        => 'database', # this is assumed to be relative from the Laravel storage path.
             'days_stored' => 1,
+            's3_path'     => 'backup',
         ]
     ],
     # What version of bootstrap should the app be using.

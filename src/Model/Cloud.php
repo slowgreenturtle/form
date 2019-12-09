@@ -9,8 +9,7 @@ class Cloud
 
     public static function put($file_name, $source, $visibility = 'private')
     {
-
-        Storage::disk('s3')->put(Cloud::path($file_name), $source, $visibility);
+        Storage::disk('s3')->put($file_name, $source, $visibility);
     }
 
     public static function path($file_name)

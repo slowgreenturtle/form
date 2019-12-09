@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use SGT\Traits\Config;
+use SGT\Model\Cloud;
 use ZipArchive;
 
 class DataManage
@@ -28,10 +29,12 @@ class DataManage
     public function __construct($messenger = null)
     {
 
-        $this->tenant_connection = $this->config('data.tenant.connection');
-        $this->multi_tenant      = $this->config('data.tenant.enabled');
-        $this->local_backup_path = $this->config('data.backup.path');
-        $this->delete_limit      = $this->config('data.backup.days_stored', 1);
+        $this->tenant_connection = $this->config('database.tenant.connection');
+        $this->multi_tenant      = $this->config('database.tenant.enabled');
+
+        $this->local_backup_path = $this->config('database.backup.path');
+        $this->delete_limit      = $this->config('database.backup.days_stored', 1);
+        $this->s3_backup_path    = $this->config('database.backup.s3_path');
 
         $this->messenger = $messenger;
 
@@ -48,43 +51,56 @@ class DataManage
      *
      * @param $params
      */
-    public function cleanCopy($params = [])
+    public function copy($params = [])
     {
 
-        $type = Arr::get($params, 'type', 'export');
+        $type        = Arr::get($params, 'type', 'export');
+        $destination = Arr::get($params, 'destination', 'local');
 
         if ($type == 'import')
         {
             # import the connection
-            $this->cleanCopyImport($params);
+            $this->copyImport($params);
 
             return;
         }
 
-        #export the connection
-        $this->info("Exporting Clean Database copy");
-
-        # use the default database connection
+        $local_path     = storage_path($this->config('database.copy.local.path'));
+        $local_filename = $this->config('database.copy.local.filename');
 
         $connection    = config('database.default');
         $database_name = config("database.connections.{$connection}.database");
 
-        # Create the zip file
-        $path = $this->getBackupPath();
+        $cloud_filename = $this->config('database.copy.cloud.filename');
+        $cloud_path     = $this->config('database.copy.cloud.path');
+        $cloud_file     = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
 
         # export the zip file to the local path.
-        $zip_file = $path . DIRECTORY_SEPARATOR . 'clean_' . $database_name . '.zip';
+        $local_file = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
 
-        dd($zip_file);
+        #export the connection
+        $message = "Exporting `$database_name` to ";
 
+        if ($destination == 'local')
+        {
+            $message .= "`$local_file`";
+        }
+        else
+        {
+            $message .= "`$cloud_file`";
+        }
+
+        $this->info($message);
+
+        @mkdir($local_path);
         # necessary because the zipfile must exist for the ziparchive to have something to open.
-        @unlink($zip_file);
+        @unlink($local_file);
 
-        $file = fopen($zip_file, 'w');
+        $file = fopen($local_file, 'w');
         fclose($file);
 
         $zip = new ZipArchive();
-        $zip->open($zip_file, ZipArchive::OVERWRITE);
+        $zip->open($local_file, ZipArchive::OVERWRITE);
 
         # when 'adding' files to the zip archive, the actual add doesn't happen until the close call.
         # the temp files can then be deleted.
@@ -121,14 +137,24 @@ class DataManage
         // Close and send to users
         $zip->close();
 
-        $this->info("Cleaning up temp files");
         # remove all the temp files
+        $this->info("Cleaning up temp files");
+
         foreach ($removeFiles as $remove_file)
         {
             unlink($remove_file);
         }
 
         $this->info("Finished exporting database");
+
+        # if the export is s3 type. Then we copy the database to the s3 path and remove it locally
+
+        if ($destination == 'cloud')
+        {
+            $this->cloudCopy($local_file, $cloud_file);
+            # delete the local copy
+            unlink($local_file);
+        }
     }
 
     /**
@@ -136,7 +162,7 @@ class DataManage
      *
      * @param $params
      */
-    protected function cleanCopyImport($params)
+    protected function copyImport($params)
     {
 
         $return_status = true;
@@ -420,6 +446,23 @@ class DataManage
             $zip->addFile($file, "table_{$table}.sql");
 
             $removeFiles[] = $file;
+
+        }
+    }
+
+    /**
+     * @param $local_file the local file including path.
+     * @parm $cloud_file the cloud file including path
+     */
+
+    public function cloudCopy($local_file, $cloud_file)
+    {
+
+        if (is_file($local_file))
+        {
+            $contents = file_get_contents($local_file);
+            Cloud::put($cloud_file, $contents);
+            $this->info("Backed up $cloud_file to cloud destination");
 
         }
     }
@@ -736,35 +779,5 @@ class DataManage
                 }
             }
         }
-    }
-
-    public function backupToS3()
-    {
-
-        $path = $this->getBackupPath();
-
-        $files = glob($path . '/db_*.gz');
-
-        $counter = 0;
-
-        foreach ($files as $file)
-        {
-            if (is_file($file))
-            {
-
-                $base_name  = pathinfo($file, PATHINFO_BASENAME);
-                $cloud_path = $this->s3_backup_path . '/' . $base_name;
-                $contents   = file_get_contents($file);
-
-                if (!Cloud::exists($cloud_path))
-                {
-                    Cloud::put($cloud_path, $contents);
-                    $this->info($cloud_path);
-                    $counter++;
-                }
-
-            }
-        }
-        $this->info("Backed up $counter files to S3");
     }
 }
