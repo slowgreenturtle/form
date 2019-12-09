@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use SGT\Traits\Config;
 use SGT\Model\Cloud;
+use SGT\Traits\Config;
 use ZipArchive;
 
 class DataManage
@@ -151,7 +151,9 @@ class DataManage
 
         if ($destination == 'cloud')
         {
-            $this->cloudCopy($local_file, $cloud_file);
+
+            $disk = $this->config('database.copy.cloud.disk');
+            $this->cloudCopy($local_file, $cloud_file, 'private', $disk);
             # delete the local copy
             unlink($local_file);
         }
@@ -455,13 +457,13 @@ class DataManage
      * @parm $cloud_file the cloud file including path
      */
 
-    public function cloudCopy($local_file, $cloud_file)
+    public function cloudCopy($local_file, $cloud_file, $visibility = 'private', $disk = 's3')
     {
 
         if (is_file($local_file))
         {
             $contents = file_get_contents($local_file);
-            Cloud::put($cloud_file, $contents);
+            Cloud::put($cloud_file, $contents, $visibility, $disk);
             $this->info("Backed up $cloud_file to cloud destination");
 
         }

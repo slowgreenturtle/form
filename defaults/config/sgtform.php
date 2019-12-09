@@ -3,9 +3,10 @@
 return [
     'database'  => [
         'copy'   => [
-            'cloud'    => [
-                'path'     => '',
-                'filename' => ''
+            'cloud' => [
+                'path'     => 'database',
+                'filename' => 'database',
+                'disk'     => 's3'  #$this is the disk setup in the Laravel filesystems config.
             ],
             'local' => [
                 'filename' => 'database',
