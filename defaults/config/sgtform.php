@@ -1,6 +1,15 @@
 <?php
 
 return [
+    'data'      => [
+        'tenant' => [
+            'enabled'    => false,
+            'connection' => 'team',
+        ],
+        'backup' => [
+            'path' => 'database',
+        ]
+    ],
     # What version of bootstrap should the app be using.
     'config'    => [
         'change_table' => 'model_changes',

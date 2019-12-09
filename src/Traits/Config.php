@@ -1,6 +1,6 @@
 <?php
 
-namespace SGT\HTTP;
+namespace SGT\Traits;
 
 trait Config
 {
@@ -19,7 +19,7 @@ trait Config
     public function config($path)
     {
 
-        $field = 'sgtform.config.' . $path;
+        $field = 'sgtform.' . $path;
 
         return config($field);
 

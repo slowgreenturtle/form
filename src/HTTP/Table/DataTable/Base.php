@@ -4,8 +4,8 @@ namespace SGT\HTTP\Table\DataTable;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use SGT\HTTP\Config;
 use SGT\HTTP\SGTHtml;
+use SGT\Traits\Config;
 use stdClass;
 
 abstract class Base
@@ -97,7 +97,7 @@ abstract class Base
     public function setConfigSettings()
     {
 
-        $settings = $this->config('table.settings');
+        $settings = $this->config('config.table.settings');
 
         $this->settings = array_merge($this->settings, $settings);
 
