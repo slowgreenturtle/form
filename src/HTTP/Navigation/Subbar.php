@@ -2,7 +2,7 @@
 
 namespace SGT\HTTP\Navigation;
 
-use SGT\HTTP\Config;
+use SGT\Traits\Config;
 use SGT\HTTP\Navigation\Subbar\Item;
 
 class Subbar

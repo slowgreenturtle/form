@@ -3,7 +3,7 @@
 namespace SGT\HTTP\Navigation;
 
 use Illuminate\Support\Arr;
-use SGT\HTTP\Config;
+use SGT\Traits\Config;
 
 abstract class Item
 {

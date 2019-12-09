@@ -3,7 +3,7 @@
 namespace SGT\HTTP\Element;
 
 use Form;
-use SGT\HTTP\Config;
+use SGT\Traits\Config;
 
 class Input extends Element
 {
