@@ -145,7 +145,7 @@ return [
                 'input'  => [
                     'css' => [
                         'default' => 'form-control',
-                        'error'   => 'form-control-danger'
+                        'error'   => 'is-invalid'
                     ]
                 ],
             ],
