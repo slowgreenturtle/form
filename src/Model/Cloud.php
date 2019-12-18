@@ -32,10 +32,12 @@ class Cloud
         Storage::disk($disk)->putFileAs(Cloud::path($path), $source, $base_name);
     }
 
-    public static function path($file_name)
+    public static function path($file_name, $disk = 's3')
     {
 
-        $path = config('filesystems.disks.s3.path');
+        $config_path = "filesystems.disks.{$disk}.path";
+
+        $path = config($config_path);
 
         $path .= DIRECTORY_SEPARATOR . $file_name;
 
@@ -43,12 +45,14 @@ class Cloud
 
     }
 
-    public static function url($file_name)
+    public static function url($file_name, $disk = 's3')
     {
 
-        $url = config('filesystems.disks.s3.url');
+        $config_url = "filesystems.disks.{$disk}.url";
+        $url        = config($config_url);
 
-        $url .= config('filesystems.disks.s3.path');
+        $config_path = "filesystems.disks.{$disk}.path";
+        $url         .= config($config_path);
 
         $url .= DIRECTORY_SEPARATOR;
 
@@ -84,5 +88,3 @@ class Cloud
 
     }
 }
-
-
