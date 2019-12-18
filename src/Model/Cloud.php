@@ -48,11 +48,11 @@ class Cloud
     public static function url($file_name, $disk = 's3')
     {
 
-        $config_url = "filesystems.disks.{$disk}.url";
-        $url        = config($config_url);
-
+        $config_url  = "filesystems.disks.{$disk}.url";
         $config_path = "filesystems.disks.{$disk}.path";
-        $url         .= config($config_path);
+
+        $url = config($config_url);
+        $url .= config($config_path);
 
         $url .= DIRECTORY_SEPARATOR;
 
@@ -65,26 +65,30 @@ class Cloud
     public static function exists($file_name, $disk = 's3')
     {
 
-        return Storage::disk($disk)->exists(Cloud::path($file_name));
+        return Storage::disk($disk)->exists(Cloud::path($file_name, $disk));
     }
 
     public static function delete($file_data, $disk = 's3')
     {
 
-        Storage::disk($disk)->delete(Cloud::path($file_data));
+        Storage::disk($disk)->delete(Cloud::path($file_data, $disk));
     }
 
     public static function get($file_name, $disk = 's3')
     {
 
-        return Storage::disk($disk)->get(Cloud::path($file_name));
+        $path = Cloud::path($file_name, $disk);
+
+        return Storage::disk($disk)->get(Cloud::path($file_name, $disk));
 
     }
 
     public static function append($file_name, $text, $disk = 's3')
     {
 
-        Storage::disk($disk)->append(Cloud::path($file_name), $text);
+        Storage::disk($disk)->append(Cloud::path($file_name, $disk), $text);
 
     }
 }
+
+

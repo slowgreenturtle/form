@@ -54,8 +54,8 @@ class DataManage
     public function copy($params = [])
     {
 
-        $type        = Arr::get($params, 'type', 'export');
-        $destination = Arr::get($params, 'destination', 'local');
+        $type    = Arr::get($params, 'type', 'export');
+        $storage = Arr::get($params, 'storage', 'local');
 
         if ($type == 'import')
         {
@@ -81,7 +81,7 @@ class DataManage
         #export the connection
         $message = "Exporting `$database_name` to ";
 
-        if ($destination == 'local')
+        if ($storage == 'local')
         {
             $message .= "`$local_file`";
         }
@@ -149,7 +149,7 @@ class DataManage
 
         # if the export is s3 type. Then we copy the database to the s3 path and remove it locally
 
-        if ($destination == 'cloud')
+        if ($storage == 'cloud')
         {
 
             $disk = $this->config('database.copy.cloud.disk');
@@ -169,6 +169,8 @@ class DataManage
 
         $return_status = true;
 
+        $storage = Arr::get($params, 'storage', 'local');
+
         $connection    = config('database.default');
         $database_name = config("database.connections.{$connection}.database");
 
@@ -183,7 +185,7 @@ class DataManage
         #export the connection
         $message = "Importing `$database_name` from ";
 
-        if ($destination == 'local')
+        if ($storage == 'local')
         {
             $message .= "`$local_file`";
         }
@@ -191,42 +193,42 @@ class DataManage
         {
             $message       .= "`$cloud_file`";
             $disk          = $this->config('database.copy.cloud.disk');
-            $file_contents = Cloud::get($cloud_filename);
-            file_put_contents($loca_file, $file_contents);
+            $file_contents = Cloud::get($cloud_file, $disk);
+            file_put_contents($local_file, $file_contents);
         }
 
-        return 'importing';
+        $this->info($message);
+
         $this->deleteTables($connection, $database_name);
 
         # extract the zip file in the temp folder
-        $path     = $this->getBackupPath();
-        $zip_file = $path . DIRECTORY_SEPARATOR . 'clean_' . $database_name . '.zip';
-
         $zip = new ZipArchive();
 
         $tmp_dir = DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $database_name;
 
+        $this->info("Extracting `$local_file` to `$tmp_dir`");
+
         try
         {
 
-            if ($zip->open($zip_file) === true)
+            if ($zip->open($local_file) === true)
             {
                 $zip->extractTo($tmp_dir);
                 $zip->close();
             }
             else
             {
-                throw new \Exception("Couldn't find backup file: $zip_file");
+                throw new \Exception("Couldn't find backup file: $local_file");
             }
 
             # import the schema
-            $destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "schema.sql";
+            $file_destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "schema.sql";
 
             $parameters = [
                 'command'     => 'mysql',
                 'connection'  => $connection,
                 'database'    => $database_name,
-                'destination' => $destination,
+                'destination' => $file_destination,
             ];
 
             $this->mySQL($parameters);
@@ -246,13 +248,13 @@ class DataManage
 
                 $this->info("Restoring table : $table_name");
 
-                $destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "table_{$table_name}.sql";
+                $file_destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "table_{$table_name}.sql";
 
                 $parameters = [
                     'command'     => 'mysql',
                     'connection'  => $connection,
                     'database'    => $database_name,
-                    'destination' => $destination,
+                    'destination' => $file_destination,
                     'table'       => [$table_name]
                 ];
 
@@ -275,6 +277,15 @@ class DataManage
         File::deleteDirectory($tmp_dir);
 
         return $return_status;
+    }
+
+    public function info($message)
+    {
+
+        if ($this->messenger)
+        {
+            $this->messenger->info($message);
+        }
     }
 
     protected function deleteTables($connection, $database_name, $drop_db = false)
@@ -310,15 +321,6 @@ class DataManage
 
     }
 
-    public function info($message)
-    {
-
-        if ($this->messenger)
-        {
-            $this->messenger->info($message);
-        }
-    }
-
     public function getTables($connection, $database): array
     {
 
@@ -335,12 +337,6 @@ class DataManage
         };
 
         return $list;
-    }
-
-    protected function getBackupPath()
-    {
-
-        return storage_path($this->local_backup_path);
     }
 
     /**
@@ -455,13 +451,13 @@ class DataManage
             {
 
                 # We want the whole table. Let's grab it.
-                $destination = "> $file";
+                $file_destination = "> $file";
 
                 $parameters = [
                     'command'     => 'mysqldump',
                     'connection'  => $connection,
                     'database'    => $database_name,
-                    'destination' => $destination,
+                    'destination' => $file_destination,
                     'tables'      => [$table]
                 ];
 
@@ -517,6 +513,12 @@ class DataManage
         {
             mkdir($path);
         }
+    }
+
+    protected function getBackupPath()
+    {
+
+        return storage_path($this->local_backup_path);
     }
 
     protected function restoreDatabase($db_name, $connection)
