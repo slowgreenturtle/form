@@ -145,7 +145,7 @@ class DataManage
             unlink($remove_file);
         }
 
-        $this->info("Finished exporting database");
+        $this->info("Finished exporting local database");
 
         # if the export is s3 type. Then we copy the database to the s3 path and remove it locally
 
