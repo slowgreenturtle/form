@@ -277,8 +277,7 @@ class DataManage
                     'connection'  => $connection,
                     'database'    => $database_name,
                     'destination' => $file_destination,
-                    'table'       => [$table_name],
-                    'parameters'  => '--set-gtid-purged=OFF'
+                    'table'       => [$table_name]
                 ];
 
                 $this->mySQL($parameters);
