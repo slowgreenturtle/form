@@ -231,7 +231,6 @@ class DataManage
                 throw new \Exception("Couldn't find local backup file: $local_file");
             }
 
-            $this->info("Deleting exiting tables from $database_name");
             $this->deleteTables($connection, $database_name);
 
             # import the schema
