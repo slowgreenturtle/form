@@ -188,18 +188,28 @@ class DataManage
         if ($storage == 'local')
         {
             $message .= "`$local_file`";
+            $this->info($message);
         }
         else
         {
-            $message       .= "`$cloud_file`";
-            $disk          = $this->config('database.copy.cloud.disk');
+            $message .= "`$cloud_file`";
+            $this->info($message);
+
+            $disk = $this->config('database.copy.cloud.disk');
+
+            $file_exists = Cloud::exists($cloud_file, $disk);
+
+            if ($file_exists == false)
+            {
+                $this->info("Cloud file doesn't exist");
+
+                return false;
+
+            }
+
             $file_contents = Cloud::get($cloud_file, $disk);
             file_put_contents($local_file, $file_contents);
         }
-
-        $this->info($message);
-
-        $this->deleteTables($connection, $database_name);
 
         # extract the zip file in the temp folder
         $zip = new ZipArchive();
@@ -218,8 +228,11 @@ class DataManage
             }
             else
             {
-                throw new \Exception("Couldn't find backup file: $local_file");
+                throw new \Exception("Couldn't find local backup file: $local_file");
             }
+
+            $this->info("Deleting exiting tables from $database_name");
+            $this->deleteTables($connection, $database_name);
 
             # import the schema
             $file_destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "schema.sql";
