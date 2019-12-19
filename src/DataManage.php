@@ -182,6 +182,8 @@ class DataManage
         $cloud_path     = $this->config('database.copy.cloud.path');
         $cloud_file     = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
 
+        @mkdir($local_path);
+
         #export the connection
         $message = "Importing `$database_name` from ";
 
@@ -189,6 +191,14 @@ class DataManage
         {
             $message .= "`$local_file`";
             $this->info($message);
+
+            if (file_exists($local_file) == false)
+            {
+                $this->info("Local file doesn't exist");
+
+                return false;
+            }
+
         }
         else
         {
