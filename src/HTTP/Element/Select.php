@@ -25,6 +25,7 @@ class Select extends Element
     {
 
         $this->attributes['size'] = $size;
+        return $this;
     }
 
     public function multiple($state = true)

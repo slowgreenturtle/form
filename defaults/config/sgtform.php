@@ -91,7 +91,7 @@ return [
                         [
                             'css' => [
                                 'div'     => [
-                                    'input-group'
+                                    'form-group'
                                 ],
                                 'element' => [
                                     'form-control'
@@ -102,7 +102,7 @@ return [
                         [
                             'css' => [
                                 'div'     => [
-                                    'input-group'
+                                    'form-group'
                                 ],
                                 'element' => [
                                     'form-control'

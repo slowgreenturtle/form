@@ -197,14 +197,19 @@ abstract class Element
 
         $tooltip = $this->getData('tooltip');
 
-        if ($required == true)
-        {
-            $tooltip = 'Required. ' . $tooltip;
-        }
-
         if ($tooltip)
         {
-            $attributes['title']       = $tooltip;
+
+            if ($required == true)
+            {
+                $title = 'Required. ' . $tooltip;
+            }
+            else
+            {
+                $title = $tooltip;
+            }
+
+            $attributes['title']       = $title;
             $attributes['data-toggle'] = 'tooltip';
         }
 
