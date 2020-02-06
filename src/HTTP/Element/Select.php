@@ -4,11 +4,27 @@ namespace SGT\HTTP\Element;
 
 use Form;
 use Illuminate\Support\Arr;
+
 class Select extends Element
 {
 
     protected $type    = 'input';
     protected $classes = [];
+
+    public function __construct()
+    {
+
+        parent::__construct();
+
+        $this->size(10);
+
+    }
+
+    public function size($size)
+    {
+
+        $this->attributes['size'] = $size;
+    }
 
     public function options($data)
     {
@@ -55,25 +71,49 @@ class Select extends Element
         return $view->__toString();
     }
 
+    public function multiple($state = true)
+    {
+
+        $this->data('multiple', $state);
+
+        return $this;
+    }
+
     public function element()
     {
 
         $element_name = $this->getName();
-        $type         = $this->getType();
-
-        $this->addClass('element', 'form-control');
 
         if ($this->hasError())
         {
-            $classes[] = $this->configFrontEnd('element.input.css.error');
+            $this->addClass('element', $this->configFrontEnd('element.input.css.error'));
         }
 
         $attributes = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
-        $attributes['class'] = implode(' ', $this->getClass('element'));
+        $attributes['class'] = implode(" ", $this->getClass('element'));
 
-        return Form::input($type, $element_name, $this->getValue(), $attributes);
+        $options = $this->getData('options', []);
+
+        $selected = $this->getData('value');
+
+        $multiple = $this->getData('multiple');
+
+        if ($multiple)
+        {
+
+            $attributes['multiple'] = $multiple;
+            $attributes['name']     = $element_name . '[]';
+        }
+
+        if ($this->model)
+        {
+            Form::setModel($this->model);
+        }
+
+        return Form::select($element_name, $options, $selected, $attributes);
+
     }
 
     public function getType()
