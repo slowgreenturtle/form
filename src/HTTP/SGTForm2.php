@@ -11,10 +11,12 @@ namespace SGT\HTTP;
 use Form;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use SGT\HTTP\Element\Color;
 use SGT\HTTP\Element\Hidden;
 use SGT\HTTP\Element\Input;
 use SGT\HTTP\Element\Select;
 use SGT\HTTP\Element\Submit;
+use SGT\HTTP\Element\TextArea;
 use SGT\Traits\Config;
 
 abstract class SGTForm2
@@ -104,6 +106,12 @@ abstract class SGTForm2
                 break;
             case 'select':
                 $element = new Select();
+                break;
+            case 'color':
+                $element = new Color();
+                break;
+            case 'textarea':
+                $element = new TextArea();
                 break;
             default:
                 return null;
