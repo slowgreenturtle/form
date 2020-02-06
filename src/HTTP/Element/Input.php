@@ -4,6 +4,7 @@ namespace SGT\HTTP\Element;
 
 use Form;
 use Illuminate\Support\Arr;
+
 class Input extends Element
 {
 
@@ -69,7 +70,9 @@ class Input extends Element
 
         $element_view_path = $this->configFrontEnd('element.view.path');
 
-        $view_file = $this->getData('view_file', $element_view_path);
+        $view_file = $this->getData('view_file');
+
+        $view_file = empty($view_file) ? $element_view_path : $view_file;
 
         $view_file .= '/' . $this->type;
 
