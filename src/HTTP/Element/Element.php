@@ -113,9 +113,7 @@ abstract class Element
     public function getModelField()
     {
 
-        $model_field = $this->getData('model_field', $this->getName());
-
-        return $model_field;
+        return $this->getData('model_field', $this->getName());
     }
 
     public function required($required = true)
