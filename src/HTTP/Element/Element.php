@@ -210,6 +210,11 @@ abstract class Element
 
         $label = Form::label($element_name, $label, $attributes);
 
+        if ($tooltip)
+        {
+            $label .= " <i title=\"$tooltip\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
+        }
+
         return $label;
 
     }
@@ -220,6 +225,10 @@ abstract class Element
         $label = Arr::get($this->data, 'label', $this->getName());
 
         $label = str_replace('_id', '', $label);
+
+        $label = str_replace('_', ' ', $label);
+
+        $label = ucwords($label);
 
         if ($this->getData('required') == true && !empty($label))
         {
