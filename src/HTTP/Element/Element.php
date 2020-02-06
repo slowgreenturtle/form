@@ -39,6 +39,15 @@ abstract class Element
 
     abstract public function draw();
 
+    public function attributes(array $attributes)
+    {
+
+        $this->attributes += $attributes;
+
+        return $this;
+
+    }
+
     public function tooltip($text)
     {
 
