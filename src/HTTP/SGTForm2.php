@@ -64,7 +64,7 @@ abstract class SGTForm2
 
         $this->build();
 
-        $this->add('hidden', 'return_url');
+        $this->add('return_url', 'hidden');
 
         $this->setup();
 
@@ -87,7 +87,7 @@ abstract class SGTForm2
 
     abstract protected function build();
 
-    public function add($type, $name)
+    public function add($name, $type)
     {
 
         switch ($type)
