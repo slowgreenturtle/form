@@ -8,4 +8,6 @@ use Illuminate\Support\Arr;
 class Submit extends Input
 {
 
+    protected $type = 'submit';
+
 }

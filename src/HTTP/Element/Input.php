@@ -8,7 +8,8 @@ use Illuminate\Support\Arr;
 class Input extends Element
 {
 
-    protected $type = 'input';
+    protected $type      = 'input';
+    protected $type_file = 'input';
 
     public function __construct()
     {
@@ -44,7 +45,7 @@ class Input extends Element
 
         $view_file = empty($view_file) ? $element_view_path : $view_file;
 
-        $view_file .= '/' . $this->type;
+        $view_file .= '/' . $this->type_file;
 
         $view          = view($view_file);
         $view->element = $this;
