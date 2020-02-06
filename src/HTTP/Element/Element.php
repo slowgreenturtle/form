@@ -210,7 +210,7 @@ abstract class Element
     public function getLabel()
     {
 
-        $label = Arr::get($this->data, 'label', $this->name());
+        $label = Arr::get($this->data, 'label', $this->getName());
 
         $label = str_replace('_id', '', $label);
 

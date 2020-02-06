@@ -10,7 +10,7 @@
                 <span class="input-group-addon">{!! $element->getData('prepend') !!}</span>
             @endif
 
-            {!! $element->drawElement !!}
+            {!! $element->drawElement() !!}
 
             @if($element->getData('append'))
                 <span class="input-group-addon">{!! $element->getData('append') !!}</span>
