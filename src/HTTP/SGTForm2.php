@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use SGT\HTTP\Element\Hidden;
 use SGT\HTTP\Element\Input;
+use SGT\HTTP\Element\Select;
 use SGT\HTTP\Element\Submit;
 use SGT\Traits\Config;
 
@@ -100,7 +101,9 @@ abstract class SGTForm2
                 break;
             case 'hidden':
                 $element = new Hidden();
-
+                break;
+            case 'select':
+                $element = new Select();
                 break;
             default:
                 return null;

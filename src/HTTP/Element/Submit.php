@@ -8,18 +8,7 @@ use SGT\Traits\Config;
 class Submit extends Element
 {
 
-    protected $_type = 'input';
     use Config;
-
-    public function __construct($attributes)
-    {
-
-        # set this classes
-        //$element['class'] = ['btn', 'btn-success'];
-
-
-        parent::__construct($attributes);
-    }
 
     public function draw()
     {
