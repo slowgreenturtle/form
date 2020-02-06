@@ -28,6 +28,13 @@ abstract class Element
 
     }
 
+    public function tooltip($text)
+    {
+
+        $this->data('tooltip', $text);
+
+    }
+
     public function data($name, $value)
     {
 
