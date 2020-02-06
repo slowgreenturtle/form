@@ -28,13 +28,6 @@ abstract class Element
 
     }
 
-    public function tooltip($text)
-    {
-
-        $this->data('tooltip', $text);
-
-    }
-
     public function data($name, $value)
     {
 
@@ -45,6 +38,15 @@ abstract class Element
     }
 
     abstract public function draw();
+
+    public function tooltip($text)
+    {
+
+        $this->data('tooltip', $text);
+
+        return $this;
+
+    }
 
     public function getId()
     {
