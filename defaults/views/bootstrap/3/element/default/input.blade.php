@@ -1,27 +1,26 @@
 <div class="{{ $element->getClasses('div', true) }}" id="{{ $element->getDivID() }}">
 
-    {!! $label !!}
+    {!! $element->drawLabel() !!}
 
-    @if($prepend_text != null || $append_text != null)
+    @if($element->getData('prepend') || $element->getData('append'))
         <div class="input-group">
             @endif
 
-            @if($prepend_text != null)
-                <span class="input-group-addon">{{$prepend_text}}</span>
+            @if($element->getData('prepend'))
+                <span class="input-group-addon">{!! $element->getData('prepend') !!}</span>
             @endif
 
-            {{ $form_element }}
+            {!! $element->drawElement !!}
 
-            @if($append_text != null)
-                <span class="input-group-addon">{{  $append_text }}</span>
+            @if($element->getData('append'))
+                <span class="input-group-addon">{!! $element->getData('append') !!}</span>
             @endif
 
-            @if($prepend_text != null || $append_text != null)
+            @if($element->getData('prepend') || $element->getData('append'))
         </div>
     @endif
 
-    @if(!empty($help))
-
-        <small>{{ $help }}</small>
+    @if(!empty($element->getData('help')))
+        <small>{!! $element->getData('help') !!}</small>
     @endif
 </div>

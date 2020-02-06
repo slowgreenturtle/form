@@ -79,7 +79,7 @@ class Input extends Element
         return $view->__toString();
     }
 
-    public function element()
+    public function drawElement()
     {
 
         $element_name = $this->getName();
