@@ -150,12 +150,12 @@ abstract class SGTForm2
             $name = 'submit_' . Str::slug($value);
         }
 
-        $element = $this->add('submit', $name);
+        $element = $this->add($name, 'submit');
 
-        $element['label'] = '&nbsp;';
-        $this->attribute('value', $value);
+        $element->label('&nbsp;');
+        $element->attribute('value', $value);
 
-        return $element;
+        return $element->draw();
 
     }
 
