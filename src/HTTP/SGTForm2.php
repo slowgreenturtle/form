@@ -409,14 +409,6 @@ abstract class SGTForm2
 
     }
 
-    public function text($element)
-    {
-
-        $element['type'] = 'text';
-
-        return $this->input($element);
-    }
-
     public function password($element)
     {
 
@@ -547,56 +539,6 @@ abstract class SGTForm2
 
     }
 
-    public function select($element)
-    {
-
-        $name     = Arr::get($element, 'name');
-        $list     = Arr::get($element, 'list', []);
-        $selected = $this->getValue($name);
-
-        $data = [];
-
-        $data['div_name']    = $name . '_div';
-        $data['div_classes'] = $this->makeDivClasses($name);
-
-        $data['label'] = $this->label($element);
-
-        $class   = Arr::get($element, 'class');
-        $classes = ['form-control'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        }
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        $add_atributes = Arr::get($element, 'attributes', []);
-
-        $attributes += $add_atributes;
-
-        $multiselect = Arr::get($attributes, 'multiple');
-
-        if ($multiselect)
-        {
-            $attributes['name'] = $name . '[]';
-            $attributes['size'] = Arr::get($attributes, 'size', 10);
-        }
-
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $data['form_element'] = Form::select($name, $list, $selected, $attributes);
-
-        return $this->elementView($data, $element);
-
-    }
-
     public function scripts()
     {
 
@@ -611,33 +553,5 @@ abstract class SGTForm2
         $element['type'] = 'color';
 
         return $this->input($element);
-    }
-
-    public function textarea($element)
-    {
-
-        $data = $this->viewDataDefault($element);
-
-        $name  = Arr::get($element, 'name');
-        $class = Arr::get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        }
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        $attributes += Arr::get($element, 'options', []);
-
-        $data['form_element'] = Form::textarea($name, $this->getValue($name), $attributes);
-
-        return $this->elementView($data, $element);
-
     }
 }

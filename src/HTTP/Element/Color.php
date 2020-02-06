@@ -7,5 +7,5 @@ use Illuminate\Support\Arr;
 class Color extends Input
 {
 
-    protected $type = 'input';
+    protected $type = 'color';
 }
