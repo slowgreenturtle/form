@@ -4,7 +4,7 @@ namespace SGT\HTTP\Element;
 
 use Form;
 use SGT\Traits\Config;
-
+use Illuminate\Support\Arr;
 class File extends Element
 {
 
