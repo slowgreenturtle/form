@@ -86,11 +86,6 @@ class Select extends Element
             $attributes['name']     = $element_name . '[]';
         }
 
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
         return Form::select($element_name, $options, $selected, $attributes);
 
     }
