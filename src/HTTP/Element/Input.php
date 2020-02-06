@@ -8,8 +8,7 @@ use Illuminate\Support\Arr;
 class Input extends Element
 {
 
-    protected $type    = 'input';
-    protected $classes = [];
+    protected $type = 'input';
 
     public function __construct()
     {
@@ -18,35 +17,6 @@ class Input extends Element
 
         $this->addClass('div', $this->configFrontEnd('element.input.css.div'));
         $this->addClass('element', $this->configFrontEnd('element.input.css.element'));
-    }
-
-    public function addClass($type, $class)
-    {
-
-        if (is_array($class))
-        {
-
-            $classes = Arr::get($this->classes, $type, []);
-
-            foreach ($class as $item)
-            {
-                $classes[$item] = $item;
-            }
-
-            $this->classes[$type] = $classes;
-
-        }
-        else
-        {
-            $this->classes[$type][$class] = $class;
-        }
-
-    }
-
-    public function getDivID()
-    {
-
-        return $this->getId() . '_div';
     }
 
     public function append($text)
@@ -90,7 +60,7 @@ class Input extends Element
 
         if ($this->hasError())
         {
-            $this->addClass('element', $this->configFrontEnd('element.input.css.error'));
+            $this->addClass('element', $this->configFrontEnd('element.css.error'));
         }
 
         $attributes = $this->getAttributes();
@@ -107,17 +77,4 @@ class Input extends Element
         return $this->type;
     }
 
-    public function getClass($type, $implode = false)
-    {
-
-        $classes = Arr::get($this->classes, $type, []);
-
-        if ($implode == true)
-        {
-            return implode(' ', $classes);
-        }
-
-        return $classes;
-
-    }
 }

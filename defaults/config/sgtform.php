@@ -43,6 +43,11 @@ return [
         '3' => [
             'element'    =>
                 [
+                    'css'    => [
+                        'error' => [
+                            'form-control-danger'
+                        ]
+                    ],
                     'link'   => [
                         'colors' =>
                             [

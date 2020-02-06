@@ -8,8 +8,7 @@ use Illuminate\Support\Arr;
 class Select extends Element
 {
 
-    protected $type    = 'input';
-    protected $classes = [];
+    protected $type = 'select';
 
     public function __construct()
     {
@@ -34,34 +33,14 @@ class Select extends Element
         return $this;
     }
 
-    public function getDivID()
-    {
-
-        return $this->getId() . '_div';
-    }
-
-    public function append($text)
-    {
-
-        $this->data('append', $text);
-
-        return $this;
-    }
-
-    public function prepend($text)
-    {
-
-        $this->data('prepend', $text);
-
-        return $this;
-    }
-
     public function draw()
     {
 
         $element_view_path = $this->configFrontEnd('element.view.path');
 
-        $view_file = $this->getData('view_file', $element_view_path);
+        $view_file = $this->getData('view_file');
+
+        $view_file = empty($view_file) ? $element_view_path : $view_file;
 
         $view_file .= '/' . $this->type;
 
@@ -79,14 +58,14 @@ class Select extends Element
         return $this;
     }
 
-    public function element()
+    public function drawElement()
     {
 
         $element_name = $this->getName();
 
         if ($this->hasError())
         {
-            $this->addClass('element', $this->configFrontEnd('element.input.css.error'));
+            $this->addClass('element', $this->configFrontEnd('element.css.error'));
         }
 
         $attributes = $this->getAttributes();
@@ -116,46 +95,4 @@ class Select extends Element
 
     }
 
-    public function getType()
-    {
-
-        return $this->type;
-    }
-
-    public function addClass($type, $class)
-    {
-
-        if (is_array($class))
-        {
-
-            $classes = Arr::get($this->classes, $type, []);
-
-            foreach ($class as $item)
-            {
-                $classes[$item] = $item;
-            }
-
-            $this->classes[$type] = $classes;
-
-        }
-        else
-        {
-            $this->classes[$type][$class] = $class;
-        }
-
-    }
-
-    public function getClass($type, $implode = false)
-    {
-
-        $classes = Arr::get($this->classes, $type, []);
-
-        if ($implode == true)
-        {
-            return implode(' ', $classes);
-        }
-
-        return $classes;
-
-    }
 }

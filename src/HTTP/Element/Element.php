@@ -21,6 +21,7 @@ abstract class Element
     public    $form       = null;
     protected $data       = [];
     protected $attributes = [];
+    protected $classes    = [];
 
     public function __construct()
     {
@@ -40,22 +41,10 @@ abstract class Element
 
     abstract public function draw();
 
-    public function attributes(array $attributes)
+    public function getDivID()
     {
 
-        $this->attributes += $attributes;
-
-        return $this;
-
-    }
-
-    public function tooltip($text)
-    {
-
-        $this->data('tooltip', $text);
-
-        return $this;
-
+        return $this->getId() . '_div';
     }
 
     public function getId()
@@ -75,6 +64,24 @@ abstract class Element
     {
 
         return $this->getData('name');
+
+    }
+
+    public function attributes(array $attributes)
+    {
+
+        $this->attributes += $attributes;
+
+        return $this;
+
+    }
+
+    public function tooltip($text)
+    {
+
+        $this->data('tooltip', $text);
+
+        return $this;
 
     }
 
@@ -222,6 +229,12 @@ abstract class Element
         return $label;
     }
 
+    public function getAttributes()
+    {
+
+        return $this->attributes;
+    }
+
     public function name($name)
     {
 
@@ -230,9 +243,41 @@ abstract class Element
         return $this;
     }
 
-    public function getAttributes()
+    public function addClass($type, $class)
     {
 
-        return $this->attributes;
+        if (is_array($class))
+        {
+
+            $classes = Arr::get($this->classes, $type, []);
+
+            foreach ($class as $item)
+            {
+                $classes[$item] = $item;
+            }
+
+            $this->classes[$type] = $classes;
+
+        }
+        else
+        {
+            $this->classes[$type][$class] = $class;
+        }
+
     }
+
+    public function getClass($type, $implode = false)
+    {
+
+        $classes = Arr::get($this->classes, $type, []);
+
+        if ($implode == true)
+        {
+            return implode(' ', $classes);
+        }
+
+        return $classes;
+
+    }
+
 }
