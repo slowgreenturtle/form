@@ -170,7 +170,7 @@ abstract class Element
         return $this;
     }
 
-    protected function drawLabel()
+    public function drawLabel()
     {
 
         $label = $this->getLabel();
