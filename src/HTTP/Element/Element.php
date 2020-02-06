@@ -82,6 +82,8 @@ abstract class Element
 
         $this->data('value', $value);
 
+        return $this;
+
     }
 
     public function getValue()
@@ -112,10 +114,6 @@ abstract class Element
     {
 
         $model_field = $this->getData('model_field', $this->getName());
-
-        if ($model_field == null)
-        {
-        }
 
         return $model_field;
     }
@@ -153,6 +151,8 @@ abstract class Element
 
         $this->attributes[$name] = $value;
 
+        return $this;
+
     }
 
     public function label($label)
@@ -163,14 +163,12 @@ abstract class Element
         return $this;
     }
 
-    protected function viewDataDefault($element)
+    public function id($id)
     {
 
-        $data             = [];
-        $name             = $this->getName();
-        $data['div_name'] = $name . '_div';
+        $this->data('id', $id);
 
-        return $data;
+        return $this;
     }
 
     protected function drawLabel()
@@ -223,13 +221,14 @@ abstract class Element
         }
 
         return $label;
-
     }
 
     public function name($name)
     {
 
         $this->data('name', $name);
+
+        return $this;
     }
 
     public function getAttributes()
