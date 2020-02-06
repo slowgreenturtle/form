@@ -15,7 +15,7 @@ class Select extends Element
 
         parent::__construct();
 
-        $this->size(10);
+        $this->size(10)->multiple(false)->options([])->value('');
 
     }
 
@@ -23,6 +23,14 @@ class Select extends Element
     {
 
         $this->attributes['size'] = $size;
+    }
+
+    public function multiple($state = true)
+    {
+
+        $this->data('multiple', $state);
+
+        return $this;
     }
 
     public function options($data)
@@ -50,14 +58,6 @@ class Select extends Element
         return $view->__toString();
     }
 
-    public function multiple($state = true)
-    {
-
-        $this->data('multiple', $state);
-
-        return $this;
-    }
-
     public function drawElement()
     {
 
@@ -71,10 +71,9 @@ class Select extends Element
         $attributes = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
-        $attributes['class'] = implode(" ", $this->getClass('element'));
+        $attributes['class'] = $this->getClass('element', true);
 
-        $options = $this->getData('options', []);
-
+        $options  = $this->getData('options');
         $selected = $this->getData('value');
 
         $multiple = $this->getData('multiple');
