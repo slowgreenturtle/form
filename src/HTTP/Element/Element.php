@@ -10,6 +10,7 @@
 namespace SGT\HTTP\Element;
 
 use Form;
+use Illuminate\Support\Arr;
 use SGT\Traits\Config;
 
 abstract class Element
