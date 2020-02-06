@@ -84,11 +84,16 @@ return [
                         ],
                     'input'  =>
                         [
-                            'css' =>
-                                [
-                                    'default' => 'form-control',
-                                    'error'   => 'form-control-danger'
+                            'css' => [
+                                'div'     => [
+                                    'input-group'
+                                ],
+                                'element' => [
+                                    'form-control'],
+                                'error'   => [
+                                    'form-control-danger'
                                 ]
+                            ]
                         ],
                 ],
             'table'      => [
@@ -144,8 +149,15 @@ return [
                 ],
                 'input'  => [
                     'css' => [
-                        'default' => 'form-control',
-                        'error'   => 'is-invalid'
+                        'div'     => [
+                            'input-group'
+
+                        ],
+                        'element' => [
+                            'form-control'],
+                        'error'   => [
+                            'is-invalid'
+                        ]
                     ]
                 ],
             ],

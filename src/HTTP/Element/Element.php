@@ -1,29 +1,111 @@
 <?php
+/**
+ *
+ * An attribute is an html attribute.
+ * A data field is something else which may be needed by the data type.
+ *
+ *
+ */
 
 namespace SGT\HTTP\Element;
 
 use Form;
+use SGT\Traits\Config;
 
 abstract class Element
 {
 
-    public $attributes = [];
+    use Config;
 
-    public function __construct($attributes)
+    public    $form       = null;
+    protected $data       = [];
+    protected $attributes = [];
+
+    public function __construct()
     {
 
-        $this->attributes['view_file'] = '';
+        $this->data('view_file', '');
 
-        $this->attributes = array_merge($this->attributes, $attributes);
+    }
+
+    public function data($name, $value)
+    {
+
+        $this->data[$name] = $value;
+
+        return $this;
 
     }
 
     abstract public function draw();
 
-    public function required($required)
+    public function getId()
     {
 
-        $this->attributes['required'] = $required;
+        return $this->getData('id', $this->getName());
+    }
+
+    public function getData($name, $default_value = null)
+    {
+
+        return Arr::get($this->data, $name, $default_value);
+
+    }
+
+    public function getName()
+    {
+
+        return $this->getData('name');
+
+    }
+
+    public function value($value)
+    {
+
+        $this->data('value', $value);
+
+    }
+
+    public function getValue()
+    {
+
+        $value = $this->getData('value');
+
+        if ($value === null)
+        {
+            $model = $this->form->getModel();
+
+            if ($model)
+            {
+                $model_field = $this->getModelField();
+                $value       = $model->$model_field;
+            }
+        }
+
+        $name = $this->getName();
+
+        $value = Form::getValueAttribute($name, $value);
+
+        return $value;
+
+    }
+
+    public function getModelField()
+    {
+
+        $model_field = $this->getData('model_field', $this->getName());
+
+        if ($model_field == null)
+        {
+        }
+
+        return $model_field;
+    }
+
+    public function required($required = true)
+    {
+
+        $this->data('required', $required);
 
         return $this;
     }
@@ -42,46 +124,23 @@ abstract class Element
 
     }
 
-    public function hasError($field)
+    public function hasError()
     {
 
-        if ($this->errors)
-        {
-            return $this->errors->default->has($field);
-        }
-
-        return false;
-
+        return $this->form->hasError($this->getName());
     }
 
-    public function attributes($attributes)
+    public function attribute($name, $value)
     {
 
-        array_merge($this->attributes, $attributes);
-
-        return $this;
-
-    }
-
-    public function getLabelAttribute()
-    {
-
-        $label = Arr::get($this->attributes, 'label', $this->name);
-        $label = str_replace('_id', '', $label);
-
-        if ($this->required == true && !empty($label))
-        {
-            $label = '* ' . $label;
-        }
-
-        return $label;
+        $this->attributes[$name] = $value;
 
     }
 
     public function label($label)
     {
 
-        $this->attributes['label'] = $label;
+        $this->data('label', $label);
 
         return $this;
     }
@@ -90,29 +149,31 @@ abstract class Element
     {
 
         $data             = [];
-        $name             = Arr::get($element, 'name');
+        $name             = $this->getName();
         $data['div_name'] = $name . '_div';
 
         return $data;
     }
 
-    protected function buildLabel()
+    protected function drawLabel()
     {
 
-        $label_text = $this->label;
+        $label = $this->getLabel();
 
-        if (empty($label_text))
+        if (empty($label))
         {
             return '';
         }
 
-        $element_name = $this->name;
+        $element_name = 'label_' . $this->getName();
 
-        $required = $this->required;
+        $required = $this->getData('required');
 
-        $attributes = ['class' => 'control-label'];
+        $attributes = $this->getAttributes();
 
-        $tooltip = Arr::get($element_name, 'tooltip', Arr::get($this->tooltips, $element_name));
+        $attributes['class'] = 'control-label';
+
+        $tooltip = $this->getData('tooltip');
 
         if ($required == true)
         {
@@ -125,9 +186,37 @@ abstract class Element
             $attributes['data-toggle'] = 'tooltip';
         }
 
-        $label = Form::label($element_name, $label_text, $attributes);
+        $label = Form::label($element_name, $label, $attributes);
 
         return $label;
 
+    }
+
+    public function getLabel()
+    {
+
+        $label = Arr::get($this->data, 'label', $this->name());
+
+        $label = str_replace('_id', '', $label);
+
+        if ($this->getData('required') == true && !empty($label))
+        {
+            $label = '* ' . $label;
+        }
+
+        return $label;
+
+    }
+
+    public function name($name)
+    {
+
+        $this->data('name', $name);
+    }
+
+    public function getAttributes()
+    {
+
+        return $this->attributes;
     }
 }
