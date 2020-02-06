@@ -15,16 +15,17 @@ class Select extends Element
 
         parent::__construct();
 
-        $this->size(10)->multiple(false)->options([])->value('');
+        $this->multiple(false)->options([])->value('');
         $this->addClass('div', $this->configFrontEnd('element.select.css.div'));
         $this->addClass('element', $this->configFrontEnd('element.select.css.element'));
 
     }
 
-    public function size($size)
+    public function options($data)
     {
 
-        $this->attributes['size'] = $size;
+        $this->data('options', $data);
+
         return $this;
     }
 
@@ -36,10 +37,10 @@ class Select extends Element
         return $this;
     }
 
-    public function options($data)
+    public function size($size)
     {
 
-        $this->data('options', $data);
+        $this->attribute('size', $size);
 
         return $this;
     }
@@ -86,6 +87,7 @@ class Select extends Element
 
             $attributes['multiple'] = $multiple;
             $attributes['name']     = $element_name . '[]';
+            $attributes['size']     = $this->getAttribute('size', 10);
         }
 
         return Form::select($element_name, $options, $selected, $attributes);
