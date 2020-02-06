@@ -119,7 +119,7 @@ abstract class SGTForm2
 
         $this->elements[$name] = $element;
 
-        $element->setName($name);
+        $element->name($name);
         $element->form = $this;
 
         return $element;
