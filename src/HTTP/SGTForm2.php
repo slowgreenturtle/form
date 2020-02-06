@@ -12,8 +12,11 @@ use Form;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use SGT\HTTP\Element\Color;
+use SGT\HTTP\Element\Email;
 use SGT\HTTP\Element\Hidden;
 use SGT\HTTP\Element\Input;
+use SGT\HTTP\Element\Number;
+use SGT\HTTP\Element\Password;
 use SGT\HTTP\Element\Select;
 use SGT\HTTP\Element\Submit;
 use SGT\HTTP\Element\TextArea;
@@ -112,6 +115,15 @@ abstract class SGTForm2
                 break;
             case 'textarea':
                 $element = new TextArea();
+                break;
+            case 'email':
+                $element = new Email();
+                break;
+            case 'number':
+                $element = new Number();
+                break;
+            case 'password':
+                $element = new Password();
                 break;
             default:
                 return null;
@@ -409,30 +421,6 @@ abstract class SGTForm2
 
     }
 
-    public function password($element)
-    {
-
-        $element['type'] = 'password';
-
-        return $this->input($element);
-    }
-
-    public function email($element)
-    {
-
-        $element['type'] = 'email';
-
-        return $this->input($element);
-    }
-
-    public function number($element)
-    {
-
-        $element['type'] = 'number';
-
-        return $this->input($element);
-    }
-
     public function checkbox($element)
     {
 
@@ -545,13 +533,5 @@ abstract class SGTForm2
         $html = implode(' ', $this->scripts);
 
         return $html;
-    }
-
-    public function color($element)
-    {
-
-        $element['type'] = 'color';
-
-        return $this->input($element);
     }
 }
