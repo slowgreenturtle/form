@@ -89,7 +89,8 @@ return [
                                     'input-group'
                                 ],
                                 'element' => [
-                                    'form-control'],
+                                    'form-control'
+                                ],
                                 'error'   => [
                                     'form-control-danger'
                                 ]

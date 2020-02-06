@@ -16,7 +16,7 @@ class Input extends Element
         parent::__construct();
 
         $this->addClass('div', $this->configFrontEnd('element.input.css.div'));
-
+        $this->addClass('element', $this->configFrontEnd('element.input.css.element'));
     }
 
     public function addClass($type, $class)
@@ -85,17 +85,15 @@ class Input extends Element
         $element_name = $this->getName();
         $type         = $this->getType();
 
-        $this->addClass('element', 'form-control');
-
         if ($this->hasError())
         {
-            $classes[] = $this->configFrontEnd('element.input.css.error');
+            $this->addClass('element', $this->configFrontEnd('element.input.css.error'));
         }
 
         $attributes = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
-        $attributes['class'] = implode(' ', $this->getClass('element'));
+        $attributes['class'] = implode(" ", $this->getClass('element'));
 
         return Form::input($type, $element_name, $this->getValue(), $attributes);
     }
