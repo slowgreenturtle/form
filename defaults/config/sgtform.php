@@ -87,6 +87,17 @@ return [
                         [
                             'path' => 'sgtform::bootstrap.3.element.default'
                         ],
+                    'select' =>
+                        [
+                            'css' => [
+                                'div'     => [
+                                    'input-group'
+                                ],
+                                'element' => [
+                                    'form-control'
+                                ],
+                            ]
+                        ],
                     'input'  =>
                         [
                             'css' => [
@@ -96,9 +107,6 @@ return [
                                 'element' => [
                                     'form-control'
                                 ],
-                                'error'   => [
-                                    'form-control-danger'
-                                ]
                             ]
                         ],
                 ],
