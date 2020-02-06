@@ -81,6 +81,16 @@ return [
                             'small'  => 'btn-sm',
                             'medium' => '',
                             'large'  => 'btn-lg'
+                        ],
+                        'css'    => [
+                            'div'     => [
+                                'form-group'
+                            ],
+                            'element' => [
+                                'form-control',
+                                'btn',
+                                'btn-success'
+                            ],
                         ]
                     ],
                     'view'   =>
@@ -156,7 +166,7 @@ return [
                         'small'  => 'btn-sm',
                         'medium' => '',
                         'large'  => 'btn-lg'
-                    ]
+                    ],
                 ],
                 'view'   => [
                     'path' => 'sgtform::bootstrap.4.element.default'

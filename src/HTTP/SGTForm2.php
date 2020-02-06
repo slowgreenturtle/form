@@ -153,7 +153,7 @@ abstract class SGTForm2
         $element = $this->add($name, 'submit');
 
         $element->label('&nbsp;');
-        $element->attribute('value', $value);
+        $element->value($value);
 
         return $element->draw();
 
