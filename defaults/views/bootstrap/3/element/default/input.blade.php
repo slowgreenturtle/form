@@ -1,4 +1,4 @@
-<div class="{{ $element->getClasses('div', true) }}" id="{{ $element->getDivID() }}">
+<div class="{{ $element->getClass('div', true) }}" id="{{ $element->getDivID() }}">
 
     {!! $element->drawLabel() !!}
 
