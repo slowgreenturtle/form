@@ -67,24 +67,6 @@ abstract class Element
 
     }
 
-    public function attributes(array $attributes)
-    {
-
-        $this->attributes += $attributes;
-
-        return $this;
-
-    }
-
-    public function tooltip($text)
-    {
-
-        $this->data('tooltip', $text);
-
-        return $this;
-
-    }
-
     public function value($value)
     {
 
@@ -124,14 +106,6 @@ abstract class Element
         return $this->getData('model_field', $this->getName());
     }
 
-    public function required($required = true)
-    {
-
-        $this->data('required', $required);
-
-        return $this;
-    }
-
     public function getDivClassesAttribute()
     {
 
@@ -159,14 +133,6 @@ abstract class Element
 
         return $this;
 
-    }
-
-    public function label($label)
-    {
-
-        $this->data('label', $label);
-
-        return $this;
     }
 
     public function id($id)
@@ -291,6 +257,74 @@ abstract class Element
         }
 
         return $classes;
+
+    }
+
+    public function parseOptions($options)
+    {
+
+
+        foreach ($options as $option => $value)
+        {
+            switch ($option)
+            {
+                case 'required':
+                    $this->required();
+                    break;
+                case 'tooltip':
+                    $this->tooltip($value);
+                    break;
+                case 'label':
+                    $this->label($value);
+                    break;
+                case 'list':
+                    $this->options($value);
+                    break;
+                case 'options':
+                case 'attributes':
+                    $this->attributes($value);
+                    break;
+                case 'prepend':
+                    $this->prepend($value);
+                    break;
+                case 'append':
+                    $this->append($value);
+                    break;
+            }
+        }
+    }
+
+    public function required($required = true)
+    {
+
+        $this->data('required', $required);
+
+        return $this;
+    }
+
+    public function tooltip($text)
+    {
+
+        $this->data('tooltip', $text);
+
+        return $this;
+
+    }
+
+    public function label($label)
+    {
+
+        $this->data('label', $label);
+
+        return $this;
+    }
+
+    public function attributes(array $attributes)
+    {
+
+        $this->attributes += $attributes;
+
+        return $this;
 
     }
 
