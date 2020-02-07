@@ -191,7 +191,7 @@ abstract class SGTForm
             $attribute => $value
         ];
 
-        $element->setOptioni($item);
+        $element->setOption($item);
     }
 
     public function element($name)
