@@ -41,6 +41,15 @@ abstract class Element
 
     abstract public function draw();
 
+    public function value($value)
+    {
+
+        $this->data('value', $value);
+
+        return $this;
+
+    }
+
     public function getDivID()
     {
 
@@ -64,15 +73,6 @@ abstract class Element
     {
 
         return $this->getData('name');
-
-    }
-
-    public function value($value)
-    {
-
-        $this->data('value', $value);
-
-        return $this;
 
     }
 

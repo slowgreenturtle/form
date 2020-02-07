@@ -3,7 +3,6 @@
 namespace SGT\HTTP\Element;
 
 use Form;
-use Illuminate\Support\Arr;
 
 class Checkbox extends Input
 {
@@ -11,10 +10,19 @@ class Checkbox extends Input
     protected $type      = 'checkbox';
     protected $type_file = 'checkbox';
 
+    public function __construct()
+    {
+
+        parent::__construct();
+        $this->value(1);
+
+    }
+
     public function check($check = true)
     {
 
         $this->data('checked', $check);
+
     }
 
     public function drawElement()
