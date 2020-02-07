@@ -17,6 +17,7 @@ use SGT\HTTP\Element\Date;
 use SGT\HTTP\Element\DateRange;
 use SGT\HTTP\Element\DateTime;
 use SGT\HTTP\Element\Email;
+use SGT\HTTP\Element\File;
 use SGT\HTTP\Element\Hidden;
 use SGT\HTTP\Element\Input;
 use SGT\HTTP\Element\Number;
@@ -146,6 +147,9 @@ abstract class SGTForm
                 break;
             case 'checkbox':
                 $element = new Checkbox();
+                break;
+            case 'file':
+                $element = new File();
                 break;
             default:
                 return null;
