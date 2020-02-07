@@ -172,6 +172,23 @@ abstract class SGTForm
 
     }
 
+    public function setParam($name, $value = null)
+    {
+
+        $element = $this->element($name);
+
+        if ($element)
+        {
+            $element->value($value);
+        }
+    }
+
+    public function element($name)
+    {
+
+        return Arr::get($this->elements, $name);
+    }
+
     public function setFormAttribute($name, $value)
     {
 
@@ -183,12 +200,6 @@ abstract class SGTForm
     {
 
         return $this->model;
-    }
-
-    public function element($name)
-    {
-
-        return Arr::get($this->elements, $name);
     }
 
     public function submitButton($value = 'Submit', $name = null)
