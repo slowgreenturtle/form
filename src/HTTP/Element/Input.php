@@ -67,7 +67,7 @@ class Input extends Element
         $attributes = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
-        $attributes['class'] = implode(" ", $this->getClass('element'));
+        $attributes['class'] = $this->getClass('element', true);
 
         return Form::input($type, $element_name, $this->getValue(), $attributes);
     }

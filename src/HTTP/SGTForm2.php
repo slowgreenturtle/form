@@ -11,7 +11,11 @@ namespace SGT\HTTP;
 use Form;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use SGT\HTTP\Element\Checkbox;
 use SGT\HTTP\Element\Color;
+use SGT\HTTP\Element\Date;
+use SGT\HTTP\Element\DateRange;
+use SGT\HTTP\Element\DateTime;
 use SGT\HTTP\Element\Email;
 use SGT\HTTP\Element\Hidden;
 use SGT\HTTP\Element\Input;
@@ -20,6 +24,7 @@ use SGT\HTTP\Element\Password;
 use SGT\HTTP\Element\Select;
 use SGT\HTTP\Element\Submit;
 use SGT\HTTP\Element\TextArea;
+use SGT\HTTP\Element\Time;
 use SGT\Traits\Config;
 
 abstract class SGTForm2
@@ -125,6 +130,21 @@ abstract class SGTForm2
             case 'password':
                 $element = new Password();
                 break;
+            case 'date':
+                $element = new Date();
+                break;
+            case 'datetime':
+                $element = new DateTime();
+                break;
+            case 'time':
+                $element = new Time();
+                break;
+            case 'daterange':
+                $element = new DateRange();
+                break;
+            case 'checkbox':
+                $element = new Checkbox();
+                break;
             default:
                 return null;
         }
@@ -228,82 +248,6 @@ abstract class SGTForm2
 
     }
 
-    public function url($element)
-    {
-
-        $element['type'] = 'url';
-
-        return $this->input($element);
-
-    }
-
-    public function input($element)
-    {
-
-        $data = $this->viewDataDefault($element);
-
-        $name = Arr::get($element, 'name');
-
-        $type                 = Arr::get($element, 'type', 'text');
-        $data['append_text']  = Arr::get($element, 'append');
-        $data['prepend_text'] = Arr::get($element, 'prepend');
-        $data['help']         = Arr::get($element, 'help');
-
-        $class = Arr::get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($this->hasError($name))
-        {
-            $classes[] = $this->configFrontEnd('element.input.css.error');
-
-        }
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        }
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes),
-        ];
-
-        $attributes += Arr::get($element, 'options', []);
-
-        $data['form_element'] = Form::input($type, $name, $this->getValue($name), $attributes);
-
-        return $this->elementView($data, $element);
-
-    }
-
-    protected function viewDataDefault($element)
-    {
-
-        $data                = [];
-        $name                = Arr::get($element, 'name');
-        $data['div_name']    = $name . '_div';
-        $data['div_classes'] = $this->makeDivClasses($name);
-        $data['label']       = $this->label($element);
-
-        return $data;
-    }
-
-    protected function makeDivClasses($name)
-    {
-
-        $div_classes = ['form-group'];
-
-        if ($this->hasError($name))
-        {
-            $div_classes[] = 'has-error';
-        }
-
-        return implode(' ', $div_classes);
-
-    }
-
     public function hasError($element)
     {
 
@@ -314,165 +258,6 @@ abstract class SGTForm2
 
         return false;
 
-    }
-
-    public function label($element)
-    {
-
-        $element_name = Arr::get($element, 'name');
-
-        $label_text = Arr::get($element, 'label', $element_name);
-        $required   = Arr::get($element, 'required', false);
-
-        $label_text = str_replace('_id', '', $label_text);
-
-        $label_text = str_replace('_', ' ', $label_text);
-
-        $label_text = ucwords($label_text);
-
-        $attributes = ['class' => 'control-label'];
-
-        if (empty($label_text))
-        {
-            return '';
-        }
-
-        $tooltip = Arr::get($element, 'tooltip', Arr::get($this->tooltips, $element_name));
-
-        if ($required == true)
-        {
-            $label_text = '* ' . $label_text;
-
-            if (strlen($tooltip) > 0)
-            {
-                $tooltip = 'Required. ' . $tooltip;
-            }
-        }
-
-        $label = Form::label($element_name, $label_text, $attributes);
-
-        if ($tooltip)
-        {
-            $label .= " <i title=\"$tooltip\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
-        }
-
-        return $label;
-
-    }
-
-    public function getValue($name)
-    {
-
-        $value = $this->getParam($name);
-
-        if ($value === null && is_object($this->model))
-        {
-            $value = $this->model->$name;
-        }
-
-        $value = Form::getValueAttribute($name, $value);
-
-        return $value;
-
-    }
-
-    protected function elementView($data, $element)
-    {
-
-        $data['element_id']   = Arr::get($element, 'name');
-        $data['element_name'] = Arr::get($element, 'name');
-
-        $view_form = Arr::get($element, 'view', $this->element_view_path);
-        $type      = Arr::get($element, 'type');
-
-        $view_form .= '/' . $type;
-
-        return view($view_form, $data)->__toString();
-
-    }
-
-    public function date($element)
-    {
-
-        $element['class'] = Arr::get($element, 'class', []) + ['date'];
-        $element['type']  = 'date';
-
-        return $this->input($element);
-
-    }
-
-    public function date_time($element)
-    {
-
-        $element['class'] = Arr::get($element, 'class', []) + ['datetime'];
-        $element['type']  = 'text';
-
-        return $this->input($element);
-
-    }
-
-    public function time($element)
-    {
-
-        $element['class'] = Arr::get($element, 'class', []) + ['time'];
-        $element['type']  = 'text';
-
-        return $this->input($element);
-
-    }
-
-    public function checkbox($element)
-    {
-
-        $name = Arr::get($element, 'name');
-
-        $check = Arr::get($element, 'check');
-        $value = Arr::get($element, 'value', 1);
-
-        $div_name = $name . '_div';
-
-        $html = '<div class="form-group" id="' . $div_name . '">';
-
-        $class = Arr::get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        }
-
-        $html .= $this->label($element);
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        $options = Arr::get($element, 'options');
-
-        if (is_array($options))
-        {
-            $attributes += $options;
-        }
-
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $html .= Form::checkbox($name, $value, $check, $attributes);
-
-        $html .= '</div>';
-
-        return $html;
-
-    }
-
-    public function date_range($element)
-    {
-
-        return 'date range here';
     }
 
     /**
