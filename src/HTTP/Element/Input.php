@@ -3,63 +3,79 @@
 namespace SGT\HTTP\Element;
 
 use Form;
-use SGT\Traits\Config;
+use Illuminate\Support\Arr;
 
 class Input extends Element
 {
 
-    protected $_type = 'input';
-    use Config;
+    protected $type      = 'input';
+    protected $type_file = 'input';
+
+    public function __construct()
+    {
+
+        parent::__construct();
+
+        $this->addClass('div', $this->configFrontEnd('element.input.css.div'));
+        $this->addClass('element', $this->configFrontEnd('element.input.css.element'));
+    }
+
+    public function append($text)
+    {
+
+        $this->data('append', $text);
+
+        return $this;
+    }
+
+    public function prepend($text)
+    {
+
+        $this->data('prepend', $text);
+
+        return $this;
+    }
 
     public function draw()
     {
 
-        $data = $this->viewDataDefault($element);
-
-        $name = Arr::get($element, 'name');
-
-        $class = Arr::get($element, 'class');
-
-        $classes = ['form-control'];
-
-        if ($this->hasError($name))
-        {
-            $classes[] = 'form-control-danger';
-        }
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        };
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes),
-        ];
-
-        $attributes += Arr::get($element, 'options', []);
-
-        $data['form_element'] = Form::input($this->_type, $name, $this->getValue($name), $attributes);
-
-        $view_file = $this->getViewFile();
-
-        return view($view_file, ['element' => $this])->__toString();
-
-    }
-
-    public function getViewFile()
-    {
-
         $element_view_path = $this->configFrontEnd('element.view.path');
 
-        $view_file = $this->view_file;
+        $view_file = $this->getData('view_file');
 
-        $view_file = $view_file == '' ? $element_view_path : $view_file;
+        $view_file = empty($view_file) ? $element_view_path : $view_file;
 
-        $view_file .= '/' . $this->type;
+        $view_file .= '/' . $this->type_file;
 
-        return $view_file;
+        $view          = view($view_file);
+        $view->element = $this;
+
+        return $view->__toString();
+    }
+
+    public function drawElement()
+    {
+
+        $element_name = $this->getName();
+        $type         = $this->getType();
+
+        if ($this->hasError())
+        {
+            $this->addClass('element', $this->configFrontEnd('element.css.error'));
+        }
+
+        $attributes = $this->getAttributes();
+
+        $attributes['id']    = $this->getId();
+        $attributes['class'] = $this->getClass('element', true);
+
+        return Form::input($type, $element_name, $this->getValue(), $attributes);
+    }
+
+    public function getType()
+    {
+
+        return $this->type;
     }
 
 }

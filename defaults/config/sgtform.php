@@ -43,6 +43,11 @@ return [
         '3' => [
             'element'    =>
                 [
+                    'css'    => [
+                        'error' => [
+                            'form-control-danger'
+                        ]
+                    ],
                     'link'   => [
                         'colors' =>
                             [
@@ -76,19 +81,43 @@ return [
                             'small'  => 'btn-sm',
                             'medium' => '',
                             'large'  => 'btn-lg'
+                        ],
+                        'css'    => [
+                            'div'     => [
+                                'form-group'
+                            ],
+                            'element' => [
+                                'form-control',
+                                'btn',
+                                'btn-success'
+                            ],
                         ]
                     ],
                     'view'   =>
                         [
                             'path' => 'sgtform::bootstrap.3.element.default'
                         ],
+                    'select' =>
+                        [
+                            'css' => [
+                                'div'     => [
+                                    'form-group'
+                                ],
+                                'element' => [
+                                    'form-control'
+                                ],
+                            ]
+                        ],
                     'input'  =>
                         [
-                            'css' =>
-                                [
-                                    'default' => 'form-control',
-                                    'error'   => 'form-control-danger'
-                                ]
+                            'css' => [
+                                'div'     => [
+                                    'form-group'
+                                ],
+                                'element' => [
+                                    'form-control'
+                                ],
+                            ]
                         ],
                 ],
             'table'      => [
@@ -137,15 +166,22 @@ return [
                         'small'  => 'btn-sm',
                         'medium' => '',
                         'large'  => 'btn-lg'
-                    ]
+                    ],
                 ],
                 'view'   => [
                     'path' => 'sgtform::bootstrap.4.element.default'
                 ],
                 'input'  => [
                     'css' => [
-                        'default' => 'form-control',
-                        'error'   => 'is-invalid'
+                        'div'     => [
+                            'input-group'
+
+                        ],
+                        'element' => [
+                            'form-control'],
+                        'error'   => [
+                            'is-invalid'
+                        ]
                     ]
                 ],
             ],

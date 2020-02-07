@@ -1,31 +1,109 @@
 <?php
+/**
+ *
+ * An attribute is an html attribute.
+ * A data field is something else which may be needed by the data type.
+ *
+ *
+ */
 
 namespace SGT\HTTP\Element;
 
 use Form;
+use Illuminate\Support\Arr;
+use SGT\Traits\Config;
 
 abstract class Element
 {
 
-    public $attributes = [];
+    use Config;
 
-    public function __construct($attributes)
+    public    $form       = null;
+    protected $data       = [];
+    protected $attributes = [];
+    protected $classes    = [];
+
+    public function __construct()
     {
 
-        $this->attributes['view_file'] = '';
+        $this->data('view_file', '');
 
-        $this->attributes = array_merge($this->attributes, $attributes);
+    }
+
+    public function data($name, $value)
+    {
+
+        $this->data[$name] = $value;
+
+        return $this;
 
     }
 
     abstract public function draw();
 
-    public function required($required)
+    public function value($value)
     {
 
-        $this->attributes['required'] = $required;
+        $this->data('value', $value);
 
         return $this;
+
+    }
+
+    public function getDivID()
+    {
+
+        return $this->getId() . '_div';
+    }
+
+    public function getId()
+    {
+
+        return $this->getData('id', $this->getName());
+    }
+
+    public function getData($name, $default_value = null)
+    {
+
+        return Arr::get($this->data, $name, $default_value);
+
+    }
+
+    public function getName()
+    {
+
+        return $this->getData('name');
+
+    }
+
+    public function getValue()
+    {
+
+        $value = $this->getData('value');
+
+        if ($value === null)
+        {
+            $model = $this->form->getModel();
+
+            if ($model)
+            {
+                $model_field = $this->getModelField();
+                $value       = $model->$model_field;
+            }
+        }
+
+        $name = $this->getName();
+
+        $value = Form::getValueAttribute($name, $value);
+
+        return $value;
+
+    }
+
+    public function getModelField()
+    {
+
+        return $this->getData('model_field', $this->getName());
     }
 
     public function getDivClassesAttribute()
@@ -42,92 +120,212 @@ abstract class Element
 
     }
 
-    public function hasError($field)
+    public function hasError()
     {
 
-        if ($this->errors)
-        {
-            return $this->errors->default->has($field);
-        }
-
-        return false;
-
+        return $this->form->hasError($this->getName());
     }
 
-    public function attributes($attributes)
+    public function attribute($name, $value)
     {
 
-        array_merge($this->attributes, $attributes);
+        $this->attributes[$name] = $value;
 
         return $this;
 
     }
 
-    public function getLabelAttribute()
+    public function id($id)
     {
 
-        $label = Arr::get($this->attributes, 'label', $this->name);
+        $this->data('id', $id);
+
+        return $this;
+    }
+
+    public function drawLabel()
+    {
+
+        $label = $this->getLabel();
+
+        if (empty($label))
+        {
+            return '';
+        }
+
+        $element_name = 'label_' . $this->getName();
+
+        $required = $this->getData('required');
+
+        $attributes = $this->getAttributes();
+
+        $attributes['class'] = 'control-label';
+
+        $tooltip = $this->getData('tooltip');
+
+        if ($tooltip)
+        {
+
+            if ($required == true)
+            {
+                $title = 'Required. ' . $tooltip;
+            }
+            else
+            {
+                $title = $tooltip;
+            }
+
+            $attributes['title']       = $title;
+            $attributes['data-toggle'] = 'tooltip';
+        }
+
+        $label = Form::label($element_name, $label, $attributes);
+
+        if ($tooltip)
+        {
+            $label .= " <i title=\"$tooltip\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
+        }
+
+        return $label;
+
+    }
+
+    public function getLabel()
+    {
+
+        $label = Arr::get($this->data, 'label', $this->getName());
+
         $label = str_replace('_id', '', $label);
 
-        if ($this->required == true && !empty($label))
+        $label = str_replace('_', ' ', $label);
+
+        $label = ucwords($label);
+
+        if ($this->getData('required') == true && !empty($label))
         {
             $label = '* ' . $label;
         }
 
         return $label;
+    }
+
+    public function getAttributes()
+    {
+
+        return $this->attributes;
+    }
+
+    public function name($name)
+    {
+
+        $this->data('name', $name);
+
+        return $this;
+    }
+
+    public function addClass($type, $class)
+    {
+
+        if (is_array($class))
+        {
+
+            $classes = Arr::get($this->classes, $type, []);
+
+            foreach ($class as $item)
+            {
+                $classes[$item] = $item;
+            }
+
+            $this->classes[$type] = $classes;
+
+        }
+        else
+        {
+            $this->classes[$type][$class] = $class;
+        }
+
+    }
+
+    public function getClass($type, $implode = false)
+    {
+
+        $classes = Arr::get($this->classes, $type, []);
+
+        if ($implode == true)
+        {
+            return implode(' ', $classes);
+        }
+
+        return $classes;
+
+    }
+
+    public function parseOptions($options)
+    {
+
+
+        foreach ($options as $option => $value)
+        {
+            switch ($option)
+            {
+                case 'required':
+                    $this->required();
+                    break;
+                case 'tooltip':
+                    $this->tooltip($value);
+                    break;
+                case 'label':
+                    $this->label($value);
+                    break;
+                case 'list':
+                    $this->options($value);
+                    break;
+                case 'options':
+                case 'attributes':
+                    $this->attributes($value);
+                    break;
+                case 'prepend':
+                    $this->prepend($value);
+                    break;
+                case 'append':
+                    $this->append($value);
+                    break;
+            }
+        }
+    }
+
+    public function required($required = true)
+    {
+
+        $this->data('required', $required);
+
+        return $this;
+    }
+
+    public function tooltip($text)
+    {
+
+        $this->data('tooltip', $text);
+
+        return $this;
 
     }
 
     public function label($label)
     {
 
-        $this->attributes['label'] = $label;
+        $this->data('label', $label);
 
         return $this;
     }
 
-    protected function viewDataDefault($element)
+    public function attributes(array $attributes)
     {
 
-        $data             = [];
-        $name             = Arr::get($element, 'name');
-        $data['div_name'] = $name . '_div';
+        $this->attributes += $attributes;
 
-        return $data;
-    }
-
-    protected function buildLabel()
-    {
-
-        $label_text = $this->label;
-
-        if (empty($label_text))
-        {
-            return '';
-        }
-
-        $element_name = $this->name;
-
-        $required = $this->required;
-
-        $attributes = ['class' => 'control-label'];
-
-        $tooltip = Arr::get($element_name, 'tooltip', Arr::get($this->tooltips, $element_name));
-
-        if ($required == true)
-        {
-            $tooltip = 'Required. ' . $tooltip;
-        }
-
-        if ($tooltip)
-        {
-            $attributes['title']       = $tooltip;
-            $attributes['data-toggle'] = 'tooltip';
-        }
-
-        $label = Form::label($element_name, $label_text, $attributes);
-
-        return $label;
+        return $this;
 
     }
+
 }
