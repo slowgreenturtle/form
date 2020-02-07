@@ -176,6 +176,24 @@ abstract class SGTForm
 
     }
 
+    public function field_update($name, $attribute, $value)
+    {
+
+        $element = $this->element($name);
+
+        $item = [
+            $attribute => $value
+        ];
+
+        $element->setOptioni($item);
+    }
+
+    public function element($name)
+    {
+
+        return Arr::get($this->elements, $name);
+    }
+
     public function setParam($name, $value = null)
     {
 
@@ -185,12 +203,6 @@ abstract class SGTForm
         {
             $element->value($value);
         }
-    }
-
-    public function element($name)
-    {
-
-        return Arr::get($this->elements, $name);
     }
 
     public function setFormAttribute($name, $value)
