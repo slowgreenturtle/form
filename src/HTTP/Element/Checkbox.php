@@ -20,9 +20,7 @@ class Checkbox extends Input
 
     public function check($check = true)
     {
-
         $this->data('checked', $check);
-
     }
 
     public function drawElement()
