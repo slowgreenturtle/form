@@ -176,6 +176,12 @@ abstract class SGTForm
 
     }
 
+    public function getFormAttribute($name, $default_value = null)
+    {
+
+        return $this->getAttribute($name, $default_value);
+    }
+
     public function field_update($name, $attribute, $value)
     {
 
