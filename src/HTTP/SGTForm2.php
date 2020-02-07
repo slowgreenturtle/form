@@ -260,58 +260,6 @@ abstract class SGTForm2
 
     }
 
-    /**
-     * A select tag form is a multiple select form which displays the results as tags in the field location.
-     * The results are sent to the server as an array.
-     *
-     * @param $element
-     */
-    public function select_tag($element)
-    {
-
-        $name     = Arr::get($element, 'name');
-        $list     = Arr::get($element, 'list', []);
-        $selected = $this->getValue($name);
-
-        $data = [];
-
-        $data['div_name']    = $name . '_div';
-        $data['div_classes'] = $this->makeDivClasses($name);
-
-        $data['label'] = $this->label($element);
-
-        $class   = Arr::get($element, 'class');
-        $classes = ['form-control', 'select2-multiple'];
-
-        if ($class)
-        {
-            $classes = array_merge($classes, $class);
-        }
-
-        $attributes = [
-            'id'    => $name,
-            'name'  => $name,
-            'class' => implode(' ', $classes)];
-
-        $add_atributes = Arr::get($element, 'attributes', []);
-
-        $attributes                += $add_atributes;
-        $attributes['name']        = $name . '[]';
-        $attributes['size']        = Arr::get($attributes, 'size', 10);
-        $attributes['multiple']    = 'multiple';
-        $attributes['aria-hidden'] = true;
-
-        if ($this->model)
-        {
-            Form::setModel($this->model);
-        }
-
-        $data['form_element'] = Form::select($name, $list, $selected, $attributes);
-
-        return $this->elementView($data, $element);
-
-    }
-
     public function scripts()
     {
 

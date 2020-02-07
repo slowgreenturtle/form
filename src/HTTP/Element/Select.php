@@ -8,7 +8,8 @@ use Illuminate\Support\Arr;
 class Select extends Element
 {
 
-    protected $type = 'select';
+    protected $type      = 'select';
+    protected $type_file = 'select';
 
     public function __construct()
     {
@@ -54,7 +55,7 @@ class Select extends Element
 
         $view_file = empty($view_file) ? $element_view_path : $view_file;
 
-        $view_file .= '/' . $this->type;
+        $view_file .= '/' . $this->type_file;
 
         $view          = view($view_file);
         $view->element = $this;
