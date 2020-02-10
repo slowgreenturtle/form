@@ -79,7 +79,7 @@ class Select extends Element
         $attributes['class'] = $this->getClass('element', true);
 
         $options  = $this->getData('options');
-        $selected = $this->getData('value');
+        $selected = $this->getValue();
 
         $multiple = $this->getData('multiple');
 
