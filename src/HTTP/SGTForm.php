@@ -41,7 +41,7 @@ abstract class SGTForm
      */
     public $attributes = [];
 
-    protected $model = null;
+    public $model = null;
 
     /**
      * @var array The fields which are created for the form
