@@ -272,7 +272,7 @@ abstract class Element
                     $this->required();
                     break;
                 case 'tooltip':
-                    $this->tooltip($value);
+                    $this->toolTip($value);
                     break;
                 case 'label':
                     $this->label($value);
@@ -302,7 +302,7 @@ abstract class Element
         return $this;
     }
 
-    public function tooltip($text)
+    public function toolTip($text)
     {
 
         $this->data('tooltip', $text);

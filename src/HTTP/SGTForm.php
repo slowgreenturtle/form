@@ -161,7 +161,7 @@ abstract class SGTForm
 
         if ($tooltip)
         {
-            $element->setTooltip($tooltip);
+            $element->toolTip($tooltip);
         }
 
         $element->name($name);
