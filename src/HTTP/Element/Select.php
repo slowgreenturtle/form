@@ -16,7 +16,7 @@ class Select extends Element
 
         parent::__construct();
 
-        $this->multiple(false)->options([])->value('');
+        $this->multiple(false)->options([]);
         $this->addClass('div', $this->configFrontEnd('element.select.css.div'));
         $this->addClass('element', $this->configFrontEnd('element.select.css.element'));
 
