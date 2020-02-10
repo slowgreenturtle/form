@@ -88,7 +88,16 @@ abstract class Element
             if ($model)
             {
                 $model_field = $this->getModelField();
-                $value       = $model->$model_field;
+
+                if (is_array($model))
+                {
+                    $value = Arr::get($model, $value);
+                }
+                else
+                {
+                    $value = $model->$model_field;
+                }
+
             }
         }
 
