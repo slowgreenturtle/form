@@ -39,6 +39,14 @@ class Input extends Element
     public function draw()
     {
 
+        if ($this->hasError())
+        {
+            $error_class = $this->configFrontEnd('element.css.error');
+            $this->addClass('element', $error_class);
+            $this->addClass('div', $error_class);
+
+        }
+
         $element_view_path = $this->configFrontEnd('element.view.path');
 
         $view_file = $this->getData('view_file');

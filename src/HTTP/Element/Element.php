@@ -25,14 +25,6 @@ abstract class Element
 
         $this->data('view_file', '');
 
-        if ($this->hasError())
-        {
-            $error_class = $this->configFrontEnd('element.css.error');
-            $this->addClass('element', $error_class);
-            $this->addClass('div', $error_class);
-
-        }
-
     }
 
     public function data($name, $value)
