@@ -45,7 +45,7 @@ return [
                 [
                     'css'    => [
                         'error' => [
-                            'form-control-danger'
+                            'has-error'
                         ]
                     ],
                     'link'   => [
