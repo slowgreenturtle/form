@@ -2,8 +2,9 @@
 
 namespace SGT\HTTP\Element;
 
-use Illuminate\Support\Arr;
 use Form;
+use Illuminate\Support\Arr;
+
 class TextArea extends Input
 {
 
@@ -13,11 +14,6 @@ class TextArea extends Input
     {
 
         $element_name = $this->getName();
-
-        if ($this->hasError())
-        {
-            $this->addClass('element', $this->configFrontEnd('element.css.error'));
-        }
 
         $attributes = $this->getAttributes();
 

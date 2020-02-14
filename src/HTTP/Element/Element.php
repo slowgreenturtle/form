@@ -1,10 +1,7 @@
 <?php
 /**
- *
  * An attribute is an html attribute.
  * A data field is something else which may be needed by the data type.
- *
- *
  */
 
 namespace SGT\HTTP\Element;
@@ -28,6 +25,14 @@ abstract class Element
 
         $this->data('view_file', '');
 
+        if ($this->hasError())
+        {
+            $error_class = $this->configFrontEnd('element.css.error');
+            $this->addClass('element', $error_class);
+            $this->addClass('div', $error_class);
+
+        }
+
     }
 
     public function data($name, $value)
@@ -36,6 +41,49 @@ abstract class Element
         $this->data[$name] = $value;
 
         return $this;
+
+    }
+
+    public function hasError()
+    {
+
+        return $this->form->hasError($this->getName());
+    }
+
+    public function getName()
+    {
+
+        return $this->getData('name');
+
+    }
+
+    public function getData($name, $default_value = null)
+    {
+
+        return Arr::get($this->data, $name, $default_value);
+
+    }
+
+    public function addClass($type, $class)
+    {
+
+        if (is_array($class))
+        {
+
+            $classes = Arr::get($this->classes, $type, []);
+
+            foreach ($class as $item)
+            {
+                $classes[$item] = $item;
+            }
+
+            $this->classes[$type] = $classes;
+
+        }
+        else
+        {
+            $this->classes[$type][$class] = $class;
+        }
 
     }
 
@@ -60,20 +108,6 @@ abstract class Element
     {
 
         return $this->getData('id', $this->getName());
-    }
-
-    public function getData($name, $default_value = null)
-    {
-
-        return Arr::get($this->data, $name, $default_value);
-
-    }
-
-    public function getName()
-    {
-
-        return $this->getData('name');
-
     }
 
     public function getValue()
@@ -113,26 +147,6 @@ abstract class Element
     {
 
         return $this->getData('model_field', $this->getName());
-    }
-
-    public function getDivClassesAttribute()
-    {
-
-        $div_classes = ['form-group'];
-
-        if ($this->hasError($this->name))
-        {
-            $div_classes[] = 'has-error';
-        }
-
-        return implode(' ', $div_classes);
-
-    }
-
-    public function hasError()
-    {
-
-        return $this->form->hasError($this->getName());
     }
 
     public function attribute($name, $value)
@@ -230,29 +244,6 @@ abstract class Element
         $this->data('name', $name);
 
         return $this;
-    }
-
-    public function addClass($type, $class)
-    {
-
-        if (is_array($class))
-        {
-
-            $classes = Arr::get($this->classes, $type, []);
-
-            foreach ($class as $item)
-            {
-                $classes[$item] = $item;
-            }
-
-            $this->classes[$type] = $classes;
-
-        }
-        else
-        {
-            $this->classes[$type][$class] = $class;
-        }
-
     }
 
     public function getClass($type, $implode = false)

@@ -20,6 +20,7 @@ class Checkbox extends Input
 
     public function check($check = true)
     {
+
         $this->data('checked', $check);
     }
 
@@ -27,13 +28,7 @@ class Checkbox extends Input
     {
 
         $element_name = $this->getName();
-
-        if ($this->hasError())
-        {
-            $this->addClass('element', $this->configFrontEnd('element.css.error'));
-        }
-
-        $attributes = $this->getAttributes();
+        $attributes   = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
         $attributes['class'] = $this->getClass('element', true);

@@ -59,11 +59,6 @@ class Input extends Element
         $element_name = $this->getName();
         $type         = $this->getType();
 
-        if ($this->hasError())
-        {
-            $this->addClass('element', $this->configFrontEnd('element.css.error'));
-        }
-
         $attributes = $this->getAttributes();
 
         $attributes['id']    = $this->getId();
