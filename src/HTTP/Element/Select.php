@@ -91,7 +91,8 @@ class Select extends Element
 
             $attributes['multiple'] = $multiple;
             $attributes['name']     = $element_name . '[]';
-            $attributes['size']     = $this->getAttribute('size', 10);
+            # in case size is not set, we set it here.
+            $attributes['size'] = Arr::get($attributes, 'size', 10);
         }
 
         return Form::select($element_name, $options, $selected, $attributes);
