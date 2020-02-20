@@ -18,18 +18,4 @@ class File extends Input
 
         return $this;
     }
-
-    public function drawElement()
-    {
-
-        $element_name = $this->getName();
-        $type         = $this->getType();
-
-        $attributes = $this->getAttributes();
-
-        $attributes['id']    = $this->getId();
-        $attributes['class'] = $this->getClass('element', true);
-
-        return Form::input($type, $element_name, $this->getValue(), $attributes);
-    }
 }
