@@ -8,7 +8,6 @@ class Checkbox extends Input
 {
 
     protected $type      = 'checkbox';
-    protected $type_file = 'checkbox';
 
     public function __construct()
     {
