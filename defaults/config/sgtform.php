@@ -174,7 +174,7 @@ return [
                 'input'  => [
                     'css' => [
                         'div'     => [
-                            'input-group'
+                            'form-group'
 
                         ],
                         'element' => [
