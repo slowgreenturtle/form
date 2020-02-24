@@ -1,4 +1,7 @@
-<div class="{{ $div_classes }}" id="{{ $div_name}}">
-    {!! $label !!}
-    {{ $form_element }}
+<div class="{{ $element->getClass('div', true) }}" id="{{ $element->getDivID() }}">
+    {!! $element->drawLabel() !!}
+    {!! $element->drawElement() !!}
+    @if(!empty($element->getData('help')))
+        <small>{!! $element->getData('help') !!}</small>
+    @endif
 </div>
