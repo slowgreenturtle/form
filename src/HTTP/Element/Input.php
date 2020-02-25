@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Input extends Element
 {
 
-    protected $type      = 'input';
+    protected $type      = 'text';
     protected $type_file = 'input';
 
     public function __construct()
