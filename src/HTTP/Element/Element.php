@@ -117,7 +117,7 @@ abstract class Element
 
                 if (is_array($model))
                 {
-                    $value = Arr::get($model, $value);
+                    $value = Arr::get($model, $model_field);
                 }
                 else
                 {
