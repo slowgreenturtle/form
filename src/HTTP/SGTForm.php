@@ -322,17 +322,23 @@ abstract class SGTForm
         $this->tooltips = $values;
     }
 
+    public function getParam($name, $default = null)
+    {
+
+        return Arr::get($this->params, $name, $default);
+    }
+
     public function getValue($name)
     {
 
-        $value = $this->getParam($name);
+        $element = $this->element($name);
+        $value   = $element->getValue();
 
         if ($value === null)
         {
             if (is_object($this->model) || is_array($this->model))
             {
 
-                $element     = $this->element($name);
                 $model_field = $element->getModelField();
 
                 if (is_object($this->model))
