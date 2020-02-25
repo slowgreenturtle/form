@@ -3,7 +3,6 @@
 /**
  * All set methods are simply the name.
  * All get methods are getAttribute or getLabel.
- *
  */
 
 namespace SGT\HTTP;
@@ -37,7 +36,6 @@ abstract class SGTForm
 
     /**
      * @var array The attributes attached to the form. Method, etc.
-     *
      */
     public $attributes = [];
 
@@ -322,5 +320,35 @@ abstract class SGTForm
     {
 
         $this->tooltips = $values;
+    }
+
+    public function getValue($name)
+    {
+
+        $value = $this->getParam($name);
+
+        if ($value === null)
+        {
+            if (is_object($this->model) || is_array($this->model))
+            {
+
+                $element     = $this->element($name);
+                $model_field = $element->getModelField();
+
+                if (is_object($this->model))
+                {
+                    $value = $this->model->$model_field;
+                }
+                else
+                {
+                    $value = Arr::get($this->model, $model_field);
+                }
+            }
+        }
+
+        $value = Form::getValueAttribute($name, $value);
+
+        return $value;
+
     }
 }
