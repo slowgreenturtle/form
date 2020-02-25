@@ -36,6 +36,8 @@ abstract class Element
 
     }
 
+    abstract public function draw();
+
     public function hasError()
     {
 
@@ -78,8 +80,6 @@ abstract class Element
         }
 
     }
-
-    abstract public function draw();
 
     public function value($value)
     {
@@ -275,6 +275,11 @@ abstract class Element
                 case 'options':
                 case 'attributes':
                     $this->attributes($value);
+
+                    if (Arr::get($value, 'multiple'))
+                    {
+                        $this->multiple();
+                    }
                     break;
                 case 'prepend':
                     $this->prepend($value);
