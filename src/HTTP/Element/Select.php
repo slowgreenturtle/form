@@ -4,6 +4,7 @@ namespace SGT\HTTP\Element;
 
 use Form;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class Select extends Element
 {
@@ -74,6 +75,24 @@ class Select extends Element
     public function drawElement()
     {
 
+        $options = $this->getData('options');
+
+        $count = 0;
+
+        if (is_array($options))
+        {
+            $count = count($options);
+        }
+        elseif ($options instanceof Collection)
+        {
+            $count = $options->count();
+        }
+
+        if ($count > 9)
+        {
+            $this->attribute('data-live-search', 'true');
+        }
+
         $element_name = $this->getName();
 
         $attributes = $this->getAttributes();
@@ -81,7 +100,6 @@ class Select extends Element
         $attributes['id']    = $this->getId();
         $attributes['class'] = $this->getClass('element', true);
 
-        $options  = $this->getData('options');
         $selected = $this->getValue();
 
         $multiple = $this->getData('multiple');
