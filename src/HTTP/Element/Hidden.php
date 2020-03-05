@@ -7,6 +7,8 @@ use Form;
 class Hidden extends Element
 {
 
+    protected $type = 'hidden';
+
     public function draw()
     {
 

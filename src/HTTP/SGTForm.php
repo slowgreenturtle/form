@@ -33,7 +33,6 @@ abstract class SGTForm
     use Config;
 
     public $errors = null;
-
     /**
      * @var array The attributes attached to the form. Method, etc.
      */
@@ -267,7 +266,19 @@ abstract class SGTForm
 
         $this->errors = $errors;
 
-        return Form::open($this->attributes);
+        $html = Form::open($this->attributes);
+
+        foreach ($this->elements as $element)
+        {
+
+            if ($element instanceof Hidden)
+            {
+                $html .= $element->draw();
+            }
+        }
+
+        return $html;
+
     }
 
     public function close()
