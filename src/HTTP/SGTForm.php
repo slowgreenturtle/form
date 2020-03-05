@@ -75,7 +75,9 @@ abstract class SGTForm
 
         $this->build();
 
-        $this->add('return_url', 'hidden');
+        $return_url = $this->add('return_url', 'hidden');
+
+        $return_url->value($this->returnURL());
 
         $this->setup();
 
@@ -166,6 +168,16 @@ abstract class SGTForm
         $element->parseOptions($options);
 
         return $element;
+    }
+
+    protected function returnURL()
+    {
+
+        $return_url = request()->old('return_url');
+        $return_url = empty($return_url) ? request()->server('HTTP_REFERER') : $return_url;
+
+        return $return_url;
+
     }
 
     protected function setup()
@@ -268,14 +280,17 @@ abstract class SGTForm
 
         $html = Form::open($this->attributes);
 
+        $elements = [];
+
         foreach ($this->elements as $element)
         {
-
             if ($element instanceof Hidden)
             {
-                $html .= $element->draw();
+                $elements[] = $element->draw();
             }
         }
+
+        $html .= implode("\r\n", $elements);
 
         return $html;
 
