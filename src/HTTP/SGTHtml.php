@@ -2,6 +2,7 @@
 
 namespace SGT\HTTP;
 
+use Illuminate\Support\Arr;
 use SGT\HTTP\Navigation\Attribute;
 
 class SGTHtml
@@ -246,11 +247,11 @@ class SGTHtml
             'red'        => 'btn-danger'
         ];
 
-        $button_color = array_get($params, 'button_color', 'blue');
+        $button_color = Arr::get($params, 'button_color', 'blue');
 
-        $button_color_class = array_get($button_colors, $button_color, 'btn-primary');
+        $button_color_class = Arr::get($button_colors, $button_color, 'btn-primary');
 
-        $button_size = array_get($params, 'button_size', 'medium');
+        $button_size = Arr::get($params, 'button_size', 'medium');
 
         $button_size_class = '';
 
@@ -274,11 +275,11 @@ class SGTHtml
 
             if (is_array($action))
             {
-                $type = array_get($action, 'type');
+                $type = Arr::get($action, 'type');
 
                 $button = [
-                    'link'  => array_get($action, 'link'),
-                    'title' => array_get($action, 'name'),
+                    'link'  => Arr::get($action, 'link'),
+                    'title' => Arr::get($action, 'name'),
                     'class' => ''
                 ];
 
