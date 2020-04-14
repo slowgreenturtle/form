@@ -29,7 +29,7 @@ class DataManage
     public function __construct($messenger = null)
     {
 
-        $this->system_connection = $this->confif('database.default');
+        $this->system_connection = $this->config('database.default');
         $this->tenant_connection = $this->config('database.tenant.connection');
         $this->multi_tenant      = $this->config('database.tenant.enabled');
 
