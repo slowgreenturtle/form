@@ -559,7 +559,7 @@ class DataManage
 
             $this->info("Filename: " . $db_full_path);
 
-            $this->clear_database($db_name, $connection);
+            $this->deleteTables($connection, $db_name);
 
             //$command = "gzip -d < $db_full_path | mysql -h {$db_host} -u{$db_username} -p'$db_password' $db_name";
             $command = "gzip -d < $db_full_path | mysql -h {$db_host} -u{$db_username} $db_name";
@@ -624,7 +624,7 @@ class DataManage
 
         $db_name = config('database.connections.' . $this->system_connection . '.database');
 
-        $this->clear_database($db_name, $this->system_connection);
+        $this->deleteTables($this->system_connection, $db_name);
 
         $this->info("System database '$db_name' truncated");
 
@@ -639,7 +639,7 @@ class DataManage
             {
 
                 $this->setConnection($database);
-                $this->clear_database($database, $this->tenant_connection, true);
+                $this->deleteTables($this->tenant_connection, $database, true);
 
                 $database_count++;
             }
