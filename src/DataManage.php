@@ -29,7 +29,8 @@ class DataManage
     public function __construct($messenger = null)
     {
 
-        $this->system_connection = $this->config('database.default');
+        $this->system_connection = $this->config('database.connection');
+
         $this->tenant_connection = $this->config('database.tenant.connection');
         $this->multi_tenant      = $this->config('database.tenant.enabled');
 
@@ -43,6 +44,150 @@ class DataManage
         $this->tenant_migration_path = config("database.{$this->tenant_connection}.migration.path");
 
         $this->tenant_database_name_field = config("database.connections.{$this->tenant_connection}.database");
+
+    }
+
+    /**
+     * Truncate database tables
+     *
+     * @throws \ErrorException
+     */
+
+    public function truncateTables()
+    {
+
+        $db_name = config('database.connections.' . $this->system_connection . '.database');
+
+        $this->truncateDatabaseTables($this->system_connection, $db_name);
+
+        $this->info("System database '$db_name' tables truncated");
+
+        if ($this->multi_tenant == true)
+        {
+
+            $database_count = 1;
+
+            $databases = $this->getTenantDatabases();
+
+            foreach ($databases as $database)
+            {
+
+                $this->setConnection($database);
+                $this->truncateDatabaseTables($this->tenant_connection, $database, true);
+
+                $database_count++;
+            }
+
+            $this->info("Truncated $database_count databases");
+        }
+
+    }
+
+    /**
+     * Truncate all tables within the requested database, but leave the schema.
+     *
+     * @param $connection
+     * @param $database_name
+     */
+    protected function truncateDatabaseTables($connection, $database_name)
+    {
+
+        //  We put this here in case the database doesn't exist, otherwise throws off the table check.
+        $result = DB::connection($connection)->select("SHOW DATABASES LIKE '{$database_name}';");
+
+        if (count($result) < 1)
+        {
+            $this->info("Cannot remove tables. Database doesn't exist.");
+
+            return;
+        }
+
+        $this->info("Truncating tables from $database_name. Connection: $connection");
+
+        $tables = $this->getTables($connection, $database_name);
+
+        Schema::disableForeignKeyConstraints();
+
+        foreach ($tables as $table_name)
+        {
+            //if you don't want to truncate migrations
+            if ($table_name == 'migrations')
+            {
+                continue;
+            }
+            DB::connection($connection)->table($table_name)->truncate();
+        };
+
+        Schema::enableForeignKeyConstraints();
+    }
+
+    public function info($message)
+    {
+
+        if ($this->messenger)
+        {
+            $this->messenger->info($message);
+        }
+    }
+
+    public function getTables($connection, $database): array
+    {
+
+        $tables = DB::connection($connection)->select("SHOW TABLES FROM $database;");
+
+        $list = [];
+
+        foreach ($tables as $table)
+        {
+
+            $table_array = (array)$table;
+
+            $list[] = array_pop($table_array);
+        };
+
+        return $list;
+    }
+
+    protected function getTenantDatabases()
+    {
+
+        $prefix = $this->tenant_table_prefix;
+
+        if (empty($prefix))
+        {
+            throw new \ErrorException('No Multi-tenant Prefix set');
+        }
+
+        $databases = DB::select("SHOW DATABASES LIKE '$prefix%'");
+
+        $results = [];
+
+        foreach ($databases as $database)
+        {
+            $results[] = array_pop($database);
+        }
+
+        return $results;
+    }
+
+    public function setConnection($db_name, $set_default = false)
+    {
+
+        $this->setConnectionDatabase($this->tenant_connection, $db_name);
+
+        DB::reconnect($this->tenant_connection); // Reconnect to this connection to avoid loading a cached version
+
+        if ($set_default == true)
+        {
+            DB::setDefaultConnection($this->tenant_connection); // Set the default connection to this new connection
+        }
+
+    }
+
+    public function setConnectionDatabase($connection, $name)
+    {
+
+        Config::set("database.connections.{$connection}.database", $name);
 
     }
 
@@ -302,15 +447,6 @@ class DataManage
         return $return_status;
     }
 
-    public function info($message)
-    {
-
-        if ($this->messenger)
-        {
-            $this->messenger->info($message);
-        }
-    }
-
     protected function deleteTables($connection, $database_name, $drop_db = false)
     {
 
@@ -342,24 +478,6 @@ class DataManage
             DB::connection($connection)->statement("DROP DATABASE IF EXISTS $database_name;");
         }
 
-    }
-
-    public function getTables($connection, $database): array
-    {
-
-        $tables = DB::connection($connection)->select("SHOW TABLES FROM $database;");
-
-        $list = [];
-
-        foreach ($tables as $table)
-        {
-
-            $table_array = (array)$table;
-
-            $list[] = array_pop($table_array);
-        };
-
-        return $list;
     }
 
     /**
@@ -647,49 +765,6 @@ class DataManage
 
             $this->info("Truncated $database_count databases");
         }
-    }
-
-    protected function getTenantDatabases()
-    {
-
-        $prefix = $this->tenant_table_prefix;
-
-        if (empty($prefix))
-        {
-            throw new \ErrorException('No Multi-tenant Prefix set');
-        }
-
-        $databases = DB::select("SHOW DATABASES LIKE '$prefix%'");
-
-        $results = [];
-
-        foreach ($databases as $database)
-        {
-            $results[] = array_pop($database);
-        }
-
-        return $results;
-    }
-
-    public function setConnection($db_name, $set_default = false)
-    {
-
-        $this->setConnectionDatabase($this->tenant_connection, $db_name);
-
-        DB::reconnect($this->tenant_connection); // Reconnect to this connection to avoid loading a cached version
-
-        if ($set_default == true)
-        {
-            DB::setDefaultConnection($this->tenant_connection); // Set the default connection to this new connection
-        }
-
-    }
-
-    public function setConnectionDatabase($connection, $name)
-    {
-
-        Config::set("database.connections.{$connection}.database", $name);
-
     }
 
     public function backup()
