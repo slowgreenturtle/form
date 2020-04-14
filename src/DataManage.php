@@ -16,7 +16,7 @@ class DataManage
 
     use Config;
 
-    protected $system_connection = 'mysql';
+    protected $system_connection = null;
     protected $multi_tenant      = false;
 
     protected $tenant_connection = 'team';
@@ -29,6 +29,7 @@ class DataManage
     public function __construct($messenger = null)
     {
 
+        $this->system_connection = $this->confif('database.default');
         $this->tenant_connection = $this->config('database.tenant.connection');
         $this->multi_tenant      = $this->config('database.tenant.enabled');
 
