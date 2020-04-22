@@ -3,6 +3,7 @@
 namespace SGT\HTTP\Navigation;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use SGT\Traits\Config;
 
 abstract class Item
@@ -50,6 +51,16 @@ abstract class Item
 
     public function canDisplay(): bool
     {
+
+        $route = Arr::get($this->route, 'route');
+
+        if ($route)
+        {
+            if (Route::current()->getName() == $route)
+            {
+                return false;
+            }
+        }
 
         return $this->hasPermission() && $this->canShow();
     }

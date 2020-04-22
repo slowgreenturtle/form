@@ -65,7 +65,7 @@ class ButtonDropdown extends Button
         foreach ($this->items as $item)
         {
 
-            if (!$item->hasPermission())
+            if ($item->canDisplay() == false)
             {
                 continue;
             }

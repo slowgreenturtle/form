@@ -14,7 +14,7 @@ class Submit extends Button
     public function display()
     {
 
-        if (!$this->hasPermission())
+        if ($this->canDisplay() == false)
         {
             return '';
         }
