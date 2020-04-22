@@ -25,19 +25,17 @@ class ButtonBar
     public function display()
     {
 
-        $html = '';
+        $content = [];
 
         foreach ($this->items as $item)
         {
-
-            if ($item->hasPermission())
+            if ($item->canDisplay())
             {
-                $html .= $item->display() . '&nbsp;';
+                $content[] = $item->display();
             }
-
         }
 
-        return $html;
+        return implode('&nbsp;', $content);
 
     }
 

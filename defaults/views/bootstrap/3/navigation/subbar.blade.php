@@ -1,5 +1,7 @@
 <div class="btn-group" role="group">
     @foreach($items as $item)
-        {!! $item->display() !!}
+        @if($item->canDisplay() == true)
+            {!! $item->display() !!}
+        @endif
     @endforeach
 </div>

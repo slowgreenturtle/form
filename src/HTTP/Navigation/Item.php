@@ -25,6 +25,7 @@ abstract class Item
     protected $classes    = [];
     protected $colors     = [];
     protected $sizes      = [];
+    protected $show_param = true;
 
     public function __construct($label = 'Default')
     {
@@ -46,6 +47,56 @@ abstract class Item
     public abstract function display();
 
     abstract public static function create($label = '');
+
+    public function canDisplay(): bool
+    {
+
+        return $this->hasPermission() && $this->canShow();
+    }
+
+    public function hasPermission()
+    {
+
+        if (count($this->permission) < 1)
+        {
+            return true;
+        }
+
+        $user = auth()->user();
+
+        if ($user)
+        {
+            return $user->hasPermission($this->permission['slug'], $this->permission['context_slug'], $this->permission['context_id']);
+        }
+
+        return false;
+    }
+
+    protected function canShow()
+    {
+
+        if (is_callable($this->show_param))
+        {
+            $show_param = $this->show_param;
+
+            return $show_param();
+        }
+
+        return $this->show_param == true;
+
+    }
+
+    /**
+     *
+     */
+    public function show($param)
+    {
+
+        $this->show_param = $param;
+
+        return $this;
+
+    }
 
     public function getSizeClass()
     {
@@ -98,6 +149,7 @@ abstract class Item
      * @param      $permission_slug The slug of the permission to be tested
      * @param null $context_slug    The type of variable being passed in.
      * @param null $context_id      The id of the variable type to test against if looking for a single variable.
+     *
      * @return $this
      */
 
@@ -116,24 +168,6 @@ abstract class Item
 
         return $this;
 
-    }
-
-    public function hasPermission()
-    {
-
-        if (count($this->permission) < 1)
-        {
-            return true;
-        }
-
-        $user = auth()->user();
-
-        if ($user)
-        {
-            return $user->hasPermission($this->permission['slug'], $this->permission['context_slug'], $this->permission['context_id']);
-        }
-
-        return false;
     }
 
     public function route($route, $params = [])
@@ -201,6 +235,7 @@ abstract class Item
      * Attach a tool tip to the object
      *
      * @param $text
+     *
      * @return $this
      */
 

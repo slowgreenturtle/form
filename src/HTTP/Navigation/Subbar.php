@@ -2,14 +2,14 @@
 
 namespace SGT\HTTP\Navigation;
 
-use SGT\Traits\Config;
 use SGT\HTTP\Navigation\Subbar\Item;
+use SGT\Traits\Config;
 
 class Subbar
 {
 
     use Config;
-    public $title = '';
+
     public $items = [];
 
     public function item($label)

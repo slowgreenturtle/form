@@ -19,6 +19,8 @@ abstract class Element
     protected $data       = [];
     protected $attributes = [];
     protected $classes    = [];
+    # show param must return for the object to show itself. Otherwise for html elements will simply return an empty string.
+    protected $show_param = true;
 
     public function __construct()
     {
@@ -100,6 +102,18 @@ abstract class Element
     {
 
         return $this->getData('id', $this->getName());
+    }
+
+    /**
+     *
+     */
+    public function show($param)
+    {
+
+        $this->show_param = $param;
+
+        return $this;
+
     }
 
     public function getValue()
