@@ -200,109 +200,17 @@ class DataManage
     public function copy($params = [])
     {
 
-        $type    = Arr::get($params, 'type', 'export');
-        $storage = Arr::get($params, 'storage', 'local');
-
+        $type = Arr::get($params, 'type', 'export');
         if ($type == 'import')
         {
             # import the connection
-            $this->copyImport($params);
-
-            return;
-        }
-
-        $local_path     = storage_path($this->config('database.copy.local.path'));
-        $local_filename = $this->config('database.copy.local.filename');
-
-        $connection    = config('database.default');
-        $database_name = config("database.connections.{$connection}.database");
-
-        $cloud_filename = $this->config('database.copy.cloud.filename');
-        $cloud_path     = $this->config('database.copy.cloud.path');
-        $cloud_file     = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
-
-        # export the zip file to the local path.
-        $local_file = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
-
-        #export the connection
-        $message = "Exporting `$database_name` to ";
-
-        if ($storage == 'local')
-        {
-            $message .= "`$local_file`";
+            $this->databaseImport($params);
         }
         else
         {
-            $message .= "`$cloud_file`";
+            $this->databaseExport($params);
         }
 
-        $this->info($message);
-
-        @mkdir($local_path);
-        # necessary because the zipfile must exist for the ziparchive to have something to open.
-        @unlink($local_file);
-
-        $file = fopen($local_file, 'w');
-        fclose($file);
-
-        $zip = new ZipArchive();
-        $zip->open($local_file, ZipArchive::OVERWRITE);
-
-        # when 'adding' files to the zip archive, the actual add doesn't happen until the close call.
-        # the temp files can then be deleted.
-        $removeFiles = [];
-
-        #export schema
-        $parameters = [
-            '--no-data',
-        ];
-
-        $random_filename = Str::random(20);
-
-        $schema_file = "/tmp/{$database_name}_{$random_filename}.sql";
-
-        $removeFiles[] = $schema_file;
-
-        $output_command = "> $schema_file";
-
-        $dump_params = [
-            'command'     => 'mysqldump',
-            'parameters'  => $parameters,
-            'connection'  => $connection,
-            'database'    => $database_name,
-            'destination' => $output_command
-        ];
-
-        $this->mySQL($dump_params);
-
-        // Add schema to zip file
-        $zip->addFile($schema_file, 'schema.sql');
-
-        $this->addTablesToCopy($connection, $database_name, $zip, $params, $removeFiles);
-
-        // Close and send to users
-        $zip->close();
-
-        # remove all the temp files
-        $this->info("Cleaning up temp files");
-
-        foreach ($removeFiles as $remove_file)
-        {
-            unlink($remove_file);
-        }
-
-        $this->info("Finished exporting local database");
-
-        # if the export is s3 type. Then we copy the database to the s3 path and remove it locally
-
-        if ($storage == 'cloud')
-        {
-
-            $disk = $this->config('database.copy.cloud.disk');
-            $this->cloudCopy($local_file, $cloud_file, 'private', $disk);
-            # delete the local copy
-            unlink($local_file);
-        }
     }
 
     /**
@@ -310,25 +218,27 @@ class DataManage
      *
      * @param $params
      */
-    protected function copyImport($params)
+    protected function databaseImport($params)
     {
 
+        $storage       = Arr::get($params, 'storage', 'local');
         $return_status = true;
 
-        $storage = Arr::get($params, 'storage', 'local');
+        $local_filename = Arr::get($params, 'filename', $this->config('database.copy.local.filename'));
+        $cloud_filename = Arr::get($params, 'filename', $this->config('database.copy.cloud.filename'));
+        $connection     = Arr::get($params, 'connection', config('database.default'));
 
-        $connection    = config('database.default');
         $database_name = config("database.connections.{$connection}.database");
 
-        $local_path     = storage_path($this->config('database.copy.local.path'));
-        $local_filename = $this->config('database.copy.local.filename');
-        $local_file     = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
+        $local_path = storage_path($this->config('database.copy.local.path'));
+        $local_file = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
 
-        $cloud_filename = $this->config('database.copy.cloud.filename');
-        $cloud_path     = $this->config('database.copy.cloud.path');
-        $cloud_file     = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
+        $cloud_path = $this->config('database.copy.cloud.path');
+        $cloud_file = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
 
         @mkdir($local_path);
+
+        $this->info("Connection: $connection");
 
         #export the connection
         $message = "Importing `$database_name` from ";
@@ -365,6 +275,7 @@ class DataManage
 
             $file_contents = Cloud::get($cloud_file, $disk);
             file_put_contents($local_file, $file_contents);
+
         }
 
         # extract the zip file in the temp folder
@@ -526,6 +437,117 @@ class DataManage
         $response = shell_exec($command);
         putenv('MYSQL_PWD=');
 
+    }
+
+    /**
+     * Export a database
+     */
+    protected function databaseExport($params)
+    {
+
+        # Export the file at this point.
+        $local_filename = Arr::get($params, 'filename', $this->config('database.copy.local.filename'));
+        $cloud_filename = Arr::get($params, 'filename', $this->config('database.copy.cloud.filename'));
+        $connection     = Arr::get($params, 'connection', config('database.default'));
+
+        # Export the database to a local file or a cloud file.
+        $storage = Arr::get($params, 'storage', 'local');
+
+        $local_path = storage_path($this->config('database.copy.local.path'));
+
+        $database_name = config("database.connections.{$connection}.database");
+
+        $cloud_path = $this->config('database.copy.cloud.path');
+        $cloud_file = $cloud_path . DIRECTORY_SEPARATOR . $cloud_filename . '.zip';
+
+        # export the zip file to the local path.
+        $local_file = $local_path . DIRECTORY_SEPARATOR . $local_filename . '.zip';
+
+        #export the connection
+        $message = "Exporting `$database_name` to ";
+
+        if ($storage == 'local')
+        {
+            $message .= "`$local_file`";
+        }
+        else
+        {
+            $message .= "`$cloud_file`";
+        }
+
+        $this->info("Connection: $connection");
+        $this->info($message);
+
+        @mkdir($local_path);
+
+        # necessary because the zipfile must exist for the ziparchive to have something to open.
+        # Delete the local file because we're store it there first.
+        @unlink($local_file);
+
+        # reopen the local file as a 'new' file.
+        $file = fopen($local_file, 'w');
+        fclose($file);
+
+        # then open the local file as a zip archive
+        $zip = new ZipArchive();
+        $zip->open($local_file, ZipArchive::OVERWRITE);
+
+        # when 'adding' files to the zip archive, the actual add doesn't happen until the close call.
+        # the temp files can then be deleted.
+        # we store the list of names here.
+        $removeFiles = [];
+
+        #export schema
+        $parameters = [
+            '--no-data',
+        ];
+
+        $random_filename = Str::random(20);
+
+        $schema_file = "/tmp/{$database_name}_{$random_filename}.sql";
+
+        $removeFiles[] = $schema_file;
+
+        $output_command = "> $schema_file";
+
+        $dump_params = [
+            'command'     => 'mysqldump',
+            'parameters'  => $parameters,
+            'connection'  => $connection,
+            'database'    => $database_name,
+            'destination' => $output_command
+        ];
+
+        $this->mySQL($dump_params);
+
+        // Add schema to zip file
+        $zip->addFile($schema_file, 'schema.sql');
+
+        $this->addTablesToCopy($connection, $database_name, $zip, $params, $removeFiles);
+
+        // Close and send to users
+        $zip->close();
+
+        # remove all the temp files
+        $this->info("Cleaning up temp files");
+
+        foreach ($removeFiles as $remove_file)
+        {
+            unlink($remove_file);
+        }
+
+        $this->info("Finished exporting local database");
+
+        # if the export is cloud type, copy the local file to the cloud and remove the local file.
+
+        if ($storage == 'cloud')
+        {
+
+            $disk = $this->config('database.copy.cloud.disk');
+            $this->cloudCopy($local_file, $cloud_file, 'private', $disk);
+            # delete the local copy
+            unlink($local_file);
+        }
     }
 
     protected function addTablesToCopy($connection, $database_name, $zip, $params, &$removeFiles)
