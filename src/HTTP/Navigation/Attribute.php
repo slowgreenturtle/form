@@ -5,7 +5,28 @@ namespace SGT\HTTP\Navigation;
 trait Attribute
 {
 
-    public function attributes($attributes)
+    protected $attributes = [];
+
+    public function attributes()
+    {
+
+        return $this->attributes;
+    }
+
+    public function attribute($title, $value)
+    {
+
+        $this->attributes[$title] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param      $attributes
+     *
+     * @return string
+     */
+    public function htmlAttributes($attributes)
     {
 
         $html = [];

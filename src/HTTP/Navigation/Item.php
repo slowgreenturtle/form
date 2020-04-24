@@ -19,7 +19,6 @@ abstract class Item
     protected $link       = '';
     protected $color      = 'blue';
     protected $size       = 'small';
-    protected $attributes = [];
     protected $permission = [];
     protected $route      = [];
     protected $confirm    = false;
@@ -126,14 +125,6 @@ abstract class Item
     {
 
         return $this->attribute('name', $value);
-    }
-
-    public function attribute($title, $value)
-    {
-
-        $this->attributes[$title] = $value;
-
-        return $this;
     }
 
     public function value($value)

@@ -2,8 +2,12 @@
 
 namespace SGT\HTTP\Navigation;
 
-class ButtonDropdown extends Button
+use SGT\Traits\Config;
+
+class ButtonDropdown
 {
+
+    use Config;
 
     public    $type      = 'button_dropdown';
     protected $alignment = 'right';
@@ -21,8 +25,7 @@ class ButtonDropdown extends Button
     public function addItem($label)
     {
 
-        $item = new Menu($label);
-        $item->addClass('dropdown-item');
+        $item          = new Menu($label);
         $this->items[] = $item;
 
         return $item;
@@ -91,12 +94,12 @@ class ButtonDropdown extends Button
 
             if ($item_count == 0)
             {
-                $this->label($item->getLabel());
-                $this->link($item->gethRef());
+                $button = $this->makeButton($item);
             }
             else
             {
                 $items[] = $item;
+                $item->addClass('dropdown-item');
             }
 
             $item_count++;
@@ -106,8 +109,9 @@ class ButtonDropdown extends Button
         if ($item_count > 0)
         {
 
-            $view->items    = $items;
             $view->dropdown = $this;
+            $view->items    = $items;
+            $view->button   = $button;
 
             return $view->__toString();
         }
@@ -116,7 +120,26 @@ class ButtonDropdown extends Button
 
     }
 
-    public static function create($label = '')
+    protected function makeButton($item)
+    {
+
+        $button = new Button();
+
+        $button->label($item->getLabel());
+        $button->link($item->gethRef());
+
+        $attributes = $item->attributes();
+
+        foreach($attributes as $key=>$value)
+        {
+            $button->attribute($key, $value);
+        }
+
+        return $button;
+
+    }
+
+    public static function create()
     {
 
         return new ButtonDropdown();

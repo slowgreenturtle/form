@@ -39,9 +39,9 @@ class Button extends Item
             'role'  => 'button'
         ];
 
-        $attributes = array_merge($attribs, $this->attributes);
+        $attributes = array_merge($attribs, $this->attributes());
 
-        $html = "<a " . $this->attributes($attributes) . '>' . $html_icon . $this->label . '</a>';
+        $html = "<a " . $this->htmlAttributes($attributes) . '>' . $html_icon . $this->label . '</a>';
 
         return $html;
     }
