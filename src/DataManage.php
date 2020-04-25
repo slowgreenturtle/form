@@ -196,19 +196,22 @@ class DataManage
      * Exports by default.
      *
      * @param $params
+     *
+     * @return bool
      */
-    public function copy($params = [])
+    public function copy($params = []): bool
     {
 
         $type = Arr::get($params, 'type', 'export');
+
         if ($type == 'import')
         {
             # import the connection
-            $this->databaseImport($params);
+            return $this->databaseImport($params);
         }
         else
         {
-            $this->databaseExport($params);
+            return $this->databaseExport($params);
         }
 
     }
@@ -443,8 +446,10 @@ class DataManage
 
     /**
      * Export a database
+     *
+     * @return bool
      */
-    protected function databaseExport($params)
+    protected function databaseExport($params): bool
     {
 
         # Export the file at this point.
@@ -551,6 +556,8 @@ class DataManage
             # delete the local copy
             unlink($local_file);
         }
+
+        return true;
     }
 
     protected function addTablesToCopy($connection, $database_name, $zip, $params, &$removeFiles)
