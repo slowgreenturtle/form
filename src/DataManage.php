@@ -455,6 +455,7 @@ class DataManage
         # Export the file at this point.
         $local_filename = Arr::get($params, 'filename', $this->config('database.copy.local.filename'));
         $cloud_filename = Arr::get($params, 'filename', $this->config('database.copy.cloud.filename'));
+        $connection     = Arr::get($params, 'connection');
 
         $connection = empty($connection) ? config('database.default') : $connection;
 
