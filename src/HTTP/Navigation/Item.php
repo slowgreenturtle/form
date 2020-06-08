@@ -14,18 +14,18 @@ abstract class Item
 
     public $type = '';
 
-    protected $icon       = '';
-    protected $label      = '';
-    protected $link       = '';
-    protected $color      = 'blue';
-    protected $size       = 'small';
-    protected $permission = [];
-    protected $route      = [];
-    protected $confirm    = false;
-    protected $classes    = [];
-    protected $colors     = [];
-    protected $sizes      = [];
-    protected $show_param = true;
+    protected $icon        = '';
+    protected $label       = '';
+    protected $link        = '';
+    protected $color       = 'blue';
+    protected $size        = 'small';
+    protected $permissions = [];
+    protected $route       = [];
+    protected $confirm     = false;
+    protected $classes     = [];
+    protected $colors      = [];
+    protected $sizes       = [];
+    protected $show_param  = true;
 
     public function __construct($label = 'Default')
     {
@@ -67,7 +67,7 @@ abstract class Item
     public function hasPermission()
     {
 
-        if (count($this->permission) < 1)
+        if (count($this->permissions) < 1)
         {
             return true;
         }
@@ -76,7 +76,10 @@ abstract class Item
 
         if ($user)
         {
-            return $user->hasPermission($this->permission['slug'], $this->permission['context_slug'], $this->permission['context_id']);
+            foreach ($this->permissions as $permission)
+            {
+                return $user->hasPermission($permission['slug'], $permission['context_slug'], $permission['context_id']);
+            }
         }
 
         return false;
@@ -164,9 +167,11 @@ abstract class Item
             $context_slug = Arr::get($context_slug, 'context_slug');
         }
 
-        $this->permission['slug']         = $permission_slug;
-        $this->permission['context_slug'] = $context_slug;
-        $this->permission['context_id']   = $context_id;
+        $permission['slug']         = $permission_slug;
+        $permission['context_slug'] = $context_slug;
+        $permission['context_id']   = $context_id;
+
+        $this->permissions[] = $permission;
 
         return $this;
 

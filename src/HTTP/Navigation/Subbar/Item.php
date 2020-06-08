@@ -11,16 +11,16 @@ class Item
 
     use Attribute;
 
-    protected $label      = '';
-    protected $url        = '';
-    protected $color      = 'blue';
-    protected $tool       = '';
-    protected $size       = 'small';
-    protected $attributes = [];
-    protected $type       = 'item';
-    protected $permission = '';
-    protected $colors     = [];
-    protected $sizes      = [];
+    protected $label       = '';
+    protected $url         = '';
+    protected $color       = 'blue';
+    protected $tool        = '';
+    protected $size        = 'small';
+    protected $attributes  = [];
+    protected $type        = 'item';
+    protected $permissions = [];
+    protected $colors      = [];
+    protected $sizes       = [];
 
     protected $badge = [
         'text'    => '',
@@ -57,8 +57,9 @@ class Item
     public function permission($permission)
     {
 
-        $this->permission = $permission;
+        $this->permissions[] = $permission;
 
+        return this;
     }
 
     public function url($url)
@@ -119,11 +120,7 @@ class Item
     public function display()
     {
 
-        $user = auth()->user();
-
-        $permission = $this->permission;
-
-        if (!empty($permission) && !$user->hasPermission($permission))
+        if ($this->hasPermission() == false)
         {
             return '';
         }
@@ -137,6 +134,30 @@ class Item
         }
 
         return '';
+    }
+
+    public function hasPermission()
+    {
+
+        $user = auth()->user();
+
+        $permissions = $this->permissions;
+
+        if (count($permissions) < 1)
+        {
+            return true;
+        }
+
+        foreach ($permissions as $permission)
+        {
+            if ($user->hasPermission($permission))
+            {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     protected function displayDivider()
