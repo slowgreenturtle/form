@@ -78,7 +78,10 @@ abstract class Item
         {
             foreach ($this->permissions as $permission)
             {
-                return $user->hasPermission($permission['slug'], $permission['context_slug'], $permission['context_id']);
+                if ($user->hasPermission($permission['slug'], $permission['context_slug'], $permission['context_id']) == true)
+                {
+                    return true;
+                }
             }
         }
 
