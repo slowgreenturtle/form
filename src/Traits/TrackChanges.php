@@ -8,6 +8,9 @@ use SGT\Observer\ChangeObserver;
 trait TrackChanges
 {
 
+    # Can add track_ignore_fields which will ignore particular fields from
+    # being saved.
+
     public static function bootTrackChanges()
     {
 
@@ -19,6 +22,23 @@ trait TrackChanges
         {
             self::observe(ChangeObserver::class);
         }
+
+    }
+
+    /**
+     * @param $field
+     *
+     * @return bool true if the passed in field should be ignored.
+     */
+    public function ignoreField($field)
+    {
+
+        if (property_exists($this, 'track_ignore_fields'))
+        {
+            return in_array($field, $this->track_ignore_fields);
+        }
+
+        return false;
 
     }
 
@@ -49,6 +69,7 @@ trait TrackChanges
      * and covert the field name here.
      *
      * @param $field_name
+     *
      * @return mixed
      */
     public function translateName($field_name)
@@ -64,6 +85,7 @@ trait TrackChanges
      *
      * @param $field_name
      * @param $field_value
+     *
      * @return mixed
      */
     public function translateValue($field_name, $field_value)
