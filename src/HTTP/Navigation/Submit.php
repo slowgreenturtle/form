@@ -36,7 +36,7 @@ class Submit extends Button
 
         $attributes = array_merge($attribs, $this->attributes);
 
-        $html = "<button " . $this->attributes($attributes) . '>' . $html_icon . $this->label . '</button>';
+        $html = "<button " . $this->htmlAttributes($attributes) . '>' . $html_icon . $this->label . '</button>';
 
         return $html;
     }

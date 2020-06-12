@@ -213,7 +213,7 @@ class SGTHtml
 
         }
 
-        return '<a href="' . $url . '"' . $this->attributes($attributes) . '>' . $icon_text . $this->entities($title) . '</a>';
+        return '<a href="' . $url . '"' . $this->htmlAttributes($attributes) . '>' . $icon_text . $this->entities($title) . '</a>';
 
     }
 
