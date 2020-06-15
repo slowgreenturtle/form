@@ -12,6 +12,8 @@ class ButtonDropdown
     public    $type      = 'button_dropdown';
     protected $alignment = 'right';
     protected $items     = [];     //  Can be left or right
+    protected $size      = null;
+    protected $color     = null;
 
     public function alignment($alignment = 'left')
     {
@@ -20,6 +22,22 @@ class ButtonDropdown
 
         return $this;
 
+    }
+
+    public function size($size)
+    {
+
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function color($color)
+    {
+
+        $this->color = $color;
+
+        return $this;
     }
 
     public function addItem($label)
@@ -95,6 +113,17 @@ class ButtonDropdown
             if ($item_count == 0)
             {
                 $button = $this->makeButton($item);
+
+                if ($this->color != null)
+                {
+                    $button->color($this->color);
+                }
+
+                if ($this->size != null)
+                {
+                    $button->size($this->size);
+                }
+
             }
             else
             {
@@ -130,7 +159,7 @@ class ButtonDropdown
 
         $attributes = $item->attributes();
 
-        foreach($attributes as $key=>$value)
+        foreach ($attributes as $key => $value)
         {
             $button->attribute($key, $value);
         }
