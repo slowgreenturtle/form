@@ -3,6 +3,7 @@
 namespace SGT\HTTP;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use SGT\HTTP\Navigation\Attribute;
 
 class SGTHtml
@@ -110,6 +111,7 @@ class SGTHtml
      * Build an HTML attribute string from an array.
      *
      * @param array $attributes
+     *
      * @return string
      */
     public function arrayAttributes($attributes)
@@ -138,6 +140,7 @@ class SGTHtml
      *
      * @param string $key
      * @param string $value
+     *
      * @return string
      */
     protected function arrayAttributeElement($key, $value)
@@ -172,7 +175,7 @@ class SGTHtml
         $title = Arr::get($action, 'name');
         $link  = Arr::get($action, 'link');
 
-        $unique_id = str_random();
+        $unique_id = Str::random();
 
         $attributes['class'] = $unique_id;
 
