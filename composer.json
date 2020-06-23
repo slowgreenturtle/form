@@ -22,9 +22,9 @@
   },
   "require": {
     "php": "^7.2",
-    "laravel/framework": "^6.*",
+    "laravel/framework": "^6.2",
     "doctrine/dbal": "^2.9",
-    "laravelcollective/html": "^6.*"
+    "laravelcollective/html": "^6.1"
   },
   "autoload": {
     "psr-4": {
