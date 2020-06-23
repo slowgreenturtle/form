@@ -42,7 +42,7 @@ abstract class SGTForm3
     public function __construct($model = null)
     {
 
-        $this->setFormAttribute('name', snake_case(class_basename($this)));
+        $this->setFormAttribute('name', Str::snake(class_basename($this)));
         $this->setFormAttribute('method', 'POST');
         $this->setFormAttribute('id', $this->getFormAttribute('name'));
 

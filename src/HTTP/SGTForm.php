@@ -58,7 +58,7 @@ abstract class SGTForm
     public function __construct($model = null)
     {
 
-        $this->attribute('name', snake_case(class_basename($this)));
+        $this->attribute('name', Str::snake(class_basename($this)));
         $this->attribute('method', 'POST');
         $this->attribute('id', $this->getAttribute('name'));
 
