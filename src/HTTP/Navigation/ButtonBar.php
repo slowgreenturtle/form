@@ -6,10 +6,33 @@
 
 namespace SGT\HTTP\Navigation;
 
+use SGT\Traits\Config;
+
 class ButtonBar
 {
 
-    protected $items = [];
+    use Config;
+
+    protected $items                     = [];
+    protected $size                      = 'small';
+    protected $classes                   = [];
+    protected $config_button_group_sizes = 'element.button_group.sizes';
+
+    public function __construct()
+    {
+
+        $this->sizes = $this->configFrontEnd($this->config_button_group_sizes);
+
+        $this->addClass('btn-group');
+    }
+
+    public function addClass($class)
+    {
+
+        $this->classes[$class] = $class;
+
+        return $this;
+    }
 
     public function addButton($label)
     {
@@ -20,6 +43,21 @@ class ButtonBar
 
         return $item;
 
+    }
+
+    public function getSizeClass()
+    {
+
+        return Arr::get($this->sizes, $this->size);
+
+    }
+
+    public function size($size)
+    {
+
+        $this->size = $size;
+
+        return $this;
     }
 
     public function display()
@@ -35,8 +73,17 @@ class ButtonBar
             }
         }
 
-        return implode('&nbsp;', $content);
+        $classes = $this->classes();
+        $classes = implode(' ', $classes);
 
+        return '<div class="' . $classes . '" role="group" aria-label="Navigation">' . implode('', $content) . '</div>';
+
+    }
+
+    public function classes()
+    {
+
+        return $this->classes;
     }
 
     public static function create()

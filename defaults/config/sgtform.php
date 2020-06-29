@@ -43,12 +43,12 @@ return [
         '3' => [
             'element'    =>
                 [
-                    'css'    => [
+                    'css'          => [
                         'error' => [
                             'has-error'
                         ]
                     ],
-                    'link'   => [
+                    'link'         => [
                         'colors' =>
                             [
                                 'green'      => 'btn-success',
@@ -66,7 +66,14 @@ return [
                             'large'  => 'btn-lg'
                         ]
                     ],
-                    'button' => [
+                    'button_group' => [
+                        'sizes' => [
+                            'small'  => 'btn-group-sm',
+                            'medium' => '',
+                            'large'  => 'btn-group-lg'
+                        ],
+                    ],
+                    'button'       => [
                         'colors' => [
                             'green'      => 'btn-success',
                             'blue'       => 'btn-primary',
@@ -93,11 +100,11 @@ return [
                             ],
                         ]
                     ],
-                    'view'   =>
+                    'view'         =>
                         [
                             'path' => 'sgtform::bootstrap.3.element.default'
                         ],
-                    'select' =>
+                    'select'       =>
                         [
                             'css' => [
                                 'div'     => [
@@ -108,7 +115,7 @@ return [
                                 ],
                             ]
                         ],
-                    'input'  =>
+                    'input'        =>
                         [
                             'css' => [
                                 'div'     => [
