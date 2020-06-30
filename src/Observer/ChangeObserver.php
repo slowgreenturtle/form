@@ -45,6 +45,10 @@ class ChangeObserver
 
             if ($original_value != $field_value)
             {
+                if ($model->ignoreField($field_name) == true)
+                {
+                    continue;
+                }
                 $model->addChangeNotice($field_name, $field_value);
             }
         }
