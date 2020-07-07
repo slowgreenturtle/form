@@ -327,7 +327,7 @@ abstract class SGTForm
 
         if ($this->errors)
         {
-            return $this->errors->default->has($element);
+            return $this->errors->has($element);
         }
 
         return false;
