@@ -384,14 +384,19 @@ class DataManage
 
         foreach ($tables as $table_name)
         {
+            $this->info("Dropping: $table_name");
             Schema::connection($connection)->dropIfExists($table_name);
-        };
+        }
+
+        $this->info("All tables dropped");
 
         Schema::enableForeignKeyConstraints();
 
         if ($drop_db == true)
         {
+            $this->info("Dropping Database '$database_name'");
             DB::connection($connection)->statement("DROP DATABASE IF EXISTS $database_name;");
+            $this->info("Database dropped");
         }
 
     }
