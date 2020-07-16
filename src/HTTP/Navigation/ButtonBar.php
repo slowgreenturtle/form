@@ -34,6 +34,16 @@ class ButtonBar
         return $this;
     }
 
+    public function addSubmit($label)
+    {
+
+        $item = new Submit($label);
+
+        $this->items[] = $item;
+
+        return $item;
+    }
+
     public function addButton($label)
     {
 
@@ -67,10 +77,7 @@ class ButtonBar
 
         foreach ($this->items as $item)
         {
-            if ($item->canDisplay())
-            {
-                $content[] = $item->display();
-            }
+            $content[] = $item->display();
         }
 
         $classes = $this->classes();
