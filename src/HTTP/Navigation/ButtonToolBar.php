@@ -8,7 +8,7 @@ namespace SGT\HTTP\Navigation;
 
 use SGT\Traits\Config;
 
-class ButtonBar
+class ButtonToolBar
 {
 
     use Config;
@@ -16,14 +16,14 @@ class ButtonBar
     protected $items                     = [];
     protected $size                      = 'small';
     protected $classes                   = [];
-    protected $config_button_group_sizes = 'element.button_group.sizes';
+    protected $config_button_group_sizes = 'element.button.toolbar.sizes';
 
     public function __construct()
     {
 
         $this->sizes = $this->configFrontEnd($this->config_button_group_sizes);
 
-        $this->addClass('btn-group');
+        $this->addClass('btn-toolbar');
     }
 
     public function addClass($class)
@@ -48,6 +48,17 @@ class ButtonBar
     {
 
         $item = new Button($label);
+
+        $this->items[] = $item;
+
+        return $item;
+
+    }
+
+    public function addGroup()
+    {
+
+        $item = new ButtonBar();
 
         $this->items[] = $item;
 
@@ -94,7 +105,7 @@ class ButtonBar
         $classes = $this->classes();
         $classes = implode(' ', $classes);
 
-        return '<div class="' . $classes . '" role="group" aria-label="Navigation">' . implode('', $content) . '</div>';
+        return '<div class="' . $classes . '" role="toolbar" aria-label="Navigation">' . implode('', $content) . '</div>';
 
     }
 

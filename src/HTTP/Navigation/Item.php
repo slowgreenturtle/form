@@ -247,11 +247,20 @@ abstract class Item
      * @param $text
      *
      * @return $this
+     * @deprecated
      */
 
     public function tool_tip($tool_tip)
     {
 
+        return $this->toolTip($tool_tip);
+    }
+
+    public function toolTip($tool_tip)
+    {
+
+        $this->attribute('data-toggle', 'tooltip');
+        $this->attribute('data-placement', 'left');
         return $this->attribute('title', $tool_tip);
     }
 
