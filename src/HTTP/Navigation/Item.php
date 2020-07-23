@@ -256,11 +256,12 @@ abstract class Item
         return $this->toolTip($tool_tip);
     }
 
-    public function toolTip($tool_tip)
+    public function toolTip($tool_tip, $location = 'left')
     {
 
         $this->attribute('data-toggle', 'tooltip');
-        $this->attribute('data-placement', 'bottom');
+        $this->attribute('data-placement', $location);
+
         return $this->attribute('title', $tool_tip);
     }
 
