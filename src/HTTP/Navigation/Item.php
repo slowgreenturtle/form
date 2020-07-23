@@ -256,14 +256,18 @@ abstract class Item
         return $this->toolTip($tool_tip);
     }
 
-    public function toolTip($tool_tip, $location = 'left')
+    public function toolTip($tool_tip, $placement = null)
     {
 
+        $placement = $this->getTooltipPlacement($placement);
+
         $this->attribute('data-toggle', 'tooltip');
-        $this->attribute('data-placement', $location);
+        $this->attribute('data-placement', $placement);
 
         return $this->attribute('title', $tool_tip);
     }
+
+    public abstract function getTooltipPlacement(string $placement = null): string;
 
     public function size($size)
     {

@@ -49,7 +49,10 @@ return [
                         ]
                     ],
                     'link'         => [
-                        'colors' =>
+                        'tooltip' => [
+                            'placement' => 'left'
+                        ],
+                        'colors'  =>
                             [
                                 'green'      => 'btn-success',
                                 'blue'       => 'btn-primary',
@@ -59,7 +62,7 @@ return [
                                 'light-blue' => 'btn-info',
                                 'white'      => '',
                             ],
-                        'sizes'  => [
+                        'sizes'   => [
                             'xsmall' => 'btn-xs',
                             'small'  => 'btn-sm',
                             'medium' => '',
@@ -74,7 +77,7 @@ return [
                         ],
                     ],
                     'button'       => [
-                        'colors' => [
+                        'colors'  => [
                             'green'      => 'btn-success',
                             'blue'       => 'btn-primary',
                             'red'        => 'btn-danger',
@@ -83,13 +86,16 @@ return [
                             'light-blue' => 'btn-info',
                             'white'      => '',
                         ],
-                        'sizes'  => [
+                        'tooltip' => [
+                            'placement' => 'bottom'
+                        ],
+                        'sizes'   => [
                             'xsmall' => 'btn-xs',
                             'small'  => 'btn-sm',
                             'medium' => '',
                             'large'  => 'btn-lg'
                         ],
-                        'css'    => [
+                        'css'     => [
                             'div'     => [
                                 'form-group'
                             ],

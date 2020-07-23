@@ -10,6 +10,17 @@ class Button extends Item
     protected $config_colors = 'element.button.colors';
     protected $config_sizes  = 'element.button.sizes';
 
+    public function getTooltipPlacement(string $placement = null): string
+    {
+
+        if ($placement == null)
+        {
+            $placement = $this->configFrontEnd('element.button.tooltip.placement');
+        }
+
+        return $placement;
+    }
+
     public static function create($label = '')
     {
 

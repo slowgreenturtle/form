@@ -15,6 +15,17 @@ class Menu extends Item
     protected $config_colors = 'element.link.colors';
     protected $config_sizes  = 'element.link.sizes';
 
+    public function getTooltipPlacement(string $placement = null): string
+    {
+
+        if ($placement == null)
+        {
+            $placement = $this->configFrontEnd('element.link.tooltip.placement');
+        }
+
+        return $placement;
+    }
+
     public static function create($link = '')
     {
 
