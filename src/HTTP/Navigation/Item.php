@@ -263,6 +263,7 @@ abstract class Item
 
         $this->attribute('data-toggle', 'tooltip');
         $this->attribute('data-placement', $placement);
+        $this->attribute('data-container', 'body');
 
         return $this->attribute('title', $tool_tip);
     }
