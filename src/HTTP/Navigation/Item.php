@@ -260,7 +260,7 @@ abstract class Item
     {
 
         $this->attribute('data-toggle', 'tooltip');
-        $this->attribute('data-placement', 'left');
+        $this->attribute('data-placement', 'bottom');
         return $this->attribute('title', $tool_tip);
     }
 
