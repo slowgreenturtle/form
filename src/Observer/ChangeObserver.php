@@ -35,6 +35,7 @@ class ChangeObserver
     {
 
         $fillable = $model->getFillable();
+        $changes  = [];
 
         foreach ($fillable as $field_name)
         {
@@ -49,9 +50,12 @@ class ChangeObserver
                 {
                     continue;
                 }
-                $model->addChangeNotice($field_name, $field_value);
+                $changes[$field_name] = $field_value;
             }
         }
+
+        $model->addChangeNotices($changes);
+
     }
 
     public function updating($model)

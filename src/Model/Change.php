@@ -29,17 +29,32 @@ class Change extends Model
     public static function boot()
     {
 
-        parent::boot();
+        static $user_id = 'abc';
 
-        self::saving(function ($history)
+        if ($user_id == 'abc')
         {
-
             $user = auth()->user();
 
             if ($user)
             {
-                $history->user_id = $user->id;
+                $user_id = $user->id;
             }
+            else
+            {
+                $user_id = null;
+            }
+        }
+
+        parent::boot();
+
+        self::saving(function ($history) use ($user_id)
+        {
+
+            if ($history->user_id == null)
+            {
+                $history->user_id = $user_id;
+            }
+
         });
 
     }

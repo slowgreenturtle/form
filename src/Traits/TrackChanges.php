@@ -100,4 +100,39 @@ trait TrackChanges
         return $this->morphMany(Change::class, 'reportable');
     }
 
+    public function addChangeNotices(array $changes)
+    {
+
+        if (count($changes) < 1)
+        {
+            return;
+        }
+
+        $load_changes = [];
+
+        foreach ($changes as $field => $value)
+        {
+
+            $field_name = $this->translateName($field);
+
+            $field_value = $this->translateValue($field, $value);
+
+            $load_changes[] =
+                [
+                    'field' => $field_name,
+                    'value' => $field_value
+                ];
+
+        }
+
+        if (count($load_changes) > 0)
+        {
+            foreach ($load_changes as $change)
+            {
+                $change = Change::create($change);
+                $this->changes()->save($change);
+            }
+        }
+    }
+
 }
