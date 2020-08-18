@@ -406,6 +406,11 @@ abstract class Base
 
         $order = $this->search->order;
 
+        if(!is_array($order))
+        {
+            return $query;
+        }
+
         foreach ($order as $order_item)
         {
 
@@ -434,7 +439,7 @@ abstract class Base
 
                     if (method_exists($this, $orderMethodName))
                     {
-                        $content = $this->$orderMethodName($query, $sort_direction);
+                        $this->$orderMethodName($query, $sort_direction);
                     }
                     else
                     {
