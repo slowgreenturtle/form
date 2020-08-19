@@ -24,6 +24,8 @@ class Checkbox extends Element
     {
 
         $this->data('checked', $check);
+
+        return $this;
     }
 
     public function draw()
