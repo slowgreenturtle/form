@@ -194,25 +194,17 @@ abstract class Element
 
         if ($tooltip)
         {
-
             if ($required == true)
             {
-                $title = 'Required. ' . $tooltip;
+                $tooltip = "Required.<br><div class='text-justify'>" . $tooltip . '</div>';
             }
-            else
-            {
-                $title = $tooltip;
-            }
-
-            $attributes['title']       = $title;
-            $attributes['data-toggle'] = 'tooltip';
         }
 
         $label = Form::label($element_name, $label, $attributes);
 
         if ($tooltip)
         {
-            $label .= " <i title=\"$tooltip\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
+            $label .= " <i title=\"$tooltip\" data-html=\"true\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
         }
 
         return $label;
