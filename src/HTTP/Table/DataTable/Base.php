@@ -2,10 +2,10 @@
 
 namespace SGT\HTTP\Table\DataTable;
 
-use SGT\Traits\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use SGT\HTTP\SGTHtml;
+use SGT\Traits\Config;
 use stdClass;
 
 abstract class Base
@@ -15,6 +15,8 @@ abstract class Base
 
     /** the data url for the offer */
     public $data_url = '';
+
+    public $default_limit = 100;
 
     /** the custom method to use to send custom data back to the server */
     public $data_method = '';
@@ -223,22 +225,15 @@ abstract class Base
 
         /**
          *  Must be in the following format:
-         *
          * ['slug_name'] = [
          *  'name'=>'Name',
          *  'sort_field'=>'name'
-         *
-         *
          * ]
-         *
-         *
          * slug_name    must be lowercase, underscored, used internally to track the calls, sent to the client as id fields,
          *              etc
          * name         The human readable name, most notably used in the header field of the table.
          * sort_field   is the field used if this column is sortable and can be ordered by. Used in the query sort
          *              functionality
-         *
-         *
          */
 
         /**
@@ -386,6 +381,7 @@ abstract class Base
     /**
      * @param $query
      *              Return the query with the search filters appended to it.
+     *
      * @return mixed
      */
     public function querySearch($query)
@@ -406,7 +402,7 @@ abstract class Base
 
         $order = $this->search->order;
 
-        if(!is_array($order))
+        if (!is_array($order))
         {
             return $query;
         }
@@ -481,10 +477,12 @@ abstract class Base
 
         $limit = $this->search->limit;
 
-        if (!empty($limit))
+        if (empty($limit) || $limit < 1)
         {
-            $query->limit($limit);
+            $limit = $this->default_limit;
         }
+
+        $query->limit($limit);
 
         $start = $this->search->start;
 
@@ -556,6 +554,7 @@ abstract class Base
      * Retrieve a CSS class list ready to be inserted into an html element.
      *
      * @param $group
+     *
      * @return string
      */
     public function htmlClass($group)
@@ -568,6 +567,7 @@ abstract class Base
      * Returns a list of css classes.
      *
      * @param $list
+     *
      * @return mixed
      */
     public function cssClass($list)
@@ -583,6 +583,7 @@ abstract class Base
      * Creates a name for the table and any sub elements required
      *
      * @param string $append
+     *
      * @return mixed|string
      */
     public function name($append = '')
