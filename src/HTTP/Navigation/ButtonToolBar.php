@@ -6,12 +6,14 @@
 
 namespace SGT\HTTP\Navigation;
 
+use Illuminate\Support\Arr;
 use SGT\Traits\Config;
 
 class ButtonToolBar
 {
 
     use Config;
+    use AddButtonItem;
 
     protected $items                     = [];
     protected $size                      = 'small';

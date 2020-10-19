@@ -12,6 +12,7 @@ class ButtonBar
 {
 
     use Config;
+    use AddButtonItem;
 
     protected $items                     = [];
     protected $size                      = 'small';
