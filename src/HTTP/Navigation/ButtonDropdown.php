@@ -8,6 +8,7 @@ class ButtonDropdown
 {
 
     use Config;
+    use AddItem;
 
     public    $type      = 'button_dropdown';
     protected $alignment = 'right';
@@ -38,6 +39,12 @@ class ButtonDropdown
         $this->color = $color;
 
         return $this;
+    }
+
+    public function addButton($label)
+    {
+
+        return $this->addItem($label);
     }
 
     public function addItem($label)

@@ -5,7 +5,7 @@ namespace SGT\HTTP\Navigation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
-trait AddButtonItem
+trait AddItem
 {
 
     public function add($item_name, $params = [])

@@ -13,7 +13,7 @@ class ButtonToolBar
 {
 
     use Config;
-    use AddButtonItem;
+    use AddItem;
 
     protected $items                     = [];
     protected $size                      = 'small';
