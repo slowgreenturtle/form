@@ -21,7 +21,7 @@ class DataManage
 
     protected $tenant_connection = 'team';
 
-    protected $delete_limit      = 1;    //  how many days in the past do we want to remove?
+    protected $delete_limit      = 1;        //  how many days in the past do we want to remove?
     protected $backup_to_ftp     = false;    //App/config/ftp.php must be configured for this to work properly.
     protected $s3_backup_path    = 'backup';
     protected $local_backup_path = 'database';  # local storage relative backup path.
@@ -230,6 +230,21 @@ class DataManage
         $local_filename = Arr::get($params, 'filename', $this->config('database.copy.local.filename'));
         $cloud_filename = Arr::get($params, 'filename', $this->config('database.copy.cloud.filename'));
         $connection     = Arr::get($params, 'connection');
+        $exclude_list   = Arr::get($params, 'exclude_tables', []);
+        $exclude_tables = [];
+
+        if (is_string($exclude_list))
+        {
+
+            $exclude_items = explode(',', $exclude_list);
+
+            foreach ($exclude_items as $exclude_item)
+            {
+                $item = trim($exclude_item);
+
+                $exclude_tables[$item] = $item;
+            }
+        }
 
         $connection = empty($connection) ? config('database.default') : $connection;
 
@@ -330,6 +345,12 @@ class DataManage
 
                 $table_name = str_replace([$prefix, '.sql'], '', $file_name);
 
+                if (Arr::get($exclude_tables, $table_name) != null)
+                {
+                    $this->error("Excluding table : $table_name");
+                    continue;
+                }
+
                 $this->info("Restoring table : $table_name");
 
                 $file_destination = "< $tmp_dir" . DIRECTORY_SEPARATOR . "table_{$table_name}.sql";
@@ -350,8 +371,7 @@ class DataManage
 
             # enable foreign key constraints
 
-        }
-        catch (\Exception $e)
+        } catch (\Exception $e)
         {
             $this->info($e->getMessage());
 
@@ -944,4 +964,5 @@ class DataManage
             }
         }
     }
+
 }
