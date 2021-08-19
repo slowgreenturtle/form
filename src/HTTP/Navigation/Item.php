@@ -78,7 +78,7 @@ abstract class Item
         {
             foreach ($this->permissions as $permission)
             {
-                if ($user->hasPermission($permission['slug'], $permission['context_slug'], $permission['context_id']) == true)
+                if ($user->hasPermission($permission['slug'], $permission['context_id']) == true)
                 {
                     return true;
                 }
@@ -294,4 +294,5 @@ abstract class Item
 
         return $this->link;
     }
+
 }
