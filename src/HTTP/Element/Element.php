@@ -101,7 +101,9 @@ abstract class Element
     public function getId()
     {
 
-        return $this->getData('id', $this->getName());
+        $id = $this->form->getAttribute('name') . '_' . $this->getName();
+
+        return $this->getData('id', $id);
     }
 
     /**
@@ -260,7 +262,6 @@ abstract class Element
 
     public function parseOptions($options)
     {
-
 
         foreach ($options as $option => $value)
         {
