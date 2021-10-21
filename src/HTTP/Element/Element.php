@@ -101,9 +101,7 @@ abstract class Element
     public function getId()
     {
 
-        $id = $this->form->getAttribute('name') . '_' . $this->getName();
-
-        return $this->getData('id', $id);
+        return $this->getData('id', $this->getName());
     }
 
     /**

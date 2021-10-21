@@ -238,7 +238,7 @@ abstract class SGTForm
 
         if ($name == null)
         {
-            $name = Str::slug($value);
+            $name = 'submit_' . Str::slug($value);
         }
 
         $element = $this->add($name, 'submit');
