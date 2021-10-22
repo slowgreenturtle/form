@@ -7,33 +7,57 @@ use Illuminate\Support\Arr;
 class Search
 {
 
-    public $draw         = false;
-    public $start        = 0;
-    public $limit        = 0;
-    public $order        = [];
-    public $search_value = '';
-    public $request      = null;
-    public $columns      = [];
+    public $draw    = false;
+    public $start   = 0;
+    public $limit   = 0;
+    public $order   = [];
+    public $request = null;
+    public $columns = [];
 
-    protected $input = [];
+    protected $session_name = 'default';
+    protected $input        = [];
+    public    $except       = [
+        'draw',
+        'start',
+        'length',
+        'order',
+        'columns'
+    ];
 
-    public function fill($request, $custom_search_fields = [])
+    public function __construct($data = [])
+    {
+
+        $this->session_name = Arr::get($data, 'session_name', 'default');
+    }
+
+    public function fill($request, $field_map = [])
     {
 
         $this->request = $request;
-        $this->draw    = $request->input('draw');
-        $this->start   = $request->input('start');
-        $this->limit   = $request->input('length');
-        $this->order   = $request->input('order');
+        $this->draw    = $this->input('draw');
+        $this->start   = $this->input('start');
+        $this->limit   = $this->input('length');
+        $this->order   = $this->input('order');
 
-        $this->columns = $request->input('columns');
+        $this->columns = $this->input('columns');
 
-        $this->addInput('text', $request->input('search.value'));
+        $session = session($this->session_name);
 
-        foreach ($custom_search_fields as $field)
+        if (is_array($session))
         {
-            $this->addInput($field, $request->input($field));
+            $this->input = $session;
         }
+
+        if (Arr::has($this->input, 'text') == false && $this->inputrequest->has('text') == false)
+        {
+            $field_map['search.field'] = 'text';
+        }
+
+        foreach ($field_map as $search_field => $map_field)
+        {
+            $this->addInput($map_field, $this->request->input($search_field));
+        }
+
     }
 
     public function addInput($name, $value)
@@ -42,14 +66,27 @@ class Search
         $this->input[$name] = $value;
     }
 
-    public function input($name, $default = null)
+    public function input($name = null, $default = null)
     {
 
-        $result = Arr::get($this->input, $name);
-
-        if ($result == null)
+        if ($name == null)
         {
-            $result = $this->request->input($name, $default);
+
+            $input         = $this->input;
+            $request_input = $this->request->except($this->except);
+
+            $result = $input + $request_input;
+
+        }
+        else
+        {
+
+            $result = Arr::get($this->input, $name);
+
+            if ($result == null)
+            {
+                $result = $this->request->input($name, $default);
+            }
         }
 
         return $result;
@@ -64,4 +101,20 @@ class Search
         return Arr::get($column, 'name');
 
     }
+
+    public function sessionStore()
+    {
+
+        $store_data[$this->session_name] = $this->request->except($this->except);
+        session($store_data);
+
+    }
+
+    public function sessionForget()
+    {
+
+        session()->forget($this->session_name);
+
+    }
+
 }

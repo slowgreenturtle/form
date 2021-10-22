@@ -40,45 +40,73 @@ abstract class Base
         'serverSide'  => true,
         'saveState'   => true,
         'lengthMenu'  => [
-            50, 100, 500
-        ]];
-
-    /** @var array Custom search fields the child model may want to get from the Request */
-    protected $custom_search_fields = [];
+            50,
+            100,
+            500
+        ]
+    ];
 
     /** @var Request|null The http request */
-    protected $classes =
-        [
-            'wrapper' =>
-                [
-                    'dataTables_wrapper' => 'dataTables_wrapper',
-                    'form-inline'        => 'form-inline',
-                    'dt-bootstrap'       => 'dt-bootstrap',
-                    'no-footer'          => 'no-footer'
-                ],
-            'table'   =>
-                [
-                    'table'          => 'table',
-                    'table-striped'  => 'table-stripped',
-                    'table-bordered' => 'table-bordered',
-                    'table-hover'    => 'table-hover',
-                    'no-footer'      => 'no-footer'
-                ],
-            'row'     => []
-        ];
+    protected $classes = [
+        'wrapper' => [
+            'dataTables_wrapper' => 'dataTables_wrapper',
+            'form-inline'        => 'form-inline',
+            'dt-bootstrap'       => 'dt-bootstrap',
+            'no-footer'          => 'no-footer'
+        ],
+        'table'   => [
+            'table'          => 'table',
+            'table-striped'  => 'table-stripped',
+            'table-bordered' => 'table-bordered',
+            'table-hover'    => 'table-hover',
+            'no-footer'      => 'no-footer'
+        ],
+        'row'     => []
+    ];
 
     public function __construct(Request $request)
     {
 
-        $this->search = new Search();
-        $this->search->fill($request, $this->custom_search_fields);
+        $data = ['session_name' => get_class($this)];
+
+        $this->search = new Search($data);
+        $this->search->fill($request);
 
         $this->html = new SGTHtml();
         $this->view = view($this->getViewFile());
 
         $this->setConfigSettings();
 
+        if (property_exists($this, 'search_columns'))
+        {
+
+            $this->setting('searching', false);
+
+            $setting_list = '';
+
+            foreach ($this->search_columns as $setting)
+            {
+                $setting_list .= "d.{$setting}={$setting};";
+            }
+
+            $this->setting('ajax.data', $setting_list);
+        }
+
         $this->setup();
+
+    }
+
+    public function sessionStore()
+    {
+
+        $this->search->sessionStore();
+
+    }
+
+    public function sessionForget()
+    {
+
+        $this->search->sessionForget();
 
     }
 
@@ -127,6 +155,13 @@ abstract class Base
     {
 
         return Arr::get($this->settings, $field, $default_value);
+    }
+
+    public function getSearchInput($name = null, $value = null)
+    {
+
+        return $this->search->input($name, $value);
+
     }
 
     public function addSearchInput($name, $value)
@@ -374,7 +409,6 @@ abstract class Base
     public function query()
     {
 
-
         return null;
     }
 
@@ -386,7 +420,6 @@ abstract class Base
      */
     public function querySearch($query)
     {
-
 
         return $query;
 
@@ -692,8 +725,22 @@ abstract class Base
         return false;
     }
 
-    public function response()
+    public function response($store_session = true)
     {
+
+        if ($store_session == true)
+        {
+            $this - $this->sessionStore();
+        }
+
+        $clear = $this->getSearchInput('clear');
+
+        if ($clear)
+        {
+            $this->sessionForget();
+
+            return '';
+        }
 
         $data = $this->serverData();
 

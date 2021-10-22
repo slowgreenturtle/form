@@ -383,5 +383,4 @@ abstract class SGTForm
         return $value;
 
     }
-
 }
