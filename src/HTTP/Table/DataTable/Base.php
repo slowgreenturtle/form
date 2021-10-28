@@ -99,6 +99,8 @@ abstract class Base
     public function sessionStore()
     {
 
+        $this->sessionForget();
+
         $this->search->sessionStore();
 
     }
@@ -641,9 +643,6 @@ abstract class Base
     {
 
         $this->request = $request;
-
-        //$total = $this->total();
-        //$count = $this->count();
 
         $total   = 0;
         $count   = 0;

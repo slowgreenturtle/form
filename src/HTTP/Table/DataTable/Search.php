@@ -2,17 +2,19 @@
 
 namespace SGT\HTTP\Table\DataTable;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class Search
 {
 
-    public $draw    = false;
-    public $start   = 0;
-    public $limit   = 0;
-    public $order   = [];
-    public $request = null;
-    public $columns = [];
+    public    $draw         = false;
+    public    $start        = 0;
+    public    $limit        = 0;
+    public    $order        = [];
+    public    $request      = null;
+    public    $columns      = [];
+    protected $session_data = null;
 
     protected $session_name = 'default';
     protected $input        = [];
@@ -30,23 +32,26 @@ class Search
         $this->session_name = Arr::get($data, 'session_name', 'default');
     }
 
-    public function fill($request, $field_map = [])
+    public function fill(Request $request, $field_map = [])
     {
 
         $this->request = $request;
-        $this->draw    = $this->input('draw');
-        $this->start   = $this->input('start');
-        $this->limit   = $this->input('length');
-        $this->order   = $this->input('order');
+
+        $clear = $this->input('clear');
+
+        if ($clear)
+        {
+            $this->sessionForget();
+        }
+
+        $this->session_data = session($this->session_name);
+
+        $this->draw  = $this->input('draw');
+        $this->start = $this->input('start');
+        $this->limit = $this->input('length');
+        $this->order = $this->input('order');
 
         $this->columns = $this->input('columns');
-
-        $session = session($this->session_name);
-
-        if (is_array($session))
-        {
-            $this->input = $session;
-        }
 
         if (Arr::has($this->input, 'text') == false && $this->request->has('text') == false)
         {
@@ -86,6 +91,12 @@ class Search
             if ($result == null)
             {
                 $result = $this->request->input($name, $default);
+
+                if ($result == null && $this->session_data != null)
+                {
+                    $result = Arr::get($this->session_data, $name, $default);
+                }
+
             }
         }
 
@@ -113,7 +124,10 @@ class Search
     public function sessionForget()
     {
 
-        session()->forget($this->session_name);
+        $session_name = $this->session_name;
+        session()->forget($session_name);
+
+        $this->session_data = session($session_name);
 
     }
 
