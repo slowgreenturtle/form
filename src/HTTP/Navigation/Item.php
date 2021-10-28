@@ -4,6 +4,7 @@ namespace SGT\HTTP\Navigation;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use SGT\Traits\Config;
 
 abstract class Item
@@ -31,9 +32,24 @@ abstract class Item
     {
 
         $this->label($label);
+        $id = STR::snake($label);
+        $this->id($id)->name($id);
+
         $this->colors = $this->configFrontEnd($this->config_colors);
         $this->sizes  = $this->configFrontEnd($this->config_sizes);
 
+    }
+
+    public function id($name)
+    {
+
+        return $this->attribute('id', $name);
+    }
+
+    public function name($name)
+    {
+
+        return $this->attribute('name', $name);
     }
 
     public function label($label)
@@ -127,10 +143,16 @@ abstract class Item
         return Arr::get($this->colors, $this->color, '');
     }
 
-    public function name($value)
+    public function getName()
     {
 
         return $this->attribute('name', $value);
+    }
+
+    public function getId($value, $default = null)
+    {
+
+        return $this->getAttribute('id', $default);
     }
 
     public function value($value)
