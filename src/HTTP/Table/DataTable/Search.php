@@ -79,8 +79,14 @@ class Search
 
             $input         = $this->input;
             $request_input = $this->request->except($this->except);
+            $session_input = [];
 
-            $result = $input + $request_input;
+            if ($this->session_data != null)
+            {
+                $session_input = $this->session_data;
+            }
+
+            $result = $input + $request_input + $session_input;
 
         }
         else
