@@ -730,7 +730,7 @@ abstract class Base
 
         if ($store_session == true)
         {
-            $this - $this->sessionStore();
+            $this->sessionStore();
         }
 
         $clear = $this->getSearchInput('clear');
