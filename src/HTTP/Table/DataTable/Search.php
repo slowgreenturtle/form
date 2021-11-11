@@ -53,7 +53,7 @@ class Search
 
         $this->columns = $this->input('columns');
 
-        if (Arr::has($this->input, 'text') == false && $this->request->has('text') == false)
+        if (Arr::has($this->input, 'text') == false && $this->request->has('text') == false && Arr::get($this->session_data, 'text') == null)
         {
             $field_map['search.field'] = 'text';
         }
