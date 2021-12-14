@@ -55,7 +55,7 @@ class Search
 
         if (Arr::has($this->input, 'text') == false && $this->request->has('text') == false && Arr::get($this->session_data, 'text') == null)
         {
-            $field_map['search.field'] = 'text';
+            $field_map['search.value'] = 'text';
         }
 
         foreach ($field_map as $search_field => $map_field)
