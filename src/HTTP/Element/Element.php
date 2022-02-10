@@ -261,7 +261,6 @@ abstract class Element
     public function parseOptions($options)
     {
 
-
         foreach ($options as $option => $value)
         {
             switch ($option)

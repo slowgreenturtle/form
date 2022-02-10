@@ -2,6 +2,8 @@
 
 namespace SGT\HTTP\Navigation;
 
+use Illuminate\Support\Arr;
+
 trait Attribute
 {
 
@@ -11,6 +13,12 @@ trait Attribute
     {
 
         return $this->attributes;
+    }
+
+    public function getAttribute($name, $default = null)
+    {
+
+        return Arr::get($this->attributes, $name, $default);
     }
 
     public function attribute($title, $value)
