@@ -309,7 +309,7 @@ class DataManage
 
         $tables = $this->getTables($connection, $database_name);
 
-        $exclude_list = Arr::get($params, 'schema_only', []);
+        $exclude_list = Arr::get($params, 'exclude_tables', []);
 
         $filtered_list = Arr::get($params, 'filtered');
 
@@ -345,7 +345,6 @@ class DataManage
                     continue;
                 }
 
-                $file = "/var/lib/mysql-files/{$table}_{$random}.csv";
                 $file = "/tmp/{$table}_{$random}.csv";
 
                 $sql .= " INTO OUTFILE '{$file}' FIELDS TERMINATED BY ',';";
