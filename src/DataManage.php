@@ -311,6 +311,11 @@ class DataManage
 
         $exclude_list = Arr::get($params, 'exclude_tables', []);
 
+        if (!is_array($exclude_list))
+        {
+            $exclude_list = [];
+        }
+
         $filtered_list = Arr::get($params, 'filtered');
 
         /**
