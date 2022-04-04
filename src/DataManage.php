@@ -765,6 +765,10 @@ class DataManage
                 # enable foreign key constraints
                 Schema::enableForeignKeyConstraints();
             }
+            else
+            {
+                $this->truncateDatabaseTables($connection, $database_name);
+            }
 
         }
         catch (\Exception $e)
@@ -931,6 +935,39 @@ class DataManage
 
             return false;
         }
+    }
+
+    /**
+     * Truncate single table within the requested database.
+     *
+     * @param $connection
+     * @param $database_name
+     */
+    protected function truncateDatabaseTable($connection, $database_name, $table_name)
+    {
+
+        //  We put this here in case the database doesn't exist, otherwise throws off the table check.
+        $result = DB::connection($connection)->select("SHOW DATABASES LIKE '{$database_name}';");
+
+        if (count($result) < 1)
+        {
+            $this->info("Cannot truncate table. Database doesn't exist.");
+
+            return;
+        }
+
+        $this->info("Truncating table {$table_name} from '$database_name'. Connection: $connection");
+
+        $tables = $this->getTables($connection, $database_name);
+
+        Schema::disableForeignKeyConstraints();
+
+        if ($table_name != 'migrations')
+        {
+            DB::connection($connection)->table($table_name)->truncate();
+        }
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
