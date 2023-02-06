@@ -22,7 +22,7 @@
   },
   "require": {
     "php": "^8.0.2",
-    "laravel/framework": "^9.*",
+    "laravel/framework": "9.*",
     "laravelcollective/html": "6.*"
   },
   "autoload": {
