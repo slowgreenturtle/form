@@ -2,6 +2,8 @@
 
 namespace SGT;
 
+use ErrorException;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -135,7 +137,7 @@ class DataManage
             $table_array = (array)$table;
 
             $list[] = array_pop($table_array);
-        };
+        }
 
         return $list;
     }
@@ -265,7 +267,7 @@ class DataManage
     /**
      * Truncate database tables
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
 
     public function truncateTables()
@@ -708,7 +710,7 @@ class DataManage
             }
             else
             {
-                throw new \Exception("Couldn't find local backup file: $local_file");
+                throw new Exception("Couldn't find local backup file: $local_file");
             }
 
             $this->deleteTables($connection, $database_name);
@@ -771,7 +773,7 @@ class DataManage
             }
 
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $this->info($e->getMessage());
 
@@ -885,7 +887,7 @@ class DataManage
 
         if (empty($prefix))
         {
-            throw new \ErrorException('No Multi-tenant Prefix set');
+            throw new ErrorException('No Multi-tenant Prefix set');
         }
 
         $databases = DB::select("SHOW DATABASES LIKE '$prefix%'");
@@ -1003,7 +1005,7 @@ class DataManage
                 continue;
             }
             DB::connection($connection)->table($table_name)->truncate();
-        };
+        }
 
         Schema::enableForeignKeyConstraints();
     }

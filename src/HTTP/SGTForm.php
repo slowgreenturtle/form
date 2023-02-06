@@ -32,28 +32,22 @@ abstract class SGTForm
 
     use Config;
 
-    public $errors = null;
     /**
      * @var array The attributes attached to the form. Method, etc.
      */
     public $attributes = [];
-
+    public $errors = null;
     public $model = null;
-
+    protected $element_view_path = '';
     /**
      * @var array The fields which are created for the form
      */
     protected $elements = [];
-
     protected $scripts = [];
-
     protected $tooltips = [];
-
     protected $view = null;
-
     /** @var string $view_file The Laravel view file */
     protected $view_file         = '';
-    protected $element_view_path = '';
 
     public function __construct($model = null)
     {
@@ -83,22 +77,32 @@ abstract class SGTForm
 
     }
 
-    public function attribute($name, $value)
+    public function __get($method)
     {
 
-        $this->attributes[$name] = $value;
+        $element = Arr::get($this->elements, $method);
 
-        return $this;
+        if ($element == null)
+        {
+            return '';
+        }
+
+        return $element->draw();
 
     }
 
-    public function getAttribute($name, $default_value = null)
+    public function __toString()
     {
 
-        return Arr::get($this->attributes, $name, $default_value);
-    }
+        if ($this->view)
+        {
+            $this->view->form = $this;
 
-    abstract protected function build();
+            return $this->view->__toString();
+        }
+
+        return '';
+    }
 
     public function add($name, $type, $options = [])
     {
@@ -170,25 +174,41 @@ abstract class SGTForm
         return $element;
     }
 
-    protected function returnURL()
+    public function attribute($name, $value)
     {
 
-        $return_url = request()->old('return_url');
-        $return_url = empty($return_url) ? request()->server('HTTP_REFERER') : $return_url;
+        $this->attributes[$name] = $value;
 
-        return $return_url;
+        return $this;
 
     }
 
-    protected function setup()
+    public function close()
     {
 
+        return Form::close();
     }
 
-    public function getFormAttribute($name, $default_value = null)
+    public function element($name)
     {
 
-        return $this->getAttribute($name, $default_value);
+        return Arr::get($this->elements, $name);
+    }
+
+    public function elementExists($name)
+    {
+
+        return isset($this->elements[$name]);
+    }
+
+    /**
+     * Returns a list of field
+     */
+
+    public function elementNames()
+    {
+
+        return array_keys($this->elements);
     }
 
     public function field_update($name, $attribute, $value)
@@ -203,149 +223,22 @@ abstract class SGTForm
         $element->parseOptions($item);
     }
 
-    public function element($name)
+    public function getAttribute($name, $default_value = null)
     {
 
-        return Arr::get($this->elements, $name);
+        return Arr::get($this->attributes, $name, $default_value);
     }
 
-    public function setParam($name, $value = null)
+    public function getFormAttribute($name, $default_value = null)
     {
 
-        $element = $this->element($name);
-
-        if ($element)
-        {
-            $element->value($value);
-        }
-    }
-
-    public function setFormAttribute($name, $value)
-    {
-
-        $this->attribute($name, $value);
-
+        return $this->getAttribute($name, $default_value);
     }
 
     public function getModel()
     {
 
         return $this->model;
-    }
-
-    public function submitButton($value = 'Submit', $name = null)
-    {
-
-        if ($name == null)
-        {
-            $name = 'submit_' . Str::slug($value);
-        }
-
-        $element = $this->add($name, 'submit');
-
-        $element->label('&nbsp;');
-        $element->value($value);
-
-        return $element->draw();
-
-    }
-
-    public function __toString()
-    {
-
-        if ($this->view)
-        {
-            $this->view->form = $this;
-
-            return $this->view->__toString();
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns a list of field
-     */
-
-    public function elementNames()
-    {
-
-        return array_keys($this->elements);
-    }
-
-    public function open($errors)
-    {
-
-        $this->errors = $errors;
-
-        $html = Form::open($this->attributes);
-
-        $elements = [];
-
-        foreach ($this->elements as $element)
-        {
-            if ($element instanceof Hidden)
-            {
-                $elements[] = $element->draw();
-            }
-        }
-
-        $html .= implode("\r\n", $elements);
-
-        return $html;
-
-    }
-
-    public function close()
-    {
-
-        return Form::close();
-    }
-
-    public function elementExists($name)
-    {
-
-        return isset($this->elements[$name]);
-    }
-
-    public function __get($method)
-    {
-
-        $element = Arr::get($this->elements, $method);
-
-        if ($element == null)
-        {
-            return '';
-        }
-
-        return $element->draw();
-
-    }
-
-    public function hasError($element)
-    {
-
-        if ($this->errors)
-        {
-            return $this->errors->has($element);
-        }
-
-        return false;
-
-    }
-
-    public function scripts()
-    {
-
-        $html = implode(' ', $this->scripts);
-
-        return $html;
-    }
-
-    public function setTooltips($values)
-    {
-
-        $this->tooltips = $values;
     }
 
     public function getParam($name, $default = null)
@@ -383,4 +276,106 @@ abstract class SGTForm
         return $value;
 
     }
+
+    public function hasError($element)
+    {
+
+        if ($this->errors)
+        {
+            return $this->errors->has($element);
+        }
+
+        return false;
+
+    }
+
+    public function open($errors)
+    {
+
+        $this->errors = $errors;
+
+        $html = Form::open($this->attributes);
+
+        $elements = [];
+
+        foreach ($this->elements as $element)
+        {
+            if ($element instanceof Hidden)
+            {
+                $elements[] = $element->draw();
+            }
+        }
+
+        $html .= implode("\r\n", $elements);
+
+        return $html;
+
+    }
+
+    public function scripts()
+    {
+
+        $html = implode(' ', $this->scripts);
+
+        return $html;
+    }
+
+    public function setFormAttribute($name, $value)
+    {
+
+        $this->attribute($name, $value);
+
+    }
+
+    public function setParam($name, $value = null)
+    {
+
+        $element = $this->element($name);
+
+        if ($element)
+        {
+            $element->value($value);
+        }
+    }
+
+    public function setTooltips($values)
+    {
+
+        $this->tooltips = $values;
+    }
+
+    public function submitButton($value = 'Submit', $name = null)
+    {
+
+        if ($name == null)
+        {
+            $name = 'submit_' . Str::slug($value);
+        }
+
+        $element = $this->add($name, 'submit');
+
+        $element->label('&nbsp;');
+        $element->value($value);
+
+        return $element->draw();
+
+    }
+
+    abstract protected function build();
+
+    protected function returnURL()
+    {
+
+        $return_url = request()->old('return_url');
+        $return_url = empty($return_url) ? request()->server('HTTP_REFERER') : $return_url;
+
+        return $return_url;
+
+    }
+
+    protected function setup()
+    {
+
+    }
+
 }

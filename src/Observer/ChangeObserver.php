@@ -5,6 +5,12 @@ namespace SGT\Observer;
 class ChangeObserver
 {
 
+    public function created($model)
+    {
+
+        $this->recordFieldChange($model);
+    }
+
     public function creating($model)
     {
 
@@ -25,10 +31,14 @@ class ChangeObserver
     {
     }
 
-    public function created($model)
+    public function updated($model)
     {
 
         $this->recordFieldChange($model);
+    }
+
+    public function updating($model)
+    {
     }
 
     protected function recordFieldChange($model)
@@ -58,13 +68,4 @@ class ChangeObserver
 
     }
 
-    public function updating($model)
-    {
-    }
-
-    public function updated($model)
-    {
-
-        $this->recordFieldChange($model);
-    }
 }

@@ -26,23 +26,6 @@ trait TrackChanges
     }
 
     /**
-     * @param $field
-     *
-     * @return bool true if the passed in field should be ignored.
-     */
-    public function ignoreField($field)
-    {
-
-        if (property_exists($this, 'track_ignore_fields'))
-        {
-            return in_array($field, $this->track_ignore_fields);
-        }
-
-        return false;
-
-    }
-
-    /**
      * Quick way to add history to a model.
      * The field can be any string data you'd like, and the value
      * can be any string value also.
@@ -60,6 +43,63 @@ trait TrackChanges
         $history->save();
 
         $this->changes()->save($history);
+
+    }
+
+    public function addChangeNotices(array $changes)
+    {
+
+        if (count($changes) < 1)
+        {
+            return;
+        }
+
+        $load_changes = [];
+
+        foreach ($changes as $field => $value)
+        {
+
+            $field_name = $this->translateName($field);
+
+            $field_value = $this->translateValue($field, $value);
+
+            $load_changes[] = [
+                'field' => $field_name,
+                'value' => $field_value
+            ];
+
+        }
+
+        if (count($load_changes) > 0)
+        {
+            foreach ($load_changes as $change)
+            {
+                $change = Change::create($change);
+                $this->changes()->save($change);
+            }
+        }
+    }
+
+    public function changes()
+    {
+
+        return $this->morphMany(Change::class, 'reportable');
+    }
+
+    /**
+     * @param $field
+     *
+     * @return bool true if the passed in field should be ignored.
+     */
+    public function ignoreField($field)
+    {
+
+        if (property_exists($this, 'track_ignore_fields'))
+        {
+            return in_array($field, $this->track_ignore_fields);
+        }
+
+        return false;
 
     }
 
@@ -92,47 +132,6 @@ trait TrackChanges
     {
 
         return $field_value;
-    }
-
-    public function changes()
-    {
-
-        return $this->morphMany(Change::class, 'reportable');
-    }
-
-    public function addChangeNotices(array $changes)
-    {
-
-        if (count($changes) < 1)
-        {
-            return;
-        }
-
-        $load_changes = [];
-
-        foreach ($changes as $field => $value)
-        {
-
-            $field_name = $this->translateName($field);
-
-            $field_value = $this->translateValue($field, $value);
-
-            $load_changes[] =
-                [
-                    'field' => $field_name,
-                    'value' => $field_value
-                ];
-
-        }
-
-        if (count($load_changes) > 0)
-        {
-            foreach ($load_changes as $change)
-            {
-                $change = Change::create($change);
-                $this->changes()->save($change);
-            }
-        }
     }
 
 }

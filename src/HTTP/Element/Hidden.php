@@ -20,4 +20,5 @@ class Hidden extends Element
 
         return Form::hidden($name, $value, $attributes);
     }
+
 }

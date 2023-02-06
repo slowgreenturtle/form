@@ -22,4 +22,5 @@ class SelectTag extends Select
         $this->attribute('aria-hidden', true);
 
     }
+
 }

@@ -40,4 +40,5 @@ class Submit extends Button
 
         return $html;
     }
+
 }

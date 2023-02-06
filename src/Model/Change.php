@@ -9,9 +9,6 @@ class Change extends Model
 {
 
     const UPDATED_AT = null;
-
-    protected $table = 'model_changes';
-
     protected $fillable = [
         'reportable_id', # the model id which is being tracked.
         'reportable_type', # the model type which is being mapped to
@@ -19,12 +16,7 @@ class Change extends Model
         'value',
         'user_id'
     ];
-
-    public function reportable()
-    {
-
-        return $this->morphTo();
-    }
+    protected $table = 'model_changes';
 
     public static function boot()
     {
@@ -47,7 +39,7 @@ class Change extends Model
 
         parent::boot();
 
-        self::saving(function ($history) use ($user_id)
+        self::saving(function($history) use ($user_id)
         {
 
             if ($history->user_id == null)
@@ -57,6 +49,12 @@ class Change extends Model
 
         });
 
+    }
+
+    public function reportable()
+    {
+
+        return $this->morphTo();
     }
 
     public function user()

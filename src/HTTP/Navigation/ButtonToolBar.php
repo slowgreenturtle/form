@@ -15,10 +15,10 @@ class ButtonToolBar
     use Config;
     use AddItem;
 
-    protected $items                     = [];
-    protected $size                      = 'small';
     protected $classes                   = [];
     protected $config_button_group_sizes = 'element.button.toolbar.sizes';
+    protected $items                     = [];
+    protected $size                      = 'small';
 
     public function __construct()
     {
@@ -26,6 +26,23 @@ class ButtonToolBar
         $this->sizes = $this->configFrontEnd($this->config_button_group_sizes);
 
         $this->addClass('btn-toolbar');
+    }
+
+    public static function create()
+    {
+
+        return new ButtonBar();
+    }
+
+    public function addButton($label)
+    {
+
+        $item = new Button($label);
+
+        $this->items[] = $item;
+
+        return $item;
+
     }
 
     public function addClass($class)
@@ -36,20 +53,10 @@ class ButtonToolBar
         return $this;
     }
 
-    public function addSubmit($label)
+    public function addDropdown()
     {
 
-        $item = new Submit($label);
-
-        $this->items[] = $item;
-
-        return $item;
-    }
-
-    public function addButton($label)
-    {
-
-        $item = new Button($label);
+        $item = new ButtonDropdown();
 
         $this->items[] = $item;
 
@@ -68,30 +75,20 @@ class ButtonToolBar
 
     }
 
-    public function addDropdown()
+    public function addSubmit($label)
     {
 
-        $item = new ButtonDropdown();
+        $item = new Submit($label);
 
         $this->items[] = $item;
 
         return $item;
-
     }
 
-    public function getSizeClass()
+    public function classes()
     {
 
-        return Arr::get($this->sizes, $this->size);
-
-    }
-
-    public function size($size)
-    {
-
-        $this->size = $size;
-
-        return $this;
+        return $this->classes;
     }
 
     public function display()
@@ -111,16 +108,19 @@ class ButtonToolBar
 
     }
 
-    public function classes()
+    public function getSizeClass()
     {
 
-        return $this->classes;
+        return Arr::get($this->sizes, $this->size);
+
     }
 
-    public static function create()
+    public function size($size)
     {
 
-        return new ButtonBar();
+        $this->size = $size;
+
+        return $this;
     }
 
 }

@@ -2,7 +2,6 @@
 
 namespace SGT\HTTP\Table;
 
-
 class Simple
 {
 
@@ -11,4 +10,5 @@ class Simple
 
         return $this->headers;
     }
+
 }

@@ -14,10 +14,10 @@ class ButtonBar
     use Config;
     use AddItem;
 
-    protected $items                     = [];
-    protected $size                      = 'small';
     protected $classes                   = [];
     protected $config_button_group_sizes = 'element.button_group.sizes';
+    protected $items                     = [];
+    protected $size                      = 'small';
 
     public function __construct()
     {
@@ -27,22 +27,10 @@ class ButtonBar
         $this->addClass('btn-group');
     }
 
-    public function addClass($class)
+    public static function create()
     {
 
-        $this->classes[$class] = $class;
-
-        return $this;
-    }
-
-    public function addSubmit($label)
-    {
-
-        $item = new Submit($label);
-
-        $this->items[] = $item;
-
-        return $item;
+        return new ButtonBar();
     }
 
     public function addButton($label)
@@ -56,6 +44,14 @@ class ButtonBar
 
     }
 
+    public function addClass($class)
+    {
+
+        $this->classes[$class] = $class;
+
+        return $this;
+    }
+
     public function addDropdown()
     {
 
@@ -67,19 +63,20 @@ class ButtonBar
 
     }
 
-    public function getSizeClass()
+    public function addSubmit($label)
     {
 
-        return Arr::get($this->sizes, $this->size);
+        $item = new Submit($label);
 
+        $this->items[] = $item;
+
+        return $item;
     }
 
-    public function size($size)
+    public function classes()
     {
 
-        $this->size = $size;
-
-        return $this;
+        return $this->classes;
     }
 
     public function display()
@@ -99,16 +96,19 @@ class ButtonBar
 
     }
 
-    public function classes()
+    public function getSizeClass()
     {
 
-        return $this->classes;
+        return Arr::get($this->sizes, $this->size);
+
     }
 
-    public static function create()
+    public function size($size)
     {
 
-        return new ButtonBar();
+        $this->size = $size;
+
+        return $this;
     }
 
 }

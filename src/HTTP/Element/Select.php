@@ -23,30 +23,6 @@ class Select extends Element
 
     }
 
-    public function options($data)
-    {
-
-        $this->data('options', $data);
-
-        return $this;
-    }
-
-    public function multiple($state = true)
-    {
-
-        $this->data('multiple', $state);
-
-        return $this;
-    }
-
-    public function size($size)
-    {
-
-        $this->attribute('size', $size);
-
-        return $this;
-    }
-
     public function draw()
     {
 
@@ -115,6 +91,30 @@ class Select extends Element
 
         return Form::select($element_name, $options, $selected, $attributes);
 
+    }
+
+    public function multiple($state = true)
+    {
+
+        $this->data('multiple', $state);
+
+        return $this;
+    }
+
+    public function options($data)
+    {
+
+        $this->data('options', $data);
+
+        return $this;
+    }
+
+    public function size($size)
+    {
+
+        $this->attribute('size', $size);
+
+        return $this;
     }
 
 }

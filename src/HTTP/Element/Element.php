@@ -16,9 +16,9 @@ abstract class Element
     use Config;
 
     public    $form       = null;
-    protected $data       = [];
     protected $attributes = [];
     protected $classes    = [];
+    protected $data       = [];
     # show param must return for the object to show itself. Otherwise for html elements will simply return an empty string.
     protected $show_param = true;
 
@@ -26,37 +26,6 @@ abstract class Element
     {
 
         $this->data('view_file', '');
-
-    }
-
-    public function data($name, $value)
-    {
-
-        $this->data[$name] = $value;
-
-        return $this;
-
-    }
-
-    abstract public function draw();
-
-    public function hasError()
-    {
-
-        return $this->form->hasError($this->getName());
-    }
-
-    public function getName()
-    {
-
-        return $this->getData('name');
-
-    }
-
-    public function getData($name, $default_value = null)
-    {
-
-        return Arr::get($this->data, $name, $default_value);
 
     }
 
@@ -83,12 +52,96 @@ abstract class Element
 
     }
 
-    public function value($value)
+    public function attribute($name, $value)
     {
 
-        $this->data('value', $value);
+        $this->attributes[$name] = $value;
 
         return $this;
+
+    }
+
+    public function attributes(array $attributes)
+    {
+
+        $this->attributes += $attributes;
+
+        return $this;
+
+    }
+
+    public function data($name, $value)
+    {
+
+        $this->data[$name] = $value;
+
+        return $this;
+
+    }
+
+    abstract public function draw();
+
+    public function drawLabel()
+    {
+
+        $label = $this->getLabel();
+
+        if (empty($label))
+        {
+            return '';
+        }
+
+        $element_name = 'label_' . $this->getName();
+
+        $required = $this->getData('required');
+
+        $attributes = $this->getAttributes();
+
+        $attributes['class'] = 'control-label';
+
+        $tooltip = $this->getData('tooltip');
+
+        $label = Form::label($element_name, $label, $attributes);
+
+        if ($tooltip)
+        {
+            if ($required == true)
+            {
+                $tooltip = "Required.<br><div class='text-justify'>" . $tooltip . '</div>';
+            }
+
+            $label .= " <i title=\"$tooltip\" data-html=\"true\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
+
+        }
+
+        return $label;
+
+    }
+
+    public function getAttributes()
+    {
+
+        return $this->attributes;
+    }
+
+    public function getClass($type, $implode = false)
+    {
+
+        $classes = Arr::get($this->classes, $type, []);
+
+        if ($implode == true)
+        {
+            return implode(' ', $classes);
+        }
+
+        return $classes;
+
+    }
+
+    public function getData($name, $default_value = null)
+    {
+
+        return Arr::get($this->data, $name, $default_value);
 
     }
 
@@ -104,15 +157,35 @@ abstract class Element
         return $this->getData('id', $this->getName());
     }
 
-    /**
-     *
-     */
-    public function show($param)
+    public function getLabel()
     {
 
-        $this->show_param = $param;
+        $label = Arr::get($this->data, 'label', $this->getName());
 
-        return $this;
+        $label = str_replace('_id', '', $label);
+
+        $label = str_replace('_', ' ', $label);
+
+        $label = ucwords($label);
+
+        if ($this->getData('required') == true && !empty($label))
+        {
+            $label = '* ' . $label;
+        }
+
+        return $label;
+    }
+
+    public function getModelField()
+    {
+
+        return $this->getData('model_field', $this->getName());
+    }
+
+    public function getName()
+    {
+
+        return $this->getData('name');
 
     }
 
@@ -149,19 +222,10 @@ abstract class Element
 
     }
 
-    public function getModelField()
+    public function hasError()
     {
 
-        return $this->getData('model_field', $this->getName());
-    }
-
-    public function attribute($name, $value)
-    {
-
-        $this->attributes[$name] = $value;
-
-        return $this;
-
+        return $this->form->hasError($this->getName());
     }
 
     public function id($id)
@@ -172,68 +236,12 @@ abstract class Element
         return $this;
     }
 
-    public function drawLabel()
+    public function label($label)
     {
 
-        $label = $this->getLabel();
+        $this->data('label', $label);
 
-        if (empty($label))
-        {
-            return '';
-        }
-
-        $element_name = 'label_' . $this->getName();
-
-        $required = $this->getData('required');
-
-        $attributes = $this->getAttributes();
-
-        $attributes['class'] = 'control-label';
-
-        $tooltip = $this->getData('tooltip');
-
-        if ($tooltip)
-        {
-            if ($required == true)
-            {
-                $tooltip = "Required.<br><div class='text-justify'>" . $tooltip . '</div>';
-            }
-        }
-
-        $label = Form::label($element_name, $label, $attributes);
-
-        if ($tooltip)
-        {
-            $label .= " <i title=\"$tooltip\" data-html=\"true\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
-        }
-
-        return $label;
-
-    }
-
-    public function getLabel()
-    {
-
-        $label = Arr::get($this->data, 'label', $this->getName());
-
-        $label = str_replace('_id', '', $label);
-
-        $label = str_replace('_', ' ', $label);
-
-        $label = ucwords($label);
-
-        if ($this->getData('required') == true && !empty($label))
-        {
-            $label = '* ' . $label;
-        }
-
-        return $label;
-    }
-
-    public function getAttributes()
-    {
-
-        return $this->attributes;
+        return $this;
     }
 
     public function name($name)
@@ -242,20 +250,6 @@ abstract class Element
         $this->data('name', $name);
 
         return $this;
-    }
-
-    public function getClass($type, $implode = false)
-    {
-
-        $classes = Arr::get($this->classes, $type, []);
-
-        if ($implode == true)
-        {
-            return implode(' ', $classes);
-        }
-
-        return $classes;
-
     }
 
     public function parseOptions($options)
@@ -304,6 +298,18 @@ abstract class Element
         return $this;
     }
 
+    /**
+     *
+     */
+    public function show($param)
+    {
+
+        $this->show_param = $param;
+
+        return $this;
+
+    }
+
     public function toolTip($text)
     {
 
@@ -313,18 +319,10 @@ abstract class Element
 
     }
 
-    public function label($label)
+    public function value($value)
     {
 
-        $this->data('label', $label);
-
-        return $this;
-    }
-
-    public function attributes(array $attributes)
-    {
-
-        $this->attributes += $attributes;
+        $this->data('value', $value);
 
         return $this;
 

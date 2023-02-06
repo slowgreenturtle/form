@@ -12,39 +12,29 @@ class ButtonDropdown
 
     public    $type      = 'button_dropdown';
     protected $alignment = 'right';
-    protected $items     = [];     //  Can be left or right
+        protected $color     = null;     //  Can be left or right
+protected $items     = [];
     protected $size      = null;
-    protected $color     = null;
 
-    public function alignment($alignment = 'left')
+    public static function create()
     {
 
-        $this->alignment = $alignment == 'left' ? 'left' : 'right';
-
-        return $this;
-
-    }
-
-    public function size($size)
-    {
-
-        $this->size = $size;
-
-        return $this;
-    }
-
-    public function color($color)
-    {
-
-        $this->color = $color;
-
-        return $this;
+        return new ButtonDropdown();
     }
 
     public function addButton($label)
     {
 
         return $this->addItem($label);
+    }
+
+    public function addDivider()
+    {
+
+        $item          = new Divider();
+        $this->items[] = $item;
+
+        return $item;
     }
 
     public function addItem($label)
@@ -57,27 +47,21 @@ class ButtonDropdown
 
     }
 
-    public function addDivider()
+    public function alignment($alignment = 'left')
     {
 
-        $item          = new Divider();
-        $this->items[] = $item;
+        $this->alignment = $alignment == 'left' ? 'left' : 'right';
 
-        return $item;
+        return $this;
+
     }
 
-    public function dropdownMenuClasses()
+    public function color($color)
     {
 
-        $classes["dropdown-menu"] = "dropdown-menu";
+        $this->color = $color;
 
-        if ($this->alignment == 'right')
-        {
-            $classes["dropdown-menu-right"] = "dropdown-menu-right";
-        }
-
-        return implode(' ', $classes);
-
+        return $this;
     }
 
     public function display()
@@ -156,6 +140,28 @@ class ButtonDropdown
 
     }
 
+    public function dropdownMenuClasses()
+    {
+
+        $classes["dropdown-menu"] = "dropdown-menu";
+
+        if ($this->alignment == 'right')
+        {
+            $classes["dropdown-menu-right"] = "dropdown-menu-right";
+        }
+
+        return implode(' ', $classes);
+
+    }
+
+    public function size($size)
+    {
+
+        $this->size = $size;
+
+        return $this;
+    }
+
     protected function makeButton($item)
     {
 
@@ -173,12 +179,6 @@ class ButtonDropdown
 
         return $button;
 
-    }
-
-    public static function create()
-    {
-
-        return new ButtonDropdown();
     }
 
 }

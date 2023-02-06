@@ -13,39 +13,11 @@ abstract class Base
 
     use Config;
 
-    /** the data url for the offer */
-    public $data_url = '';
-
-    public $default_limit = 100;
-
     /** the custom method to use to send custom data back to the server */
     public $data_method = '';
-
-    /**  The html name base for this table */
-    protected $name = 'table_name';
-    /**  The Laravel view for this table */
-    protected $view = null;
-    /** @var string $view_file The Laravel view file */
-    protected $view_file = '';
-
-    protected $search = null;
-
-    protected $settings = [
-        'pageLength'  => 25,
-        'responsive'  => true,
-        'order'       => [[0, 'asc']],
-        'ordering'    => true,
-        'deferRender' => true,
-        'processing'  => true,
-        'serverSide'  => true,
-        'saveState'   => true,
-        'lengthMenu'  => [
-            50,
-            100,
-            500
-        ]
-    ];
-
+    /** the data url for the offer */
+    public $data_url = '';
+    public $default_limit = 100;
     /** @var Request|null The http request */
     protected $classes = [
         'wrapper' => [
@@ -63,6 +35,28 @@ abstract class Base
         ],
         'row'     => []
     ];
+    /**  The html name base for this table */
+    protected $name = 'table_name';
+    protected $search = null;
+    protected $settings = [
+        'pageLength'  => 25,
+        'responsive'  => true,
+        'order'       => [[0, 'asc']],
+        'ordering'    => true,
+        'deferRender' => true,
+        'processing'  => true,
+        'serverSide'  => true,
+        'saveState'   => true,
+        'lengthMenu'  => [
+            50,
+            100,
+            500
+        ]
+    ];
+    /**  The Laravel view for this table */
+    protected $view = null;
+    /** @var string $view_file The Laravel view file */
+    protected $view_file = '';
 
     public function __construct(Request $request)
     {
@@ -96,206 +90,11 @@ abstract class Base
 
     }
 
-    public function sessionStore()
-    {
-
-        $this->sessionForget();
-
-        $this->search->sessionStore();
-
-    }
-
-    public function sessionForget()
-    {
-
-        $this->search->sessionForget();
-
-    }
-
-    public function getViewFile()
-    {
-
-        $view_file = $this->view_file;
-
-        if (empty($view_file))
-        {
-            $view_file = $this->configFrontEnd('table.datatable.default');
-        }
-
-        return $view_file;
-
-    }
-
-    public function setConfigSettings()
-    {
-
-        $settings = $this->config('config.table.settings');
-
-        $this->settings = array_merge($this->settings, $settings);
-
-    }
-
-    public function setup()
-    {
-
-    }
-
-    /**
-     * Use Dot notation to add a settings value to the array going to the javascript datatable settings.
-     *
-     * @param $field
-     * @param $value
-     */
-    public function setting($field, $value)
-    {
-
-        Arr::set($this->settings, $field, $value);
-
-    }
-
-    public function getSetting($field, $default_value = null)
-    {
-
-        return Arr::get($this->settings, $field, $default_value);
-    }
-
-    public function getSearchInput($name = null, $value = null)
-    {
-
-        return $this->search->input($name, $value);
-
-    }
-
     public function addSearchInput($name, $value)
     {
 
         $this->search->addInput($name, $value);
 
-    }
-
-    public function cssAdd($list, $value)
-    {
-
-        $this->classes[$list][] = $value;
-    }
-
-    public function cssRemove($list, $value)
-    {
-
-        unset($this->classes[$list][$value]);
-    }
-
-    /**
-     * Export the View as an html page.
-     *
-     * @return string
-     */
-    public function html()
-    {
-
-        $this->view->table = $this;
-
-        return $this->view->__toString();
-    }
-
-    /**
-     * Return an array of data describing the header fields
-     *
-     * @return array
-     */
-    public function headers()
-    {
-
-        return $this->tableColumns();
-    }
-
-    /**
-     * This method processes the  columns made by the user, sets defaults, etc.
-     */
-    public function tableColumns()
-    {
-
-        $fields = [
-            'tooltip',
-            'sort_field',
-        ];
-
-        $columns = $this->columns();
-
-        $table_columns = [];
-
-        foreach ($columns as $column_id => $column)
-        {
-            if (is_array($column))
-            {
-                $table_columns[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
-
-                foreach ($fields as $field)
-                {
-                    $table_columns[$column_id][$field] = Arr::get($column, $field, '');
-                }
-            }
-            else
-            {
-                $table_columns[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
-
-                foreach ($fields as $field)
-                {
-                    $table_columns[$column][$field] = '';
-                }
-            }
-        }
-
-        return $table_columns;
-
-    }
-
-    /**
-     * Return an array of columns.
-     * This method will be overwritten by derived classes.
-     *
-     * @return array
-     */
-
-    public function columns()
-    {
-
-        /**
-         *  Must be in the following format:
-         * ['slug_name'] = [
-         *  'name'=>'Name',
-         *  'sort_field'=>'name'
-         * ]
-         * slug_name    must be lowercase, underscored, used internally to track the calls, sent to the client as id fields,
-         *              etc
-         * name         The human readable name, most notably used in the header field of the table.
-         * sort_field   is the field used if this column is sortable and can be ordered by. Used in the query sort
-         *              functionality
-         */
-
-        /**
-         * example:
-         * $columns = [
-         * "id"      =>
-         * [
-         * 'name' => 'ID',
-         * ],
-         * "name"    => [
-         * 'name' => 'Name'
-         * ],
-         * "feed"    => [
-         * 'name'     => 'Feeds',
-         * ],
-         * "margin"  => [
-         * 'name'     => 'Margin %',
-         * ],
-         * 'actions' => [
-         * 'name'     => '',
-         * ]
-         * ];
-         * */
-
-        return [];
     }
 
     /**
@@ -352,22 +151,86 @@ abstract class Base
 
     }
 
-    public function getDataURL()
+    public function column($column_name)
     {
 
-        return $this->data_url;
+        return Arr::get($this->tableColumns(), $column_name);
     }
 
     /**
-     * The full URL to retrieve data from.
+     * Return an array of columns.
+     * This method will be overwritten by derived classes.
      *
-     * @param $url
+     * @return array
      */
-    public function setDataURL($url)
+
+    public function columns()
     {
 
-        $this->data_url = $url;
+        /**
+         *  Must be in the following format:
+         * ['slug_name'] = [
+         *  'name'=>'Name',
+         *  'sort_field'=>'name'
+         * ]
+         * slug_name    must be lowercase, underscored, used internally to track the calls, sent to the client as id fields,
+         *              etc
+         * name         The human readable name, most notably used in the header field of the table.
+         * sort_field   is the field used if this column is sortable and can be ordered by. Used in the query sort
+         *              functionality
+         */
 
+        /**
+         * example:
+         * $columns = [
+         * "id"      =>
+         * [
+         * 'name' => 'ID',
+         * ],
+         * "name"    => [
+         * 'name' => 'Name'
+         * ],
+         * "feed"    => [
+         * 'name'     => 'Feeds',
+         * ],
+         * "margin"  => [
+         * 'name'     => 'Margin %',
+         * ],
+         * 'actions' => [
+         * 'name'     => '',
+         * ]
+         * ];
+         * */
+
+        return [];
+    }
+
+    public function cssAdd($list, $value)
+    {
+
+        $this->classes[$list][] = $value;
+    }
+
+    /**
+     * Returns a list of css classes.
+     *
+     * @param $list
+     *
+     * @return mixed
+     */
+    public function cssClass($list)
+    {
+
+        $classes = Arr::get($this->classes, $list, []);
+
+        return $classes;
+
+    }
+
+    public function cssRemove($list, $value)
+    {
+
+        unset($this->classes[$list][$value]);
     }
 
     public function data()
@@ -408,10 +271,181 @@ abstract class Base
         return $data;
     }
 
+    public function getDataURL()
+    {
+
+        return $this->data_url;
+    }
+
+    public function getSearchInput($name = null, $value = null)
+    {
+
+        return $this->search->input($name, $value);
+
+    }
+
+    public function getSetting($field, $default_value = null)
+    {
+
+        return Arr::get($this->settings, $field, $default_value);
+    }
+
+    public function getViewFile()
+    {
+
+        $view_file = $this->view_file;
+
+        if (empty($view_file))
+        {
+            $view_file = $this->configFrontEnd('table.datatable.default');
+        }
+
+        return $view_file;
+
+    }
+
+    /**
+     * Return an array of data describing the header fields
+     *
+     * @return array
+     */
+    public function headers()
+    {
+
+        return $this->tableColumns();
+    }
+
+    /**
+     * Export the View as an html page.
+     *
+     * @return string
+     */
+    public function html()
+    {
+
+        $this->view->table = $this;
+
+        return $this->view->__toString();
+    }
+
+    /**
+     * Retrieve a CSS class list ready to be inserted into an html element.
+     *
+     * @param $group
+     *
+     * @return string
+     */
+    public function htmlClass($group)
+    {
+
+        return implode(' ', $this->classes[$group]);
+    }
+
+    /**
+     *  A list of column which should be sorted in the view
+     *
+     * @return array
+     */
+    public function jsColumns()
+    {
+
+        $results = [];
+
+        $columns = $this->tableColumns();
+
+        foreach ($columns as $column_name => $column)
+        {
+
+            $result            = new stdClass();
+            $result->orderable = $this->sortable($column_name);
+            $result->name      = $column_name;
+
+            $results[] = $result;
+        }
+
+        return $results;
+
+    }
+
+    public function jsSettings()
+    {
+
+        $settings = $this->settings;
+
+        $settings['columns'] = $this->jsColumns();
+
+        $data_url = $this->getDataURL();
+
+        if ($data_url != '')
+        {
+            $settings['ajax']['url'] = $data_url;
+        }
+
+        if ($this->data_method != '')
+        {
+            $settings['ajax']['data'] = $this->data_method;
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Creates a name for the table and any sub elements required
+     *
+     * @param string $append
+     *
+     * @return mixed|string
+     */
+    public function name($append = '')
+    {
+
+        $name = get_called_class();
+
+        $name = str_replace('\\', '_', $name);
+
+        $name .= '_' . $this->name;
+
+        if (!empty($append))
+        {
+            $name .= '_' . $append;
+        }
+
+        return $name;
+
+    }
+
     public function query()
     {
 
         return null;
+    }
+
+    public function queryLimit($query)
+    {
+
+        if ($query == null)
+        {
+            return $query;
+        }
+
+        $limit = $this->search->limit;
+
+        if (empty($limit) || $limit < 1)
+        {
+            $limit = $this->default_limit;
+        }
+
+        $query->limit($limit);
+
+        $start = $this->search->start;
+
+        if (!empty($start))
+        {
+            $query->offset($start);
+        }
+
+        return $query;
+
     }
 
     /**
@@ -425,6 +459,22 @@ abstract class Base
 
         return $query;
 
+    }
+
+    /**
+     * Retrieve the list of records used for this display, filtered by search variables.
+     *
+     * @return array
+     */
+    public function querySearchRecords($query_search)
+    {
+
+        if ($query_search)
+        {
+            return $query_search->get();
+        }
+
+        return [];
     }
 
     public function querySetOrder($query)
@@ -496,54 +546,176 @@ abstract class Base
         return $query;
     }
 
-    public function column($column_name)
+    public function response($store_session = true)
     {
 
-        return Arr::get($this->tableColumns(), $column_name);
+        if ($store_session == true)
+        {
+            $this->sessionStore();
+        }
+
+        $clear = $this->getSearchInput('clear');
+
+        if ($clear)
+        {
+            $this->sessionForget();
+
+            return '';
+        }
+
+        $data = $this->serverData();
+
+        return response()->json($data);
+
     }
 
-    public function queryLimit($query)
+    public function results($request)
     {
 
-        if ($query == null)
-        {
-            return $query;
-        }
+        $this->request = $request;
 
-        $limit = $this->search->limit;
+        $total   = 0;
+        $count   = 0;
+        $results = [];
 
-        if (empty($limit) || $limit < 1)
-        {
-            $limit = $this->default_limit;
-        }
+        $data = [
+            'draw'            => 'full-hold',
+            'recordsTotal'    => $total,
+            'recordsFiltered' => $count,
+            'data'            => $results
+        ];
 
-        $query->limit($limit);
+        return response()->json($data);
+    }
 
-        $start = $this->search->start;
+    public function scripts()
+    {
 
-        if (!empty($start))
-        {
-            $query->offset($start);
-        }
+        return '';
+    }
 
-        return $query;
+    public function serverData()
+    {
+
+        $data = $this->data();
+
+        $data['draw'] = $this->search->draw;
+
+        return $data;
+    }
+
+    public function sessionForget()
+    {
+
+        $this->search->sessionForget();
+
+    }
+
+    public function sessionStore()
+    {
+
+        $this->sessionForget();
+
+        $this->search->sessionStore();
+
+    }
+
+    public function setConfigSettings()
+    {
+
+        $settings = $this->config('config.table.settings');
+
+        $this->settings = array_merge($this->settings, $settings);
 
     }
 
     /**
-     * Retrieve the list of records used for this display, filtered by search variables.
+     * The full URL to retrieve data from.
      *
-     * @return array
+     * @param $url
      */
-    public function querySearchRecords($query_search)
+    public function setDataURL($url)
     {
 
-        if ($query_search)
+        $this->data_url = $url;
+
+    }
+
+    /**
+     * Use Dot notation to add a settings value to the array going to the javascript datatable settings.
+     *
+     * @param $field
+     * @param $value
+     */
+    public function setting($field, $value)
+    {
+
+        Arr::set($this->settings, $field, $value);
+
+    }
+
+    public function setup()
+    {
+
+    }
+
+    public function sortable($column_name)
+    {
+
+        if (Arr::get($this->column($column_name), 'sort_field') != null)
         {
-            return $query_search->get();
+            return true;
         }
 
-        return [];
+        $columnName = 'order_' . $column_name;
+
+        if (method_exists($this, $columnName))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * This method processes the  columns made by the user, sets defaults, etc.
+     */
+    public function tableColumns()
+    {
+
+        $fields = [
+            'tooltip',
+            'sort_field',
+        ];
+
+        $columns = $this->columns();
+
+        $table_columns = [];
+
+        foreach ($columns as $column_id => $column)
+        {
+            if (is_array($column))
+            {
+                $table_columns[$column_id]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column_id)));
+
+                foreach ($fields as $field)
+                {
+                    $table_columns[$column_id][$field] = Arr::get($column, $field, '');
+                }
+            }
+            else
+            {
+                $table_columns[$column]['name'] = Arr::get($column, 'name', ucwords(str_replace('_', ' ', $column)));
+
+                foreach ($fields as $field)
+                {
+                    $table_columns[$column][$field] = '';
+                }
+            }
+        }
+
+        return $table_columns;
+
     }
 
     /**
@@ -583,184 +755,6 @@ abstract class Base
 
         return $results;
 
-    }
-
-    /**
-     * Retrieve a CSS class list ready to be inserted into an html element.
-     *
-     * @param $group
-     *
-     * @return string
-     */
-    public function htmlClass($group)
-    {
-
-        return implode(' ', $this->classes[$group]);
-    }
-
-    /**
-     * Returns a list of css classes.
-     *
-     * @param $list
-     *
-     * @return mixed
-     */
-    public function cssClass($list)
-    {
-
-        $classes = Arr::get($this->classes, $list, []);
-
-        return $classes;
-
-    }
-
-    /**
-     * Creates a name for the table and any sub elements required
-     *
-     * @param string $append
-     *
-     * @return mixed|string
-     */
-    public function name($append = '')
-    {
-
-        $name = get_called_class();
-
-        $name = str_replace('\\', '_', $name);
-
-        $name .= '_' . $this->name;
-
-        if (!empty($append))
-        {
-            $name .= '_' . $append;
-        }
-
-        return $name;
-
-    }
-
-    public function results($request)
-    {
-
-        $this->request = $request;
-
-        $total   = 0;
-        $count   = 0;
-        $results = [];
-
-        $data = [
-            'draw'            => 'full-hold',
-            'recordsTotal'    => $total,
-            'recordsFiltered' => $count,
-            'data'            => $results
-        ];
-
-        return response()->json($data);
-    }
-
-    public function jsSettings()
-    {
-
-        $settings = $this->settings;
-
-        $settings['columns'] = $this->jsColumns();
-
-        $data_url = $this->getDataURL();
-
-        if ($data_url != '')
-        {
-            $settings['ajax']['url'] = $data_url;
-        }
-
-        if ($this->data_method != '')
-        {
-            $settings['ajax']['data'] = $this->data_method;
-        }
-
-        return $settings;
-    }
-
-    /**
-     *  A list of column which should be sorted in the view
-     *
-     * @return array
-     */
-    public function jsColumns()
-    {
-
-        $results = [];
-
-        $columns = $this->tableColumns();
-
-        foreach ($columns as $column_name => $column)
-        {
-
-            $result            = new stdClass();
-            $result->orderable = $this->sortable($column_name);
-            $result->name      = $column_name;
-
-            $results[] = $result;
-        }
-
-        return $results;
-
-    }
-
-    public function sortable($column_name)
-    {
-
-        if (Arr::get($this->column($column_name), 'sort_field') != null)
-        {
-            return true;
-        }
-
-        $columnName = 'order_' . $column_name;
-
-        if (method_exists($this, $columnName))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function response($store_session = true)
-    {
-
-        if ($store_session == true)
-        {
-            $this->sessionStore();
-        }
-
-        $clear = $this->getSearchInput('clear');
-
-        if ($clear)
-        {
-            $this->sessionForget();
-
-            return '';
-        }
-
-        $data = $this->serverData();
-
-        return response()->json($data);
-
-    }
-
-    public function serverData()
-    {
-
-        $data = $this->data();
-
-        $data['draw'] = $this->search->draw;
-
-        return $data;
-    }
-
-    public function scripts()
-    {
-
-        return '';
     }
 
 }

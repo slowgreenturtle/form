@@ -10,21 +10,31 @@ class Button extends Item
     protected $config_colors = 'element.button.colors';
     protected $config_sizes  = 'element.button.sizes';
 
-    public function getTooltipPlacement(string $placement = null): string
-    {
-
-        if ($placement == null)
-        {
-            $placement = $this->configFrontEnd('element.button.tooltip.placement');
-        }
-
-        return $placement;
-    }
-
     public static function create($label = '')
     {
 
         return new Button($label);
+    }
+
+    /**
+     *  return the classes for this button dropdown.
+     */
+    public function classes()
+    {
+
+        $class['btn'] = 'btn';
+
+        $color         = $this->getColorClass();
+        $class[$color] = $color;
+
+        $size         = $this->getSizeClass();
+        $class[$size] = $size;
+
+        $parent_classes = parent::classes();
+
+        $class += $parent_classes;
+
+        return $class;
     }
 
     public function display()
@@ -57,25 +67,15 @@ class Button extends Item
         return $html;
     }
 
-    /**
-     *  return the classes for this button dropdown.
-     */
-    public function classes()
+    public function getTooltipPlacement(string $placement = null): string
     {
 
-        $class['btn'] = 'btn';
+        if ($placement == null)
+        {
+            $placement = $this->configFrontEnd('element.button.tooltip.placement');
+        }
 
-        $color         = $this->getColorClass();
-        $class[$color] = $color;
-
-        $size         = $this->getSizeClass();
-        $class[$size] = $size;
-
-        $parent_classes = parent::classes();
-
-        $class += $parent_classes;
-
-        return $class;
+        return $placement;
     }
 
 }

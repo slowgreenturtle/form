@@ -8,16 +8,8 @@ use Illuminate\Support\Arr;
 class Search
 {
 
-    public    $draw         = false;
-    public    $start        = 0;
-    public    $limit        = 0;
-    public    $order        = [];
-    public    $request      = null;
     public    $columns      = [];
-    protected $session_data = null;
-
-    protected $session_name = 'default';
-    protected $input        = [];
+    public    $draw         = false;
     public    $except       = [
         'draw',
         'start',
@@ -25,11 +17,33 @@ class Search
         'order',
         'columns'
     ];
+    public    $limit        = 0;
+    public    $order        = [];
+    public    $request      = null;
+    public    $start        = 0;
+    protected $input        = [];
+    protected $session_data = null;
+    protected $session_name = 'default';
 
     public function __construct($data = [])
     {
 
         $this->session_name = Arr::get($data, 'session_name', 'default');
+    }
+
+    public function addInput($name, $value)
+    {
+
+        $this->input[$name] = $value;
+    }
+
+    public function columnName($column_number)
+    {
+
+        $column = Arr::get($this->columns, $column_number);
+
+        return Arr::get($column, 'name');
+
     }
 
     public function fill(Request $request, $field_map = [])
@@ -63,12 +77,6 @@ class Search
             $this->addInput($map_field, $this->request->input($search_field));
         }
 
-    }
-
-    public function addInput($name, $value)
-    {
-
-        $this->input[$name] = $value;
     }
 
     public function input($name = null, $default = null)
@@ -110,12 +118,13 @@ class Search
 
     }
 
-    public function columnName($column_number)
+    public function sessionForget()
     {
 
-        $column = Arr::get($this->columns, $column_number);
+        $session_name = $this->session_name;
+        session()->forget($session_name);
 
-        return Arr::get($column, 'name');
+        $this->session_data = session($session_name);
 
     }
 
@@ -124,16 +133,6 @@ class Search
 
         $store_data[$this->session_name] = $this->request->except($this->except);
         session($store_data);
-
-    }
-
-    public function sessionForget()
-    {
-
-        $session_name = $this->session_name;
-        session()->forget($session_name);
-
-        $this->session_data = session($session_name);
 
     }
 

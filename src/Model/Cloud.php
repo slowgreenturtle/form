@@ -7,29 +7,39 @@ use Illuminate\Support\Facades\Storage;
 class Cloud
 {
 
-    /**
-     * @param        $file_name
-     * @param        $source
-     * @param string $visibility
-     */
-    public static function put($file_name, $source, $visibility = 'private', $disk = 's3')
+    public static function append($file_name, $text, $disk = 's3')
     {
 
-        Storage::disk($disk)->put($file_name, $source, $visibility);
+        Storage::disk($disk)->append(Cloud::path($file_name, $disk), $text);
+
+    }
+
+    public static function delete($file_data, $disk = 's3')
+    {
+
+        Storage::disk($disk)->delete(Cloud::path($file_data, $disk));
+    }
+
+    public static function exists($file_name, $disk = 's3')
+    {
+
+        return Storage::disk($disk)->exists(Cloud::path($file_name, $disk));
     }
 
     public static function files($path, $disk = 's3')
     {
 
-
         return Storage::disk($disk)->files($path);
 
     }
 
-    public static function putAs($path, $source, $base_name, $disk = 's3')
+    public static function get($file_name, $disk = 's3')
     {
 
-        Storage::disk($disk)->putFileAs(Cloud::path($path), $source, $base_name);
+        $path = Cloud::path($file_name, $disk);
+
+        return Storage::disk($disk)->get(Cloud::path($file_name, $disk));
+
     }
 
     public static function path($file_name, $disk = 's3')
@@ -43,6 +53,23 @@ class Cloud
 
         return $path;
 
+    }
+
+    /**
+     * @param        $file_name
+     * @param        $source
+     * @param string $visibility
+     */
+    public static function put($file_name, $source, $visibility = 'private', $disk = 's3')
+    {
+
+        Storage::disk($disk)->put($file_name, $source, $visibility);
+    }
+
+    public static function putAs($path, $source, $base_name, $disk = 's3')
+    {
+
+        Storage::disk($disk)->putFileAs(Cloud::path($path), $source, $base_name);
     }
 
     public static function url($file_name, $disk = 's3')
@@ -62,33 +89,6 @@ class Cloud
 
     }
 
-    public static function exists($file_name, $disk = 's3')
-    {
-
-        return Storage::disk($disk)->exists(Cloud::path($file_name, $disk));
-    }
-
-    public static function delete($file_data, $disk = 's3')
-    {
-
-        Storage::disk($disk)->delete(Cloud::path($file_data, $disk));
-    }
-
-    public static function get($file_name, $disk = 's3')
-    {
-
-        $path = Cloud::path($file_name, $disk);
-
-        return Storage::disk($disk)->get(Cloud::path($file_name, $disk));
-
-    }
-
-    public static function append($file_name, $text, $disk = 's3')
-    {
-
-        Storage::disk($disk)->append(Cloud::path($file_name, $disk), $text);
-
-    }
 }
 
 

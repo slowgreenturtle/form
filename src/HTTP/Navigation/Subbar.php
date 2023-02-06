@@ -12,13 +12,16 @@ class Subbar
 
     public $items = [];
 
-    public function item($label)
+    public function display()
     {
 
-        $item          = Item::create($label);
-        $this->items[] = $item;
+        $view_file = $this->configFrontEnd('navigation.subbar');
 
-        return $item;
+        $view = view($view_file);
+
+        $view->items = $this->items;
+
+        return $view->__toString();
 
     }
 
@@ -33,16 +36,14 @@ class Subbar
 
     }
 
-    public function display()
+    public function item($label)
     {
 
-        $view_file = $this->configFrontEnd('navigation.subbar');
+        $item          = Item::create($label);
+        $this->items[] = $item;
 
-        $view = view($view_file);
-
-        $view->items = $this->items;
-
-        return $view->__toString();
+        return $item;
 
     }
+
 }

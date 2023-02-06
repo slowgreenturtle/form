@@ -20,4 +20,5 @@ class SGTHtmlFacade extends Facade
 
         return 'sgt_html';
     }
+
 }

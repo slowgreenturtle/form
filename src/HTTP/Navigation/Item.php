@@ -14,19 +14,18 @@ abstract class Item
     use Config;
 
     public $type = '';
-
+    protected $classes     = [];
+    protected $color       = 'blue';
+    protected $colors      = [];
+    protected $confirm     = false;
     protected $icon        = '';
     protected $label       = '';
     protected $link        = '';
-    protected $color       = 'blue';
-    protected $size        = 'small';
     protected $permissions = [];
     protected $route       = [];
-    protected $confirm     = false;
-    protected $classes     = [];
-    protected $colors      = [];
-    protected $sizes       = [];
     protected $show_param  = true;
+    protected $size        = 'small';
+    protected $sizes       = [];
 
     public function __construct($label = 'Default')
     {
@@ -40,29 +39,15 @@ abstract class Item
 
     }
 
-    public function id($name)
+    abstract public static function create($label = '');
+
+    public function addClass($class)
     {
 
-        return $this->attribute('id', $name);
-    }
-
-    public function name($name)
-    {
-
-        return $this->attribute('name', $name);
-    }
-
-    public function label($label)
-    {
-
-        $this->label = $label;
+        $this->classes[$class] = $class;
 
         return $this;
     }
-
-    public abstract function display();
-
-    abstract public static function create($label = '');
 
     public function canDisplay(): bool
     {
@@ -78,6 +63,86 @@ abstract class Item
         }
 
         return $this->hasPermission() && $this->canShow();
+    }
+
+    public function classes()
+    {
+
+        return $this->classes;
+    }
+
+    public function color($color)
+    {
+
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function confirm($set = true)
+    {
+
+        $this->confirm = $set;
+
+        return $this;
+    }
+
+    public abstract function display();
+
+    public function getColorClass()
+    {
+
+        return Arr::get($this->colors, $this->color, '');
+    }
+
+    public function getId($value, $default = null)
+    {
+
+        return $this->getAttribute('id', $default);
+    }
+
+    public function getLabel()
+    {
+
+        return $this->label;
+    }
+
+    public function getLink()
+    {
+
+        return $this->link;
+    }
+
+    public function getName()
+    {
+
+        return $this->attribute('name', $value);
+    }
+
+    public function getSizeClass()
+    {
+
+        return Arr::get($this->sizes, $this->size);
+
+    }
+
+    public abstract function getTooltipPlacement(string $placement = null): string;
+
+    /**
+     * Will build an href for this item with the route being a priority if it exists. if not, the link path
+     * will be used.
+     *
+     * @return string
+     */
+    public function gethRef()
+    {
+
+        if (count($this->route))
+        {
+            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
+        }
+
+        return $this->link;
     }
 
     public function hasPermission()
@@ -104,75 +169,40 @@ abstract class Item
         return false;
     }
 
-    protected function canShow()
+    public function icon($text)
     {
 
-        if (is_callable($this->show_param))
-        {
-            $show_param = $this->show_param;
-
-            return $show_param();
-        }
-
-        return $this->show_param == true;
-
-    }
-
-    /**
-     *
-     */
-    public function show($param)
-    {
-
-        $this->show_param = $param;
+        $this->icon = $text;
 
         return $this;
-
     }
 
-    public function getSizeClass()
+    public function id($name)
     {
 
-        return Arr::get($this->sizes, $this->size);
-
+        return $this->attribute('id', $name);
     }
 
-    public function getColorClass()
+    public function label($label)
     {
 
-        return Arr::get($this->colors, $this->color, '');
-    }
-
-    public function getName()
-    {
-
-        return $this->attribute('name', $value);
-    }
-
-    public function getId($value, $default = null)
-    {
-
-        return $this->getAttribute('id', $default);
-    }
-
-    public function value($value)
-    {
-
-        return $this->attribute('value', $value);
-    }
-
-    public function getLabel()
-    {
-
-        return $this->label;
-    }
-
-    public function confirm($set = true)
-    {
-
-        $this->confirm = $set;
+        $this->label = $label;
 
         return $this;
+    }
+
+    public function link($link)
+    {
+
+        $this->link = $link;
+
+        return $this;
+    }
+
+    public function name($name)
+    {
+
+        return $this->attribute('name', $name);
     }
 
     /**
@@ -211,56 +241,36 @@ abstract class Item
         return $this;
     }
 
-    public function link($link)
+    /**
+     *
+     */
+    public function show($param)
     {
 
-        $this->link = $link;
+        $this->show_param = $param;
+
+        return $this;
+
+    }
+
+    public function size($size)
+    {
+
+        $this->size = $size;
 
         return $this;
     }
 
-    public function getLink()
+    public function toolTip($tool_tip, $placement = null)
     {
 
-        return $this->link;
-    }
+        $placement = $this->getTooltipPlacement($placement);
 
-    public function type($type)
-    {
+        $this->attribute('data-toggle', 'tooltip');
+        $this->attribute('data-placement', $placement);
+        $this->attribute('data-container', 'body');
 
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function color($color)
-    {
-
-        $this->color = $color;
-
-        return $this;
-    }
-
-    public function addClass($class)
-    {
-
-        $this->classes[$class] = $class;
-
-        return $this;
-    }
-
-    public function classes()
-    {
-
-        return $this->classes;
-    }
-
-    public function icon($text)
-    {
-
-        $this->icon = $text;
-
-        return $this;
+        return $this->attribute('title', $tool_tip);
     }
 
     /**
@@ -278,43 +288,32 @@ abstract class Item
         return $this->toolTip($tool_tip);
     }
 
-    public function toolTip($tool_tip, $placement = null)
+    public function type($type)
     {
 
-        $placement = $this->getTooltipPlacement($placement);
-
-        $this->attribute('data-toggle', 'tooltip');
-        $this->attribute('data-placement', $placement);
-        $this->attribute('data-container', 'body');
-
-        return $this->attribute('title', $tool_tip);
-    }
-
-    public abstract function getTooltipPlacement(string $placement = null): string;
-
-    public function size($size)
-    {
-
-        $this->size = $size;
+        $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Will build an href for this item with the route being a priority if it exists. if not, the link path
-     * will be used.
-     *
-     * @return string
-     */
-    public function gethRef()
+    public function value($value)
     {
 
-        if (count($this->route))
+        return $this->attribute('value', $value);
+    }
+
+    protected function canShow()
+    {
+
+        if (is_callable($this->show_param))
         {
-            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
+            $show_param = $this->show_param;
+
+            return $show_param();
         }
 
-        return $this->link;
+        return $this->show_param == true;
+
     }
 
 }

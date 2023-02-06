@@ -28,14 +28,6 @@ class Input extends Element
         return $this;
     }
 
-    public function prepend($text)
-    {
-
-        $this->data('prepend', $text);
-
-        return $this;
-    }
-
     public function draw()
     {
 
@@ -79,6 +71,14 @@ class Input extends Element
     {
 
         return $this->type;
+    }
+
+    public function prepend($text)
+    {
+
+        $this->data('prepend', $text);
+
+        return $this;
     }
 
 }

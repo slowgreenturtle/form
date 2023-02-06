@@ -9,6 +9,14 @@ trait Attribute
 
     protected $attributes = [];
 
+    public function attribute($title, $value)
+    {
+
+        $this->attributes[$title] = $value;
+
+        return $this;
+    }
+
     public function attributes()
     {
 
@@ -19,14 +27,6 @@ trait Attribute
     {
 
         return Arr::get($this->attributes, $name, $default);
-    }
-
-    public function attribute($title, $value)
-    {
-
-        $this->attributes[$title] = $value;
-
-        return $this;
     }
 
     /**

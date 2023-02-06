@@ -66,4 +66,5 @@ class Checkbox extends Element
 
         return Form::checkbox($element_name, $value, $checked, $attributes);
     }
+
 }

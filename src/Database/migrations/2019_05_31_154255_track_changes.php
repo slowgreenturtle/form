@@ -20,7 +20,7 @@ class TrackChanges extends Migration
         if (Schema::hasTable($change_table_name))
         {
 
-            Schema::table($change_table_name, function (Blueprint $table) use ($change_table_name)
+            Schema::table($change_table_name, function(Blueprint $table) use ($change_table_name)
             {
 
                 if (Schema::hasColumn($change_table_name, 'id'))
@@ -58,8 +58,7 @@ class TrackChanges extends Migration
         else
         {
 
-
-            Schema::create($change_table_name, function (Blueprint $table)
+            Schema::create($change_table_name, function(Blueprint $table)
             {
 
                 $table->bigIncrements('id');

@@ -31,6 +31,17 @@ class SGTServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+
+        return ['sgt_html', SGTHtml::class];
+    }
+
+    /**
      * Publish captcha.php file.
      *
      * @return void
@@ -41,8 +52,8 @@ class SGTServiceProvider extends ServiceProvider
         if (method_exists($this, 'publishes'))
         {
             $this->publishes([
-                __DIR__ . '/../defaults/config/sgtform.php' => config_path('sgtform.php')
-            ]);
+                                 __DIR__ . '/../defaults/config/sgtform.php' => config_path('sgtform.php')
+                             ]);
         }
     }
 
@@ -65,24 +76,13 @@ class SGTServiceProvider extends ServiceProvider
     public function register()
     {
 
-        $this->app->singleton('sgt_html', function ($app)
+        $this->app->singleton('sgt_html', function($app)
         {
 
             return new SGTHtml();
         });
 
         $this->app->alias('sgt_html', SGTHtml::class);
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-
-        return ['sgt_html', SGTHtml::class];
     }
 
 }

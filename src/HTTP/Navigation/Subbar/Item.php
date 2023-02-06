@@ -11,21 +11,20 @@ class Item
 
     use Attribute;
 
-    protected $label       = '';
-    protected $url         = '';
-    protected $color       = 'blue';
-    protected $tool        = '';
-    protected $size        = 'small';
     protected $attributes  = [];
-    protected $type        = 'item';
-    protected $permissions = [];
-    protected $colors      = [];
-    protected $sizes       = [];
-
     protected $badge = [
         'text'    => '',
         'tooltip' => ''
     ];
+    protected $color       = 'blue';
+    protected $colors      = [];
+    protected $label       = '';
+    protected $permissions = [];
+    protected $size        = 'small';
+    protected $sizes       = [];
+    protected $tool        = '';
+    protected $type        = 'item';
+    protected $url         = '';
 
     public function __construct($label = '')
     {
@@ -37,35 +36,16 @@ class Item
 
     }
 
-    public function label($text)
+    public static function create($label = '')
     {
 
-        $this->label = $text;
-
-        return $this;
+        return new Item($label);
     }
 
-    public function route($route, $params = [])
+    public function attribute($title, $value)
     {
 
-        $this->route['route']  = $route;
-        $this->route['params'] = $params;
-
-        return $this;
-    }
-
-    public function permission($permission)
-    {
-
-        $this->permissions[] = $permission;
-
-        return this;
-    }
-
-    public function url($url)
-    {
-
-        $this->link = $url;
+        $this->attributes[$title] = $value;
 
         return $this;
     }
@@ -79,40 +59,10 @@ class Item
         return $this;
     }
 
-    public static function create($label = '')
-    {
-
-        return new Item($label);
-    }
-
-    public function type($type)
-    {
-
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function color($color)
     {
 
         $this->color = $color;
-
-        return $this;
-    }
-
-    public function tool($text)
-    {
-
-        $this->tool = $text;
-
-        return $this;
-    }
-
-    public function attribute($title, $value)
-    {
-
-        $this->attributes[$title] = $value;
 
         return $this;
     }
@@ -134,6 +84,23 @@ class Item
         }
 
         return '';
+    }
+
+    /**
+     * Will build an href for this item with the route being a priority if it exists. if not, the link path
+     * will be used.
+     *
+     * @return string
+     */
+    public function gethRef()
+    {
+
+        if (count($this->route))
+        {
+            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
+        }
+
+        return $this->url;
     }
 
     public function hasPermission()
@@ -158,6 +125,55 @@ class Item
 
         return false;
 
+    }
+
+    public function label($text)
+    {
+
+        $this->label = $text;
+
+        return $this;
+    }
+
+    public function permission($permission)
+    {
+
+        $this->permissions[] = $permission;
+
+        return this;
+    }
+
+    public function route($route, $params = [])
+    {
+
+        $this->route['route']  = $route;
+        $this->route['params'] = $params;
+
+        return $this;
+    }
+
+    public function tool($text)
+    {
+
+        $this->tool = $text;
+
+        return $this;
+    }
+
+    public function type($type)
+    {
+
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function url($url)
+    {
+
+        $this->link = $url;
+
+        return $this;
     }
 
     protected function displayDivider()
@@ -191,20 +207,4 @@ class Item
         return $html;
     }
 
-    /**
-     * Will build an href for this item with the route being a priority if it exists. if not, the link path
-     * will be used.
-     *
-     * @return string
-     */
-    public function gethRef()
-    {
-
-        if (count($this->route))
-        {
-            return route(Arr::get($this->route, 'route'), Arr::get($this->route, 'params'));
-        }
-
-        return $this->url;
-    }
 }
