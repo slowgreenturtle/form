@@ -2,8 +2,6 @@
 
 namespace SGT;
 
-use ErrorException;
-use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -137,7 +135,7 @@ class DataManage
             $table_array = (array)$table;
 
             $list[] = array_pop($table_array);
-        }
+        };
 
         return $list;
     }
@@ -235,6 +233,12 @@ class DataManage
 
     }
 
+    /**
+     * Truncate the database (Delete all tables, but leave the database)
+     *
+     * @return void
+     * @throws \ErrorException
+     */
     public function truncate()
     {
 
@@ -260,22 +264,24 @@ class DataManage
                 $database_count++;
             }
 
-            $this->info("Truncated $database_count databases");
+            $this->info("Truncated $database_count databases. Deleted all tables.");
         }
     }
 
     /**
      * Truncate database tables
      *
-     * @throws ErrorException
+     * @param $exclude_tables array of table names to ignore.
+     *
+     * @return void
+     * @throws \ErrorException
      */
-
-    public function truncateTables()
+    public function truncateTables($ignore_tables = ['migrations'])
     {
 
         $db_name = config('database.connections.' . $this->system_connection . '.database');
 
-        $this->truncateDatabaseTables($this->system_connection, $db_name);
+        $this->truncateDatabaseTables($this->system_connection, $db_name, $ignore_tables);
 
         $this->info("System database '$db_name' tables truncated");
 
@@ -290,12 +296,13 @@ class DataManage
             {
 
                 $this->setConnection($database);
-                $this->truncateDatabaseTables($this->tenant_connection, $database, true);
+
+                $this->truncateDatabaseTables($this->tenant_connection, $database, $ignore_tables);
 
                 $database_count++;
             }
 
-            $this->info("Truncated $database_count databases");
+            $this->info("Truncated $database_count databases. Left empty tables.");
         }
 
     }
@@ -710,7 +717,7 @@ class DataManage
             }
             else
             {
-                throw new Exception("Couldn't find local backup file: $local_file");
+                throw new \Exception("Couldn't find local backup file: $local_file");
             }
 
             $this->deleteTables($connection, $database_name);
@@ -773,7 +780,7 @@ class DataManage
             }
 
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $this->info($e->getMessage());
 
@@ -887,7 +894,7 @@ class DataManage
 
         if (empty($prefix))
         {
-            throw new ErrorException('No Multi-tenant Prefix set');
+            throw new \ErrorException('No Multi-tenant Prefix set');
         }
 
         $databases = DB::select("SHOW DATABASES LIKE '$prefix%'");
@@ -975,10 +982,11 @@ class DataManage
     /**
      * Truncate all tables within the requested database, but leave the schema.
      *
-     * @param $connection
-     * @param $database_name
+     * @param          $connection
+     * @param          $database_name
+     * @param string[] $ignore_tables
      */
-    protected function truncateDatabaseTables($connection, $database_name)
+    protected function truncateDatabaseTables($connection, $database_name, $ignore_tables = ['migrations'])
     {
 
         //  We put this here in case the database doesn't exist, otherwise throws off the table check.
@@ -999,13 +1007,17 @@ class DataManage
 
         foreach ($tables as $table_name)
         {
-            //if you don't want to truncate migrations
-            if ($table_name == 'migrations')
+
+            if (in_array($table_name, $ignore_tables) == true)
             {
+                $this->error("Ignoring: $table_name");
                 continue;
             }
+
+            $this->info("Truncating: $table_name");
             DB::connection($connection)->table($table_name)->truncate();
-        }
+
+        };
 
         Schema::enableForeignKeyConstraints();
     }
