@@ -178,6 +178,8 @@ class DataManage
         $dump_parameters[] = "-h $db_host";
         $dump_parameters[] = "-u $db_username";
 
+        $parameters[] = '--set-gtid-purged=OFF';
+
         $dump_parameters = array_merge($dump_parameters, $parameters);
 
         $dump_parameters[] = $database;
@@ -564,7 +566,7 @@ class DataManage
 
         #export schema
         $parameters = [
-            '--no-data',
+            '--no-data'
         ];
 
         $random_filename = Str::random(20);
