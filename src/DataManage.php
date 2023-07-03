@@ -178,8 +178,6 @@ class DataManage
         $dump_parameters[] = "-h $db_host";
         $dump_parameters[] = "-u $db_username";
 
-        $parameters[] = '--set-gtid-purged=OFF';
-
         $dump_parameters = array_merge($dump_parameters, $parameters);
 
         $dump_parameters[] = $database;
@@ -365,10 +363,6 @@ class DataManage
 
                 $sql .= " INTO OUTFILE '{$file}' FIELDS TERMINATED BY ',';";
 
-                $execute = $command . "-e\"$sql\"";
-
-                //$execute = $command . "-e\" $sql \" > $file";
-
                 putenv('MYSQL_PWD=' . $db_password);
                 $response = shell_exec($command);
                 putenv('MYSQL_PWD=');
@@ -384,7 +378,8 @@ class DataManage
                     'connection'  => $connection,
                     'database'    => $database_name,
                     'destination' => $file_destination,
-                    'tables'      => [$table]
+                    'tables'      => [$table],
+                    'parameters'  => ['--set-gtid-purged=OFF'],
                 ];
 
                 $this->mySQL($parameters);
@@ -566,7 +561,8 @@ class DataManage
 
         #export schema
         $parameters = [
-            '--no-data'
+            '--no-data',
+            '--set-gtid-purged=OFF'
         ];
 
         $random_filename = Str::random(20);
