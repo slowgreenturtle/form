@@ -50,6 +50,7 @@ abstract class Element
             $this->classes[$type][$class] = $class;
         }
 
+        return $this;
     }
 
     public function attribute($name, $value)
