@@ -1,6 +1,7 @@
 @include('input')
 
-@push('scripts')
+@section('scripts')
+    @parent
     <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
@@ -18,4 +19,4 @@
 
         var editor = new Quill('#editor', options);
     </script>
-@endpush
+@endsection

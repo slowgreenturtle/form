@@ -6,7 +6,8 @@
     @endif
 </div>
 
-@push('scripts')
+@section('scripts')
+    @parent
     <script>
         $(document).ready(function ()
         {
@@ -15,4 +16,5 @@
 
         });
     </script>
-@endpush
+
+@endsection
