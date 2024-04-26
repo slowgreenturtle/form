@@ -119,6 +119,21 @@ abstract class Element
 
     }
 
+    /**
+     * Set the HTML element name
+     *
+     * @param $element_name
+     *
+     * @return $this
+     */
+    public function elementName($element_name)
+    {
+
+        $this->data('element_name', $element_name);
+
+        return $this;
+    }
+
     public function getAttributes()
     {
 
