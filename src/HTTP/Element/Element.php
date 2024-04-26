@@ -146,19 +146,30 @@ abstract class Element
 
     }
 
-    public function getDivID()
+    public function getDivID(): string
     {
 
         return $this->getId() . '_div';
     }
 
-    public function getId()
+    /**
+     * This the name of the element that will be used in the form.
+     *
+     * @return mixed
+     */
+    public function getElementName(): string
+    {
+
+        return $this->getData('element_name', $this->getName());
+    }
+
+    public function getId(): string
     {
 
         return $this->getData('id', $this->getName());
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
 
         $label = Arr::get($this->data, 'label', $this->getName());
@@ -183,7 +194,12 @@ abstract class Element
         return $this->getData('model_field', $this->getName());
     }
 
-    public function getName()
+    /**
+     * The internal name of the element
+     *
+     * @return string
+     */
+    public function getName(): string
     {
 
         return $this->getData('name');
@@ -229,6 +245,13 @@ abstract class Element
         return $this->form->hasError($this->getName());
     }
 
+    /**
+     * Set the HTML id of the element
+     *
+     * @param $id
+     *
+     * @return $this
+     */
     public function id($id)
     {
 
@@ -237,6 +260,13 @@ abstract class Element
         return $this;
     }
 
+    /**
+     * Set the HTML label of the element
+     *
+     * @param $label
+     *
+     * @return $this
+     */
     public function label($label)
     {
 

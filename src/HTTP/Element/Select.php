@@ -69,7 +69,7 @@ class Select extends Element
             $this->attribute('data-live-search', 'true');
         }
 
-        $element_name = $this->getName();
+        $element_name = $this->getElementName();
 
         $attributes = $this->getAttributes();
 

@@ -55,7 +55,7 @@ class Checkbox extends Element
     public function drawElement()
     {
 
-        $element_name = $this->getName();
+        $element_name = $this->getElementName();
         $attributes   = $this->getAttributes();
 
         $attributes['id']    = $this->getId();

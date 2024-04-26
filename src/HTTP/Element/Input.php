@@ -56,7 +56,7 @@ class Input extends Element
     public function drawElement()
     {
 
-        $element_name = $this->getName();
+        $element_name = $this->getElementName();
         $type         = $this->getType();
 
         $attributes = $this->getAttributes();
