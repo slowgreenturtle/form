@@ -12,13 +12,13 @@ class Hidden extends Element
     public function draw()
     {
 
-        $name  = $this->getName();
+        $element_name = $this->getElementName();
         $value = $this->getValue();
 
         $attributes       = $this->getAttributes();
         $attributes['id'] = $this->getId();
 
-        return Form::hidden($name, $value, $attributes);
+        return Form::hidden($element_name, $value, $attributes);
     }
 
 }
