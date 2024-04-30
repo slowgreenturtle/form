@@ -257,7 +257,9 @@ abstract class Element
     public function hasError()
     {
 
-        return $this->form->hasError($this->getName());
+        $element_name_translate = $this->transformKey($this->getElementName());
+
+        return $this->form->hasError($element_name_translate);
     }
 
     /**
@@ -372,6 +374,17 @@ abstract class Element
 
         return $this;
 
+    }
+
+    /**
+     * @param $key
+     *
+     * @return array|string|string[]
+     */
+    protected function transformKey(string $key): string
+    {
+
+        return str_replace(['.', '[]', '[', ']'], ['_', '', '.', ''], $key);
     }
 
 }
