@@ -71,10 +71,10 @@ class Select extends Element
 
         $element_name = $this->getElementName();
 
-        $attributes = $this->getAttributes();
+        $select_attributes = $this->getAttributes();
 
-        $attributes['id']    = $this->getId();
-        $attributes['class'] = $this->getClass('element', true);
+        $select_attributes['id']    = $this->getId();
+        $select_attributes['class'] = $this->getClass('element', true);
 
         $selected = $this->getValue();
 
@@ -83,13 +83,21 @@ class Select extends Element
         if ($multiple)
         {
 
-            $attributes['multiple'] = $multiple;
-            $attributes['name']     = $element_name . '[]';
+            $select_attributes['multiple'] = $multiple;
+            $select_attributes['name']     = $element_name . '[]';
             # in case size is not set, we set it here.
-            $attributes['size'] = Arr::get($attributes, 'size', 10);
+            $select_attributes['size'] = Arr::get($select_attributes, 'size', 10);
         }
 
-        return Form::select($element_name, $options, $selected, $attributes);
+        $options_attributes      = $this->getData('options_attributes') ?? [];
+        $option_group_attributes = $this->getData('option_group_attributes') ?? [];
+
+        if ($option_group_attributes instanceof Collection)
+        {
+            $option_group_attributes = $option_group_attributes->toArray();
+        }
+
+        return Form::select($element_name, $options, $selected, $select_attributes, $options_attributes, $option_group_attributes);
 
     }
 
@@ -97,6 +105,33 @@ class Select extends Element
     {
 
         $this->data('multiple', $state);
+
+        return $this;
+    }
+
+    /**
+     * HTML attributes to attach to each option. Must be mapped to the value of the particular option
+     *
+     * @param $data
+     *
+     * @return $this
+     */
+    public function optionAttributes($data)
+    {
+
+        $this->data('options_attributes', $data);
+
+        return $this;
+    }
+
+    /**
+     * The key of the array is the option value, the value is the option text.
+     *
+     */
+    public function optionGroup($data)
+    {
+
+        $this->data('option_group_attributes', $data);
 
         return $this;
     }
