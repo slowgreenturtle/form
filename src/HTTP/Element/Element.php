@@ -100,18 +100,23 @@ abstract class Element
 
         $attributes['class'] = 'control-label';
 
-        $tooltip = $this->getData('tooltip');
+        $tooltip = $this->getTooltip();
 
         $label = Form::label($element_name, $label, $attributes);
 
         if ($tooltip)
         {
+
             if ($required == true)
             {
-                $tooltip = "Required.<br><div class='text-justify'>" . $tooltip . '</div>';
+                $tooltip_text = "Required.<br><div class='text-justify'>" . $tooltip . '</div>';
+            }
+            else
+            {
+                $tooltip_text = $tooltip;
             }
 
-            $label .= " <i title=\"$tooltip\" data-html=\"true\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
+            $label .= " <i title=\"$tooltip_text\" data-html=\"true\" data-toggle=\"tooltip\" class=\"fa fa-question-circle\"></i>";
 
         }
 
@@ -221,6 +226,28 @@ abstract class Element
 
     }
 
+    /**
+     * Retrieves the tooltip value if it's set.
+     * If it's not set, it will check the form for a tooltip.
+     *
+     * @return void
+     */
+    public function getTooltip(): ?string
+    {
+
+        $tooltip = $this->getData('tooltip');
+
+        if ($tooltip)
+        {
+            return $tooltip;
+        }
+
+        $form_tooltip = $this->form->getTooltip($this->getName());
+
+        return $form_tooltip;
+
+    }
+
     public function getValue()
     {
 
@@ -246,7 +273,7 @@ abstract class Element
             }
         }
 
-        $name = $this->getName();
+        $name = $this->getElementName();
 
         $value = Form::getValueAttribute($name, $value);
 

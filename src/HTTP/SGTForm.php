@@ -35,19 +35,19 @@ abstract class SGTForm
     /**
      * @var array The attributes attached to the form. Method, etc.
      */
-    public $attributes = [];
-    public $errors = null;
-    public $model = null;
+    public    $attributes = [];
+    public    $errors     = null;
+    public    $model      = null;
     protected $element_view_path = '';
     /**
      * @var array The fields which are created for the form
      */
     protected $elements = [];
-    protected $scripts = [];
+    protected $scripts    = [];
     protected $tooltips = [];
-    protected $view = null;
+    protected $view       = null;
     /** @var string $view_file The Laravel view file */
-    protected $view_file         = '';
+    protected $view_file = '';
 
     public function __construct($model = null)
     {
@@ -160,13 +160,6 @@ abstract class SGTForm
 
         $this->elements[$name] = $element;
 
-        $tooltip = Arr::get($this->tooltips, $name);
-
-        if ($tooltip)
-        {
-            $element->toolTip($tooltip);
-        }
-
         $element->name($name);
         $element->form = $this;
         $element->parseOptions($options);
@@ -245,6 +238,12 @@ abstract class SGTForm
     {
 
         return Arr::get($this->params, $name, $default);
+    }
+
+    public function getTooltip($element_name)
+    {
+
+        return Arr::get($this->tooltips, $element_name);
     }
 
     public function getValue($name)
