@@ -67,6 +67,7 @@ class Select extends Element
         if ($count > 9)
         {
             $this->attribute('data-live-search', 'true');
+            $this->attribute('data-actions-box', 'true');
         }
 
         $element_name = $this->getElementName();
