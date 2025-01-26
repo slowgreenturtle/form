@@ -34,7 +34,11 @@
     "laravel": {
       "providers": [
         "SGT\\SGTServiceProvider"
-      ]
+      ],
+      "aliases": {
+        "Form": "SGT\\HTTP\\Collective\\FormFacade",
+        "Html": "SGT\\HTTP\\Collective\\HtmlFacade"
+      }
     }
   }
 }

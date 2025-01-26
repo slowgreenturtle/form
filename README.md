@@ -1,8 +1,7 @@
 # AppForm
 Form functionality for the Laravel framework.
 
-Based on an abandoned package by [LaravelCollective]
+## Version 5.0.0
+Added support for Laravel 11.
 
-## Version 3.4.2
-
-Added support for option and option group attributes.  
+To configure the package call: `php artisan vendor:publish`
