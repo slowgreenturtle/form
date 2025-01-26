@@ -23,7 +23,6 @@
   "require": {
     "php": "^8.2",
     "laravel/framework": "^11.31",
-    "laravelcollective/html": "6.*",
     "ext-zip": "*"
   },
   "autoload": {
