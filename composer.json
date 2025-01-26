@@ -21,8 +21,8 @@
     "issues": "https://github.com/slowgreenturtle/form/issues"
   },
   "require": {
-    "php": "^8.0.2",
-    "laravel/framework": "9.*",
+    "php": "^8.3.*",
+    "laravel/framework": "11.*",
     "laravelcollective/html": "6.*",
     "ext-zip": "*"
   },
