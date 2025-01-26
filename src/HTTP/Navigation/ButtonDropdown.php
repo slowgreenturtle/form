@@ -12,8 +12,8 @@ class ButtonDropdown
 
     public    $type      = 'button_dropdown';
     protected $alignment = 'right';
-        protected $color     = null;     //  Can be left or right
-protected $items     = [];
+    protected $color     = null;     //  Can be left or right
+    protected $items     = [];
     protected $size      = null;
 
     public static function create()
