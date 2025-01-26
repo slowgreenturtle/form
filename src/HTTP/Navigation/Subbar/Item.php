@@ -12,7 +12,7 @@ class Item
     use Attribute;
 
     protected $attributes  = [];
-    protected $badge = [
+    protected $badge       = [
         'text'    => '',
         'tooltip' => ''
     ];
@@ -140,7 +140,7 @@ class Item
 
         $this->permissions[] = $permission;
 
-        return this;
+        return $this;
     }
 
     public function route($route, $params = [])
